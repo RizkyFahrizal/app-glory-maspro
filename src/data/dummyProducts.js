@@ -23,7 +23,7 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Available",
     description: "Rumah mewah berkonsep modern minimalis di lokasi strategis Alam Sutera. Fasilitas lengkap dengan keamanan 24 jam. Sangat cocok untuk keluarga modern yang mendambakan kenyamanan dan kemewahan.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 2,
@@ -47,7 +47,7 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Sold",
     description: "Apartemen fully furnished di pusat bisnis Jakarta. Cocok untuk profesional muda dan investasi menjanjikan. Akses mudah ke stasiun MRT dan pusat perbelanjaan terkemuka.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 3,
@@ -71,7 +71,7 @@ export const dummyProducts = [
     listing_type: "Disewa",
     status: "Available",
     description: "Ruko komersial di jalan utama PIK. Cocok untuk restoran, bank, atau kantor. Area parkir luas dan dikelilingi oleh pusat bisnis yang ramai pengunjung setiap hari.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 4,
@@ -95,7 +95,7 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Sold",
     description: "Villa bernuansa tropis dengan kolam renang pribadi dan pemandangan sawah yang indah. Fully furnished dan siap huni. Sangat pas untuk staycation atau disewakan kembali ke turis.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 5,
@@ -119,7 +119,7 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Available",
     description: "Rumah gaya minimalis tropis di jantung BSD City. Dekat dengan mall, sekolah internasional, dan akses tol. Lingkungan asri dan aman.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 6,
@@ -143,7 +143,7 @@ export const dummyProducts = [
     listing_type: "Disewa",
     status: "Available",
     description: "Unit studio fully furnished dengan desain interior premium. Fasilitas lengkap: kolam renang, gym, dan terhubung langsung dengan mall Kemang Village.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 7,
@@ -167,7 +167,7 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Sold",
     description: "Ruko komersial 3 lantai di pusat bisnis Gading Serpong. Trafik tinggi, cocok untuk minimarket, cafe, maupun kantor cabang.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 8,
@@ -191,6 +191,6 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Available",
     description: "Ketenangan maksimal di Villa Ubud. Memiliki private pool besar yang menghadap langsung ke lembah hijau. Sangat cocok untuk investasi resort mandiri.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   }
 ];
