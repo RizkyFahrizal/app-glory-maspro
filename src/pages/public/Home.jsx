@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { dummyProducts } from '../../data/dummyProducts'
+import axios from 'axios'
 import { ArrowLeft, ArrowRight, Search, SlidersHorizontal } from 'lucide-react'
 import logoHero from '../../assets/public/logo-glory-maspro.webp'
 import ProductCard from '../../components/public/ProductCard'
@@ -13,11 +13,19 @@ export default function Home() {
   const itemsPerPage = 6
 
   useEffect(() => {
-    // Menggunakan data statis untuk prototype (menggantikan axios.get)
-    setTimeout(() => {
-      setProducts(dummyProducts)
-      setLoading(false)
-    }, 500) // delay 500ms agar efek loading terlihat
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/products')
+        if (response.data && response.data.success) {
+          setProducts(response.data.data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProducts()
   }, [])
 
   const indexOfLastItem = currentPage * itemsPerPage
