@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { MapPin, Phone, Mail } from 'lucide-react'
 
 export default function PublicFooter() {
   return (
@@ -25,9 +26,9 @@ export default function PublicFooter() {
         <div>
           <h4 className="text-sm font-semibold tracking-[0.22em] text-[#F8F8F8] uppercase">Kontak</h4>
           <div className="mt-4 space-y-2 text-sm text-soft">
-            <p>📍 Jl. Raya Properti No. 123, Surabaya</p>
-            <p>📞 +62 812-3456-7890</p>
-            <p>✉️ hello@glorymaspro.com</p>
+            <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[#F4D35E]" /> Jl. Raya Properti No. 123, Surabaya</p>
+            <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-[#F4D35E]" /> +62 812-3456-7890</p>
+            <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-[#F4D35E]" /> hello@glorymaspro.com</p>
           </div>
         </div>
       </div>

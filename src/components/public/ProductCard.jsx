@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { MapPin, BedDouble, Bath, Scaling } from 'lucide-react'
 
 export default function ProductCard({ product }) {
   return (
@@ -26,7 +27,7 @@ export default function ProductCard({ product }) {
           {product.title}
         </h3>
         <p className="mt-2 flex items-center gap-2 text-sm text-soft">
-          <span className="text-[#C9AA4A]">📍</span> {product.location}
+          <MapPin className="h-4 w-4 text-[#C9AA4A]" /> {product.location}
         </p>
 
         <div className="mt-4 text-2xl font-semibold text-[#E7D48A]">
@@ -35,9 +36,18 @@ export default function ProductCard({ product }) {
 
         <div className="mt-auto border-t border-[rgba(245,242,234,0.06)] pt-4">
           <div className="grid grid-cols-3 gap-2 text-[11px] font-medium text-[#F5F2EA] md:text-xs">
-            <div className="rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">🛏️ {product.bedrooms} KT</div>
-            <div className="rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">🚿 {product.bathrooms} KM</div>
-            <div className="rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">📐 {product.building_area} m²</div>
+            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">
+              <BedDouble className="h-3.5 w-3.5 text-soft" />
+              <span>{product.bedrooms} KT</span>
+            </div>
+            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">
+              <Bath className="h-3.5 w-3.5 text-soft" />
+              <span>{product.bathrooms} KM</span>
+            </div>
+            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">
+              <Scaling className="h-3.5 w-3.5 text-soft" />
+              <span>{product.building_area} m²</span>
+            </div>
           </div>
         </div>
       </div>

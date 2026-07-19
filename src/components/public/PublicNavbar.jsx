@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function PublicNavbar() {
   return (
     <nav className="sticky top-0 z-50 border-b border-[rgba(244,211,94,0.12)] bg-[#0A0A0A]/88 backdrop-blur-xl">
@@ -9,9 +11,9 @@ export default function PublicNavbar() {
           </h1>
         </div>
 
-        <button className="btn-gold rounded-full px-5 py-2 text-sm transition md:px-6">
+        <Link to="/admin" className="btn-gold rounded-full px-5 py-2 text-sm transition md:px-6">
           Login
-        </button>
+        </Link>
       </div>
     </nav>
   )
