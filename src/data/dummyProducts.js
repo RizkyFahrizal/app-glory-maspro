@@ -17,7 +17,7 @@ export const dummyProducts = [
     images: [
       { id: 1, image_path: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
       { id: 2, image_path: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false },
-      { id: 3, image_path: "https://images.unsplash.com/photo-1600607687931-cecebd808cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
+      { id: 3, image_path: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Rumah",
     listing_type: "Dijual",
@@ -41,7 +41,8 @@ export const dummyProducts = [
     facing: "Timur",
     certificate: "Strata Title",
     images: [
-      { id: 4, image_path: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 4, image_path: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 41, image_path: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Apartemen",
     listing_type: "Dijual",
@@ -65,7 +66,8 @@ export const dummyProducts = [
     facing: "Utara",
     certificate: "HGB",
     images: [
-      { id: 5, image_path: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 5, image_path: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 51, image_path: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Ruko",
     listing_type: "Disewa",
@@ -89,7 +91,8 @@ export const dummyProducts = [
     facing: "Barat",
     certificate: "SHM",
     images: [
-      { id: 6, image_path: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 6, image_path: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 61, image_path: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Villa",
     listing_type: "Dijual",
@@ -113,7 +116,9 @@ export const dummyProducts = [
     facing: "Utara",
     certificate: "SHM",
     images: [
-      { id: 7, image_path: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 7, image_path: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 71, image_path: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false },
+      { id: 72, image_path: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Rumah",
     listing_type: "Dijual",

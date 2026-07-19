@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
-import { Plus, Pencil, Trash2, Search, AlertTriangle, CheckCircle2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search } from 'lucide-react'
 import { dummyProducts } from '../../data/dummyProducts'
+import DeleteModal from '../../components/admin/DeleteModal'
+import SuccessModal from '../../components/admin/SuccessModal'
 
 export default function ProductList() {
   const [productToDelete, setProductToDelete] = useState(null)
@@ -58,14 +59,14 @@ export default function ProductList() {
             <thead className="bg-[#0A0A0A] text-xs uppercase tracking-wider text-soft">
               <tr>
                 <th className="px-6 py-4 font-semibold">Properti</th>
-                <th className="px-6 py-4 font-semibold">Tipe & Status</th>
-                <th className="px-6 py-4 font-semibold">Harga</th>
-                <th className="px-6 py-4 text-center font-semibold">Aksi</th>
+                <th className="px-6 py-4 font-semibold">Harga & Tipe</th>
+                <th className="px-6 py-4 font-semibold">Status</th>
+                <th className="px-6 py-4 text-right font-semibold">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-[rgba(244,211,94,0.05)]">
               {dummyProducts.map((product) => (
-                <tr key={product.id} className="transition hover:bg-[rgba(244,211,94,0.02)]">
+                <tr key={product.id} className="transition-colors hover:bg-[rgba(245,242,234,0.02)]">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-4">
                       <img 
@@ -74,36 +75,40 @@ export default function ProductList() {
                         className="h-12 w-16 rounded-lg object-cover border border-[rgba(244,211,94,0.1)]"
                       />
                       <div>
-                        <p className="font-semibold">{product.title}</p>
-                        <p className="mt-1 text-xs text-soft">{product.location}</p>
+                        <div className="font-semibold">{product.title}</div>
+                        <div className="mt-1 flex items-center gap-2 text-xs text-soft">
+                          <span className="font-mono text-[#C9AA4A]">{product.listing_id}</span>
+                          <span>•</span>
+                          <span>{product.location}</span>
+                        </div>
                       </div>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <p className="font-medium">{product.property_type}</p>
-                    <span className={`mt-1 inline-block rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest ${
+                    <div className="font-medium text-[#C9AA4A]">{formatRupiah(product.price)}</div>
+                    <div className="mt-1 text-xs text-soft">{product.property_type} - {product.listing_type}</div>
+                  </td>
+                  <td className="px-6 py-4">
+                    <span className={`inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${
                       product.status === 'Available' 
-                        ? 'bg-[#C9AA4A]/10 text-[#C9AA4A]' 
-                        : 'bg-[#8A8A8A]/10 text-[#8A8A8A]'
+                        ? 'bg-emerald-500/10 text-emerald-400'
+                        : 'bg-red-500/10 text-red-400'
                     }`}>
-                      {product.status === 'Available' ? product.listing_type : 'Terjual'}
+                      {product.status === 'Available' ? 'Tersedia' : 'Terjual'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 font-medium text-[#E7D48A]">
-                    {formatRupiah(product.price)}
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-2">
                       <Link 
                         to={`/admin/products/edit/${product.id}`}
-                        className="rounded-xl bg-[#202020] p-2 text-soft transition hover:bg-[rgba(244,211,94,0.1)] hover:text-[#C9AA4A]"
+                        className="rounded-xl p-2 text-soft transition hover:bg-[#101010] hover:text-[#C9AA4A]"
                         title="Edit Data"
                       >
                         <Pencil className="h-4 w-4" />
                       </Link>
                       <button 
                         onClick={() => handleDeleteClick(product.title)}
-                        className="rounded-xl bg-[#202020] p-2 text-soft transition hover:bg-red-400/10 hover:text-red-400"
+                        className="rounded-xl p-2 text-soft transition hover:bg-[#101010] hover:text-red-400"
                         title="Hapus Data"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -115,49 +120,30 @@ export default function ProductList() {
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination Dummy */}
+        <div className="flex items-center justify-between border-t border-[rgba(244,211,94,0.08)] bg-[#0A0A0A] px-6 py-4 text-sm text-soft">
+          <div>Menampilkan 1 hingga {dummyProducts.length} dari {dummyProducts.length} hasil</div>
+          <div className="flex gap-2">
+            <button className="rounded-lg border border-[rgba(244,211,94,0.1)] px-3 py-1 transition hover:bg-[#101010] hover:text-[#F5F2EA]" disabled>Prev</button>
+            <button className="rounded-lg bg-[#C9AA4A]/10 px-3 py-1 text-[#C9AA4A]">1</button>
+            <button className="rounded-lg border border-[rgba(244,211,94,0.1)] px-3 py-1 transition hover:bg-[#101010] hover:text-[#F5F2EA]" disabled>Next</button>
+          </div>
+        </div>
       </div>
 
-      {/* Delete Confirmation Modal */}
-      {productToDelete && createPortal(
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a]/80 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="glass-panel w-full max-w-md rounded-[2rem] p-8 text-center border border-[rgba(244,211,94,0.08)]">
-            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-400/10 text-red-400">
-              <AlertTriangle className="h-8 w-8" />
-            </div>
-            <h3 className="mb-2 text-xl font-semibold text-[#F5F2EA]">Hapus Properti?</h3>
-            <p className="text-sm text-soft">
-              Apakah Anda yakin ingin menghapus <span className="font-semibold text-[#F5F2EA]">{productToDelete}</span> dari katalog? Tindakan ini tidak dapat dibatalkan.
-            </p>
-            <div className="mt-8 flex items-center justify-center gap-4">
-              <button 
-                onClick={() => setProductToDelete(null)}
-                className="rounded-2xl px-6 py-3 text-sm font-medium text-soft transition hover:bg-[rgba(244,211,94,0.05)] hover:text-[#F5F2EA]"
-              >
-                Batal
-              </button>
-              <button 
-                onClick={confirmDelete}
-                className="rounded-2xl bg-red-500/20 px-6 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/30"
-              >
-                Ya, Hapus Data
-              </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
+      <DeleteModal 
+        isOpen={!!productToDelete}
+        itemName={productToDelete}
+        onCancel={() => setProductToDelete(null)}
+        onConfirm={confirmDelete}
+      />
 
-      {/* Success Notification Modal */}
-      {showSuccess && createPortal(
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0a0a0a]/80 p-4 backdrop-blur-sm animate-fade-in">
-          <div className="glass-panel flex w-full max-w-sm flex-col items-center rounded-[2rem] p-8 text-center border border-[rgba(244,211,94,0.08)]">
-            <CheckCircle2 className="mb-4 h-12 w-12 text-[#C9AA4A]" />
-            <h3 className="text-lg font-semibold text-[#F5F2EA]">Berhasil Dihapus</h3>
-            <p className="mt-2 text-sm text-soft">Data properti telah dihapus dari katalog.</p>
-          </div>
-        </div>,
-        document.body
-      )}
+      <SuccessModal 
+        isOpen={showSuccess}
+        title="Berhasil Dihapus"
+        message="Data properti telah dihapus dari katalog."
+      />
     </div>
   )
 }
