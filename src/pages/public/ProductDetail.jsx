@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { dummyProducts } from '../../data/dummyProducts'
+import axios from 'axios'
 import { ArrowLeft, MapPin } from 'lucide-react'
 
 export default function ProductDetail() {
@@ -9,12 +9,22 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Menggunakan data statis untuk prototype (menggantikan axios.get)
-    setTimeout(() => {
-      const foundProduct = dummyProducts.find(p => p.slug === slug)
-      setProduct(foundProduct || null)
-      setLoading(false)
-    }, 500) // delay 500ms agar efek loading terlihat
+    const fetchProductDetail = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:8000/api/products/${slug}`)
+        if (response.data && response.data.success) {
+          setProduct(response.data.data)
+        } else {
+          setProduct(null)
+        }
+      } catch (error) {
+        console.error('Failed to fetch product detail:', error)
+        setProduct(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchProductDetail()
   }, [slug])
 
   if (loading) {
@@ -26,7 +36,8 @@ export default function ProductDetail() {
   }
 
   // Format nomor WA untuk link (memastikan diawali dengan 62)
-  const waNumber = product.user?.wa_marketing?.phone_number || ''
+  const marketingData = product.user?.waMarketing || product.user?.wa_marketing || {}
+  const waNumber = marketingData.phone_number || ''
   const waLink = `https://wa.me/${waNumber}?text=Halo%20saya%20tertarik%20dengan%20properti%20${product.title}%20(${product.listing_id})`
 
   return (
