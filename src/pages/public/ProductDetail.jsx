@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import axios from 'axios'
+import { dummyProducts } from '../../data/dummyProducts'
+import { ArrowLeft, MapPin } from 'lucide-react'
 
 export default function ProductDetail() {
   const { slug } = useParams()
@@ -8,16 +9,12 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Memanggil API detail berdasarkan slug
-    axios.get(`http://127.0.0.1:8000/api/products/${slug}`)
-      .then((response) => {
-        setProduct(response.data.data)
-        setLoading(false)
-      })
-      .catch((error) => {
-        console.error("Ada error saat mengambil data detail:", error)
-        setLoading(false)
-      })
+    // Menggunakan data statis untuk prototype (menggantikan axios.get)
+    setTimeout(() => {
+      const foundProduct = dummyProducts.find(p => p.slug === slug)
+      setProduct(foundProduct || null)
+      setLoading(false)
+    }, 500) // delay 500ms agar efek loading terlihat
   }, [slug])
 
   if (loading) {
@@ -35,7 +32,7 @@ export default function ProductDetail() {
   return (
     <div className="glass-panel rounded-[2rem] p-5 md:p-8">
       <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#E7D48A] transition hover:text-[#F5F2EA]">
-        ← Kembali ke Katalog
+        <ArrowLeft className="h-4 w-4" /> Kembali ke Katalog
       </Link>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
@@ -64,7 +61,9 @@ export default function ProductDetail() {
         <div>
           <p className="section-label">Detail Properti</p>
           <h1 className="mt-3 text-3xl font-semibold text-[#F5F2EA] md:text-4xl">{product.title}</h1>
-          <p className="mt-3 text-sm text-soft">📍 {product.location} - {product.address}</p>
+          <p className="mt-3 flex items-center gap-2 text-sm text-soft">
+            <MapPin className="h-4 w-4 text-[#C9AA4A]" /> {product.location} - {product.address}
+          </p>
           
           <div className="mt-5 text-3xl font-semibold text-[#E7D48A]">
             {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price)}
