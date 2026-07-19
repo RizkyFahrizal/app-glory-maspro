@@ -17,13 +17,13 @@ export const dummyProducts = [
     images: [
       { id: 1, image_path: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
       { id: 2, image_path: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false },
-      { id: 3, image_path: "https://images.unsplash.com/photo-1600607687931-cecebd808cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
+      { id: 3, image_path: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Rumah",
     listing_type: "Dijual",
     status: "Available",
     description: "Rumah mewah berkonsep modern minimalis di lokasi strategis Alam Sutera. Fasilitas lengkap dengan keamanan 24 jam. Sangat cocok untuk keluarga modern yang mendambakan kenyamanan dan kemewahan.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 2,
@@ -41,13 +41,14 @@ export const dummyProducts = [
     facing: "Timur",
     certificate: "Strata Title",
     images: [
-      { id: 4, image_path: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 4, image_path: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 41, image_path: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Apartemen",
     listing_type: "Dijual",
     status: "Sold",
     description: "Apartemen fully furnished di pusat bisnis Jakarta. Cocok untuk profesional muda dan investasi menjanjikan. Akses mudah ke stasiun MRT dan pusat perbelanjaan terkemuka.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 3,
@@ -65,13 +66,14 @@ export const dummyProducts = [
     facing: "Utara",
     certificate: "HGB",
     images: [
-      { id: 5, image_path: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 5, image_path: "https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 51, image_path: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Ruko",
     listing_type: "Disewa",
     status: "Available",
     description: "Ruko komersial di jalan utama PIK. Cocok untuk restoran, bank, atau kantor. Area parkir luas dan dikelilingi oleh pusat bisnis yang ramai pengunjung setiap hari.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 4,
@@ -89,13 +91,14 @@ export const dummyProducts = [
     facing: "Barat",
     certificate: "SHM",
     images: [
-      { id: 6, image_path: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 6, image_path: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 61, image_path: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Villa",
     listing_type: "Dijual",
     status: "Sold",
     description: "Villa bernuansa tropis dengan kolam renang pribadi dan pemandangan sawah yang indah. Fully furnished dan siap huni. Sangat pas untuk staycation atau disewakan kembali ke turis.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 5,
@@ -113,13 +116,15 @@ export const dummyProducts = [
     facing: "Utara",
     certificate: "SHM",
     images: [
-      { id: 7, image_path: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true }
+      { id: 7, image_path: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: true },
+      { id: 71, image_path: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false },
+      { id: 72, image_path: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", is_primary: false }
     ],
     property_type: "Rumah",
     listing_type: "Dijual",
     status: "Available",
     description: "Rumah gaya minimalis tropis di jantung BSD City. Dekat dengan mall, sekolah internasional, dan akses tol. Lingkungan asri dan aman.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 6,
@@ -143,7 +148,7 @@ export const dummyProducts = [
     listing_type: "Disewa",
     status: "Available",
     description: "Unit studio fully furnished dengan desain interior premium. Fasilitas lengkap: kolam renang, gym, dan terhubung langsung dengan mall Kemang Village.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 7,
@@ -167,7 +172,7 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Sold",
     description: "Ruko komersial 3 lantai di pusat bisnis Gading Serpong. Trafik tinggi, cocok untuk minimarket, cafe, maupun kantor cabang.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   },
   {
     id: 8,
@@ -191,6 +196,6 @@ export const dummyProducts = [
     listing_type: "Dijual",
     status: "Available",
     description: "Ketenangan maksimal di Villa Ubud. Memiliki private pool besar yang menghadap langsung ke lembah hijau. Sangat cocok untuk investasi resort mandiri.",
-    user: { wa_marketing: { phone_number: "6281234567890" } }
+    user: { wa_marketing: { phone_number: "6285174316699" } }
   }
 ];
