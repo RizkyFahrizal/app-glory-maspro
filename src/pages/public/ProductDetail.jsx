@@ -28,11 +28,11 @@ export default function ProductDetail() {
   }, [slug])
 
   if (loading) {
-    return <div className="mt-20 text-center text-lg text-[#E7D48A]">Memuat detail properti...</div>
+    return <div className="mt-20 text-center text-lg text-[#B8860B]">Memuat detail properti...</div>
   }
 
   if (!product) {
-    return <div className="mt-20 text-center text-lg text-[#F5F2EA]">Properti tidak ditemukan.</div>
+    return <div className="mt-20 text-center text-lg text-[#1F2937]">Properti tidak ditemukan.</div>
   }
 
   // Format nomor WA untuk link (memastikan diawali dengan 62)
@@ -42,13 +42,13 @@ export default function ProductDetail() {
 
   return (
     <div className="glass-panel rounded-[2rem] p-5 md:p-8">
-      <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#E7D48A] transition hover:text-[#F5F2EA]">
+      <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]">
         <ArrowLeft className="h-4 w-4" /> Kembali ke Katalog
       </Link>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         <div className="space-y-4">
-          <div className="aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] border border-[rgba(245,242,234,0.08)] bg-[#181818]">
+          <div className="aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] border border-[rgba(0,0,0,0.06)] bg-[#F3F4F6]">
              {product.images && product.images.length > 0 ? (
                <img 
                  src={product.images.find(img => img.is_primary)?.image_path || product.images[0].image_path} 
@@ -62,7 +62,7 @@ export default function ProductDetail() {
 
           <div className="grid grid-cols-3 gap-3">
             {product.images?.map((img) => (
-              <div key={img.id} className="aspect-square overflow-hidden rounded-2xl border border-[rgba(245,242,234,0.06)] bg-[#181818]">
+              <div key={img.id} className="aspect-square overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[#F3F4F6]">
                 <img src={img.image_path} alt="Thumbnail" className="h-full w-full object-cover" />
               </div>
             ))}
@@ -71,32 +71,32 @@ export default function ProductDetail() {
 
         <div>
           <p className="section-label">Detail Properti</p>
-          <h1 className="mt-3 text-3xl font-semibold text-[#F5F2EA] md:text-4xl">{product.title}</h1>
+          <h1 className="mt-3 text-3xl font-semibold text-[#1F2937] md:text-4xl">{product.title}</h1>
           <p className="mt-3 flex items-center gap-2 text-sm text-soft">
-            <MapPin className="h-4 w-4 text-[#C9AA4A]" /> {product.location} - {product.address}
+            <MapPin className="h-4 w-4 text-[#D4AF37]" /> {product.location} - {product.address}
           </p>
           
-          <div className="mt-5 text-3xl font-semibold text-[#E7D48A]">
+          <div className="mt-5 text-3xl font-semibold text-[#B8860B]">
             {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price)}
           </div>
 
-          <div className="mt-7 grid grid-cols-2 gap-3 rounded-[1.5rem] border border-[rgba(245,242,234,0.08)] bg-[#202020] p-4 md:p-5">
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Tipe Properti</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.property_type}</p></div>
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Sertifikat</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.certificate}</p></div>
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Luas Tanah</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.land_area} m²</p></div>
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Luas Bangunan</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.building_area} m²</p></div>
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Kamar Tidur</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.bedrooms}</p></div>
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Kamar Mandi</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.bathrooms}</p></div>
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Listrik</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.electricity}</p></div>
-            <div><span className="text-xs uppercase tracking-[0.16em] text-[#C9AA4A]">Arah Hadap</span><p className="mt-1 font-medium text-[#F5F2EA]">{product.facing}</p></div>
+          <div className="mt-7 grid grid-cols-2 gap-3 rounded-[1.5rem] border border-[rgba(0,0,0,0.06)] bg-white p-4 md:p-5 shadow-sm">
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Tipe Properti</span><p className="mt-1 font-medium text-[#1F2937]">{product.property_type}</p></div>
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Sertifikat</span><p className="mt-1 font-medium text-[#1F2937]">{product.certificate}</p></div>
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Luas Tanah</span><p className="mt-1 font-medium text-[#1F2937]">{product.land_area} m²</p></div>
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Luas Bangunan</span><p className="mt-1 font-medium text-[#1F2937]">{product.building_area} m²</p></div>
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Kamar Tidur</span><p className="mt-1 font-medium text-[#1F2937]">{product.bedrooms}</p></div>
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Kamar Mandi</span><p className="mt-1 font-medium text-[#1F2937]">{product.bathrooms}</p></div>
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Listrik</span><p className="mt-1 font-medium text-[#1F2937]">{product.electricity}</p></div>
+            <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Arah Hadap</span><p className="mt-1 font-medium text-[#1F2937]">{product.facing}</p></div>
           </div>
 
           <div className="mt-7">
-            <h3 className="text-sm font-semibold tracking-[0.18em] text-[#E7D48A] uppercase">Deskripsi</h3>
+            <h3 className="text-sm font-semibold tracking-[0.18em] text-[#B8860B] uppercase">Deskripsi</h3>
             <p className="mt-3 whitespace-pre-line text-sm leading-7 text-soft">{product.description}</p>
           </div>
 
-          <div className="mt-8 border-t border-[rgba(245,242,234,0.06)] pt-6">
+          <div className="mt-8 border-t border-[rgba(0,0,0,0.06)] pt-6">
             <p className="mb-3 text-sm text-soft">Tertarik dengan properti ini? Hubungi marketing kami:</p>
             <a 
               href={waLink} 

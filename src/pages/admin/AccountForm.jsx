@@ -23,11 +23,11 @@ export default function AccountForm() {
       <div className="mb-8">
         <Link 
           to="/admin/accounts" 
-          className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#C9AA4A] transition hover:text-[#F5F2EA]"
+          className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]"
         >
           <ArrowLeft className="h-4 w-4" /> Kembali ke Kelola Akun
         </Link>
-        <h1 className="text-2xl font-semibold text-[#F5F2EA]">
+        <h1 className="text-2xl font-semibold text-[#1F2937]">
           {isEdit ? 'Edit Data Akun' : 'Tambah Akun Baru'}
         </h1>
         <p className="mt-2 text-sm text-soft">
@@ -35,7 +35,7 @@ export default function AccountForm() {
         </p>
       </div>
 
-      <form className="glass-panel rounded-3xl p-6 md:p-10 border border-[rgba(244,211,94,0.08)]">
+      <form className="glass-panel rounded-3xl p-6 md:p-10 border border-[rgba(0,0,0,0.06)] bg-white">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
           
           {/* Kiri: Info Personal */}
@@ -97,23 +97,23 @@ export default function AccountForm() {
             </div>
           </div>
 
-          {/* Kanan: Foto Profil */}
+        {/* Kanan: Foto Profil */}
           <div className="space-y-6">
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Foto Profil</label>
-              <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[rgba(244,211,94,0.2)] bg-[#141414] py-16 transition hover:bg-[rgba(244,211,94,0.02)] cursor-pointer">
-                <ImagePlus className="mb-3 h-10 w-10 text-[#C9AA4A]" />
-                <p className="text-sm font-medium text-[#F5F2EA]">Klik untuk unggah foto profil</p>
+              <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] py-16 transition hover:bg-[#F3F4F6] cursor-pointer">
+                <ImagePlus className="mb-3 h-10 w-10 text-[#D4AF37]" />
+                <p className="text-sm font-medium text-[#1F2937]">Klik untuk unggah foto profil</p>
                 <p className="mt-1 text-xs text-soft">PNG, JPG up to 2MB. Rekomendasi rasio 1:1 (Kotak).</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-10 flex items-center justify-end gap-4 border-t border-[rgba(244,211,94,0.06)] pt-6">
+        <div className="mt-10 flex items-center justify-end gap-4 border-t border-[rgba(0,0,0,0.06)] pt-6">
           <Link 
             to="/admin/accounts"
-            className="rounded-2xl px-6 py-3 text-sm font-medium text-soft transition hover:text-[#F5F2EA]"
+            className="rounded-2xl px-6 py-3 text-sm font-medium text-soft transition hover:text-[#1F2937]"
           >
             Batal
           </Link>

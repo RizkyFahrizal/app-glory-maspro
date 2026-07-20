@@ -44,7 +44,7 @@ export default function AccountList() {
     <div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[#F5F2EA]">Kelola Akun</h1>
+          <h1 className="text-2xl font-semibold text-[#1F2937]">Kelola Akun</h1>
           <p className="mt-2 text-sm text-soft">Manajemen akses admin dan tim marketing.</p>
         </div>
         
@@ -58,7 +58,7 @@ export default function AccountList() {
 
       {/* Admin Section */}
       <div className="mt-10">
-        <h2 className="mb-6 text-xl font-bold text-[#F5F2EA]">Tim Admin</h2>
+        <h2 className="mb-6 text-xl font-bold text-[#1F2937]">Tim Admin</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {adminAccounts.map((account) => (
             <AccountCard 
@@ -70,12 +70,12 @@ export default function AccountList() {
         </div>
       </div>
 
-      <hr className="my-10 border-[rgba(244,211,94,0.08)]" />
+      <hr className="my-10 border-[rgba(0,0,0,0.06)]" />
 
       {/* Marketing Section */}
       <div className="mb-10">
         <div className="mb-6">
-          <h2 className="text-xl font-bold text-[#F5F2EA]">Antrean Tim Marketing (Round-Robin)</h2>
+          <h2 className="text-xl font-bold text-[#1F2937]">Antrean Tim Marketing (Round-Robin)</h2>
           <p className="mt-1 text-sm text-soft">
             Urutan penerimaan prospek. Nomor urut #1 akan menerima prospek (leads) berikutnya.
           </p>

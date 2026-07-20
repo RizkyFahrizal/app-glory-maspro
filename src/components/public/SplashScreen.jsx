@@ -25,16 +25,15 @@ export default function SplashScreen() {
 
   return (
     <div 
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#101010] transition-opacity duration-500 ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#FAFAFA] transition-opacity duration-500 ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}
     >
       <div className="flex flex-col items-center justify-center">
-        <h1 className="animate-fade-in mb-1 text-4xl font-bold tracking-widest text-[#E7D48A] md:text-5xl lg:text-6xl">
-          GLORY MASPRO
-        </h1>
-        <div className="mt-4 h-[1px] w-0 animate-[expand-width_1s_ease-in-out_forwards] bg-gradient-to-r from-transparent via-[#C9AA4A] to-transparent" />
-        <p className="mt-4 text-xs tracking-[0.3em] text-soft opacity-0 animate-[fade-in_1s_ease-in-out_0.5s_forwards]">
-          PREMIUM PROPERTY EXCELLENCE
-        </p>
+        <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white shadow-xl border border-[rgba(212,175,55,0.2)]">
+          <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-[#D4AF37] border-r-[#D4AF37] animate-spin"></div>
+          <span className="text-3xl font-bold tracking-widest text-[#D4AF37]">G</span>
+        </div>
+        <h1 className="mt-8 text-2xl font-semibold tracking-[0.3em] text-[#1F2937]">GLORY MASPRO</h1>
+        <p className="mt-2 text-sm font-medium tracking-widest text-[#B8860B]">PROPERTY COLLECTION</p>
       </div>
     </div>
   )

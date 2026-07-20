@@ -15,11 +15,11 @@ export default function AdminSidebar({ isOpen, onClose }) {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 z-50 h-screen w-64 transform border-r border-[rgba(244,211,94,0.12)] bg-[#0A0A0A] p-6 transition-transform duration-300 ease-in-out md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <aside className={`fixed left-0 top-0 z-50 h-screen w-64 transform border-r border-[rgba(212,175,55,0.2)] bg-[#FCFAF5]/80 p-6 backdrop-blur-xl transition-transform duration-300 ease-in-out md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="mb-10 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.3em] text-[#C9AA4A] uppercase">Admin Portal</p>
-            <h2 className="mt-1 text-xl font-semibold tracking-widest text-[#F5F2EA]">GLORY MASPRO</h2>
+            <p className="text-[10px] font-bold tracking-[0.3em] text-[#B8860B] uppercase">Admin Portal</p>
+            <h2 className="mt-1 text-xl font-semibold tracking-widest text-[#1F2937]">GLORY MASPRO</h2>
           </div>
           <button onClick={onClose} className="p-1 text-soft md:hidden">
             <X className="h-6 w-6" />
@@ -32,8 +32,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
             onClick={onClose}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
               location.pathname === '/admin/dashboard' 
-                ? 'bg-[rgba(245,242,234,0.08)] text-[#F4D35E]' 
-                : 'text-soft hover:bg-[rgba(245,242,234,0.03)] hover:text-[#F5F2EA]'
+                ? 'bg-[#D4AF37] text-white shadow-sm' 
+                : 'text-soft hover:bg-[rgba(0,0,0,0.03)] hover:text-[#1F2937]'
             }`}
           >
             <LayoutDashboard className="h-5 w-5" /> Dashboard
@@ -44,8 +44,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
             onClick={onClose}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
               location.pathname.includes('/admin/products') 
-                ? 'bg-[rgba(245,242,234,0.08)] text-[#F4D35E]' 
-                : 'text-soft hover:bg-[rgba(245,242,234,0.03)] hover:text-[#F5F2EA]'
+                ? 'bg-[#D4AF37] text-white shadow-sm' 
+                : 'text-soft hover:bg-[rgba(0,0,0,0.03)] hover:text-[#1F2937]'
             }`}
           >
             <PackageSearch className="h-5 w-5" /> Kelola Katalog
@@ -56,8 +56,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
             onClick={onClose}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
               location.pathname.includes('/admin/accounts') 
-                ? 'bg-[rgba(245,242,234,0.08)] text-[#F4D35E]' 
-                : 'text-soft hover:bg-[rgba(245,242,234,0.03)] hover:text-[#F5F2EA]'
+                ? 'bg-[#D4AF37] text-white shadow-sm' 
+                : 'text-soft hover:bg-[rgba(0,0,0,0.03)] hover:text-[#1F2937]'
             }`}
           >
             <Users className="h-5 w-5" /> Kelola Akun
