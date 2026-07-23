@@ -4,7 +4,7 @@ import { MapPin, Phone, Mail } from 'lucide-react'
 export default function PublicFooter() {
   return (
     <footer className="border-t border-[rgba(212,175,55,0.2)] bg-[#101010]">
-      <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-10 md:grid-cols-3 md:px-6">
+      <div className="mx-auto grid w-full max-w-7xl gap-8 px-4 py-10 md:grid-cols-3 md:px-6">
         <div>
           <p className="section-label">Glory Maspro</p>
           <p className="mt-4 max-w-sm text-sm leading-7 text-soft">
@@ -16,7 +16,7 @@ export default function PublicFooter() {
           <h4 className="text-sm font-semibold tracking-[0.22em] text-[#F5F2EA] uppercase">Tautan</h4>
           <ul className="mt-4 space-y-3 text-sm text-soft">
             <li>
-              <Link to="/" className="transition hover:text-[#D4AF37]">
+              <Link to="/" className="text-[#6b7280] transition-colors duration-300 hover:text-[#e9d387] hover:drop-shadow-[0_0_8px_rgba(233,211,135,0.4)]">
                 Katalog Properti
               </Link>
             </li>

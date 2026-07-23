@@ -1,22 +1,55 @@
-import { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import axios from 'axios'
 import AdminTopbar from '../components/admin/AdminTopbar'
 import AdminSidebar from '../components/admin/AdminSidebar'
 
 export default function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [isChecking, setIsChecking] = useState(true)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      navigate('/admin/login')
+      return
+    }
+
+    const verifyToken = async () => {
+      try {
+        await axios.get('http://127.0.0.1:8000/api/user', {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        setIsChecking(false)
+      } catch (error) {
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
+        navigate('/admin/login')
+      }
+    }
+
+    verifyToken()
+  }, [navigate])
+
+  if (isChecking) {
+    return <div className="flex min-h-screen items-center justify-center bg-[#FDFBF7]">Loading...</div>
+  }
 
   return (
-    <div className="flex min-h-screen w-full bg-transparent text-[#1F2937]">
+    <div className="flex min-h-screen w-full bg-gradient-to-br from-[#e9d387] via-[#f9e7a9] to-[#e9d387] text-[#1F2937]">
       {/* Decorative background layer matching public side */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden" style={{ zIndex: 0 }}>
-        <div className="absolute -top-20 left-1/2 -translate-x-1/2 h-[400px] w-[800px] rounded-full bg-[#F5D87A]/30 blur-[100px]" />
-        <div className="absolute top-1/3 -right-20 h-[350px] w-[350px] rounded-full bg-[#C9A84C]/20 blur-[80px]" />
-        <div className="absolute bottom-0 -left-20 h-[300px] w-[400px] rounded-full bg-[#D4AF37]/15 blur-[80px]" />
-        <svg className="absolute inset-0 h-full w-full opacity-[0.06]" xmlns="http://www.w3.org/2000/svg">
+        {/* White and soft gold gradient blobs for depth */}
+        <div className="absolute -top-40 -right-40 h-[600px] w-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%)' }} />
+        <div className="absolute top-1/4 -left-20 h-[500px] w-[500px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(253,245,211,0.6) 0%, rgba(253,245,211,0) 70%)' }} />
+        <div className="absolute bottom-0 right-1/4 h-[400px] w-[600px] rounded-full" style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0) 70%)' }} />
+        <svg className="absolute inset-0 h-full w-full opacity-[0.03]" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
-              <circle cx="1.5" cy="1.5" r="1.5" fill="#7A5C00" />
+              <circle cx="1.5" cy="1.5" r="1.5" fill="#B8860B" />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#dots)" />
@@ -32,9 +65,18 @@ export default function AdminLayout() {
 
       {/* Main Content Area */}
       <main className="relative mt-16 flex-1 w-full p-4 md:mt-0 md:ml-64 md:p-8 overflow-x-hidden" style={{ zIndex: 1 }}>
-        <div className="mx-auto w-full max-w-6xl animate-fade-in">
-          <Outlet />
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div 
+            key={location.pathname}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="mx-auto w-full max-w-6xl"
+          >
+            <Outlet />
+          </motion.div>
+        </AnimatePresence>
       </main>
     </div>
   )

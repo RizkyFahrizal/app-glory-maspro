@@ -4,7 +4,7 @@ import PublicFooter from '../components/public/PublicFooter'
 
 export default function PublicLayout() {
   return (
-    <div className="min-h-screen flex flex-col bg-transparent text-[#1F2937]">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#e9d387] via-[#f9e7a9] to-[#e9d387] text-[#1F2937]">
       {/* Decorative background layer */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden" style={{ zIndex: 0 }}>
         {/* Warm gold gradient blobs for depth */}
@@ -28,7 +28,7 @@ export default function PublicLayout() {
 
       <PublicNavbar />
 
-      <main className="relative mx-auto w-full max-w-6xl flex-1 px-6 pt-4 pb-10" style={{ zIndex: 1 }}>
+      <main className="relative mx-auto w-full max-w-7xl flex-1 px-6 pt-4 pb-10" style={{ zIndex: 1 }}>
         <Outlet />
       </main>
 

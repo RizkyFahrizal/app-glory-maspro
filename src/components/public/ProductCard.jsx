@@ -5,6 +5,16 @@ import { MapPin, BedDouble, Bath, Scaling, ChevronLeft, ChevronRight } from 'luc
 export default function ProductCard({ product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
+  const formatShortPrice = (price) => {
+    if (!price) return 'Rp 0'
+    if (price >= 1000000000) {
+      return `Rp ${(price / 1000000000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} M`
+    } else if (price >= 1000000) {
+      return `Rp ${(price / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} Jt`
+    }
+    return `Rp ${price.toLocaleString('id-ID')}`
+  }
+
   const handleNextImage = (e) => {
     e.preventDefault()
     if (product.images && product.images.length > 0) {
@@ -31,13 +41,25 @@ export default function ProductCard({ product }) {
               className="flex h-full w-full transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
             >
-              {product.images.map((img) => (
-                <div key={img.id} className="h-full w-full flex-shrink-0 overflow-hidden">
-                  <img
-                    src={img.image_path}
-                    alt={product.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+              {[...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1)).map((img) => (
+                <div key={img.id} className="h-full w-full flex-shrink-0 overflow-hidden bg-gray-100">
+                  {img.image_path.match(/\.(mp4|webm)$/) ? (
+                    <video
+                      src={img.image_path}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      muted loop playsInline autoPlay
+                    />
+                  ) : (
+                    <img
+                      src={img.image_path}
+                      alt={product.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                      }}
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -72,21 +94,41 @@ export default function ProductCard({ product }) {
           <div className="flex h-full w-full items-center justify-center text-sm text-soft">No Image</div>
         )}
         <span className="absolute right-3 top-3 z-10 rounded-full border border-[rgba(212,175,55,0.2)] bg-white/86 px-3 py-1 text-[10px] font-semibold tracking-[0.18em] text-[#D4AF37]">
-          {product.status === 'Available' ? 'TERSEDIA' : 'TERJUAL'}
+          {product.status?.toLowerCase() === 'available' ? 'TERSEDIA' : 'TERJUAL'}
         </span>
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="line-clamp-1 text-lg font-semibold text-[#1F2937] transition-colors group-hover:text-[#B8860B]">
+        <div className="mb-2 flex items-start justify-between gap-2">
+          <span className="h-fit shrink-0 rounded-full bg-[#D4AF37]/10 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#B8860B] border border-[#D4AF37]/20 uppercase">
+            {product.property_type || 'Rumah'}
+          </span>
+          <div className="flex flex-col items-end text-right">
+            <div className="flex items-center gap-1 text-[#1F2937]">
+              <MapPin className="h-3 w-3 text-[#D4AF37]" />
+              <span className="text-xs font-semibold">{product.location}</span>
+            </div>
+            {product.address && (
+              <span className="mt-0.5 max-w-[160px] line-clamp-1 text-[10px] text-soft">{product.address}</span>
+            )}
+          </div>
+        </div>
+        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-[#1F2937] transition-colors group-hover:text-[#B8860B]">
           {product.title}
         </h3>
-        <p className="mt-2 flex items-center gap-2 text-sm text-soft">
-          <MapPin className="h-4 w-4 text-[#D4AF37]" /> {product.location}
-        </p>
 
-        <div className="mt-4 text-2xl font-semibold text-[#B8860B]">
-          {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price)}
+        <div className="mt-3 text-xl font-bold text-[#B8860B] md:text-2xl">
+          {product.price_start === product.price_end 
+            ? formatShortPrice(product.price_start)
+            : `${formatShortPrice(product.price_start)} - ${formatShortPrice(product.price_end)}`
+          }
         </div>
+        
+        {product.description && (
+          <p className="mt-2 text-xs text-soft line-clamp-2 leading-relaxed">
+            {product.description}
+          </p>
+        )}
 
         <div className="mt-auto border-t border-[rgba(0,0,0,0.06)] pt-4">
           <div className="grid grid-cols-3 gap-2 text-[11px] font-medium text-[#1F2937] md:text-xs">
