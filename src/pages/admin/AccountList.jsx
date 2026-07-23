@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Plus, Search, X, SearchX, RefreshCcw } from 'lucide-react'
 import axios from 'axios'
 import AccountCard from '../../components/admin/AccountCard'
 import SuccessModal from '../../components/admin/SuccessModal'
 import DeleteModal from '../../components/admin/DeleteModal'
+import AlertModal from '../../components/admin/AlertModal'
+import RoleNotice from '../../components/admin/RoleNotice'
 
 const SkeletonAccountCard = () => (
   <div className="relative overflow-hidden rounded-[2rem] border border-[rgba(0,0,0,0.04)] bg-gradient-to-br from-white to-[#FDF5D3]/50 p-6 shadow-sm">
@@ -46,6 +48,12 @@ export default function AccountList() {
   const [adminAccounts, setAdminAccounts] = useState([])
   const [marketingQueue, setMarketingQueue] = useState([])
   const [loading, setLoading] = useState(true)
+  const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
+
+  const userData = JSON.parse(localStorage.getItem('user') || '{}')
+  const isMarketing = userData.role?.toLowerCase() === 'marketing'
+  const location = useLocation()
+  const wasRedirected = location.state?.restricted
 
   const [isRefreshing, setIsRefreshing] = useState(false)
 
@@ -106,7 +114,7 @@ export default function AccountList() {
       fetchAccounts() // Refresh list after delete
     } catch (error) {
       console.error('Failed to delete account:', error)
-      alert(error.response?.data?.message || 'Gagal menghapus akun.')
+      setAlertInfo({ isOpen: true, title: 'Gagal Menghapus', message: error.response?.data?.message || 'Gagal menghapus akun.' })
     } finally {
       setAccountToDelete(null)
     }
@@ -176,13 +184,19 @@ export default function AccountList() {
           <p className="mt-2 text-sm text-soft">Manajemen akses admin dan tim marketing.</p>
         </div>
         
-        <Link 
-          to="/admin/accounts/create" 
-          className="btn-gold flex shrink-0 items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition"
-        >
-          <Plus className="h-5 w-5" /> Tambah Akun Baru
-        </Link>
+        {!isMarketing && (
+          <Link 
+            to="/admin/accounts/create" 
+            className="btn-gold flex shrink-0 items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition"
+          >
+            <Plus className="h-5 w-5" /> Tambah Akun Baru
+          </Link>
+        )}
       </div>
+
+      {(isMarketing || wasRedirected) && (
+        <RoleNotice message="Role Marketing hanya dapat melihat data akun. Tambah, ubah, dan hapus akun hanya bisa dilakukan oleh Admin." />
+      )}
 
       {/* Admin Section Box */}
       <div className="mt-8 rounded-3xl bg-white p-6 md:p-8 border border-[rgba(0,0,0,0.06)] shadow-sm">
@@ -218,6 +232,7 @@ export default function AccountList() {
                 <AccountCard 
                   key={account.id} 
                   account={account} 
+                  isViewerMarketing={isMarketing}
                   onDelete={() => setAccountToDelete(account)}
                 />
               ))
@@ -276,17 +291,19 @@ export default function AccountList() {
             {filteredMarketing.length > 0 ? (
               filteredMarketing.map((account, index) => (
                 <AccountCard 
-                  key={account.id}
-                  account={account}
-                  index={index}
-                  isMarketing={true}
-                  isCurrentTurn={account.id === currentTurnId}
-                  isFirst={index === 0}
-                  isLast={index === marketingQueue.length - 1}
-                  onMoveUp={() => moveUp(index)}
-                  onMoveDown={() => moveDown(index)}
-                  onDelete={() => setAccountToDelete(account)}
-                />
+                   key={account.id}
+                   account={account}
+                   index={index}
+                   isMarketing={true}
+                   isViewerMarketing={isMarketing}
+                   viewerAccountId={userData.id}
+                   isCurrentTurn={account.id === currentTurnId}
+                   isFirst={index === 0}
+                   isLast={index === marketingQueue.length - 1}
+                   onMoveUp={() => moveUp(index)}
+                   onMoveDown={() => moveDown(index)}
+                   onDelete={() => setAccountToDelete(account)}
+                 />
               ))
             ) : (
               <EmptyState onReset={() => setMarketingSearch('')} />
@@ -306,6 +323,13 @@ export default function AccountList() {
         isOpen={showSuccessDelete}
         title="Berhasil Dihapus"
         message="Akun pengguna telah dihapus dari sistem."
+      />
+
+      <AlertModal
+        isOpen={alertInfo.isOpen}
+        title={alertInfo.title}
+        message={alertInfo.message}
+        onOk={() => setAlertInfo({ ...alertInfo, isOpen: false })}
       />
     </div>
   )

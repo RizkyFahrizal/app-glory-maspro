@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Plus, Pencil, Trash2, Search, X, Eye } from 'lucide-react'
 import axios from 'axios'
 import DeleteModal from '../../components/admin/DeleteModal'
 import SuccessModal from '../../components/admin/SuccessModal'
+import AlertModal from '../../components/admin/AlertModal'
+import RoleNotice from '../../components/admin/RoleNotice'
 
 export default function ProductList() {
   const [products, setProducts] = useState([])
@@ -11,6 +13,12 @@ export default function ProductList() {
   const [productToDelete, setProductToDelete] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
+
+  const userData = JSON.parse(localStorage.getItem('user') || '{}')
+  const isMarketing = userData.role?.toLowerCase() === 'marketing'
+  const location = useLocation()
+  const wasRedirected = location.state?.restricted
 
   useEffect(() => {
     fetchProducts()
@@ -48,7 +56,6 @@ export default function ProductList() {
     if (!productToDelete) return
 
     try {
-      // Setup token if auth is enabled later, here assuming admin is using it locally for now or passing token
       const token = localStorage.getItem('token') || ''
       const res = await axios.delete(`http://127.0.0.1:8000/api/products/${productToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -60,7 +67,7 @@ export default function ProductList() {
       }
     } catch (error) {
       console.error('Failed to delete product:', error)
-      alert('Gagal menghapus properti')
+      setAlertInfo({ isOpen: true, title: 'Gagal Menghapus', message: error.response?.data?.message || 'Gagal menghapus properti. Coba lagi.' })
     } finally {
       setProductToDelete(null)
     }
@@ -79,13 +86,19 @@ export default function ProductList() {
           <p className="mt-2 text-sm text-soft">Manajemen data properti eksklusif perusahaan.</p>
         </div>
         
-        <Link 
-          to="/admin/products/create" 
-          className="btn-gold flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition"
-        >
-          <Plus className="h-5 w-5" /> Tambah Properti Baru
-        </Link>
+        {!isMarketing && (
+          <Link 
+            to="/admin/products/create" 
+            className="btn-gold flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition"
+          >
+            <Plus className="h-5 w-5" /> Tambah Properti Baru
+          </Link>
+        )}
       </div>
+
+      {(isMarketing || wasRedirected) && (
+        <RoleNotice message="Role Marketing hanya dapat melihat data properti. Tambah, ubah, dan hapus properti hanya bisa dilakukan oleh Admin." />
+      )}
 
       <div className="mt-8 glass-panel animate-fade-in overflow-hidden rounded-3xl border border-[rgba(0,0,0,0.06)] bg-white">
         {/* Table Toolbar */}
@@ -192,20 +205,24 @@ export default function ProductList() {
                         >
                           <Eye className="h-4 w-4" />
                         </Link>
-                        <Link 
-                          to={`/admin/products/edit/${product.id}`}
-                          className="rounded-xl p-2 text-soft transition hover:bg-white hover:text-[#D4AF37] hover:shadow-sm"
-                          title="Edit Properti"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Link>
-                        <button 
-                          onClick={() => setProductToDelete(product)}
-                          className="rounded-xl p-2 text-soft transition hover:bg-white hover:text-red-500 hover:shadow-sm"
-                          title="Hapus Properti"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
+                        {!isMarketing && (
+                          <>
+                            <Link 
+                              to={`/admin/products/edit/${product.id}`}
+                              className="rounded-xl p-2 text-soft transition hover:bg-white hover:text-[#D4AF37] hover:shadow-sm"
+                              title="Edit Properti"
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Link>
+                            <button 
+                              onClick={() => setProductToDelete(product)}
+                              className="rounded-xl p-2 text-soft transition hover:bg-white hover:text-red-500 hover:shadow-sm"
+                              title="Hapus Properti"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -244,6 +261,13 @@ export default function ProductList() {
         isOpen={showSuccess}
         title="Berhasil Dihapus"
         message="Data properti telah dihapus dari katalog."
+      />
+
+      <AlertModal
+        isOpen={alertInfo.isOpen}
+        title={alertInfo.title}
+        message={alertInfo.message}
+        onOk={() => setAlertInfo({ ...alertInfo, isOpen: false })}
       />
     </div>
   )

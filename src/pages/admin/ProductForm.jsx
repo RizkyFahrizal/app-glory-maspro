@@ -18,6 +18,15 @@ export default function ProductForm() {
   const [imageToDelete, setImageToDelete] = useState(null)
   const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
 
+  // Role guard: marketing cannot create/edit products
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}')
+    const isMarketing = userData.role?.toLowerCase() === 'marketing'
+    if (isMarketing && (location.pathname.includes('/create') || location.pathname.includes('/edit'))) {
+      navigate('/admin/products', { replace: true, state: { restricted: true } })
+    }
+  }, [location.pathname, navigate])
+
   const [formData, setFormData] = useState({
     title: '',
     price_start: '',

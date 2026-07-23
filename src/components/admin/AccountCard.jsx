@@ -5,6 +5,8 @@ export default function AccountCard({
   account, 
   index = null, 
   isMarketing = false, 
+  isViewerMarketing = false,
+  viewerAccountId = null,
   isCurrentTurn = false,
   isFirst = false,
   isLast = false,
@@ -12,6 +14,10 @@ export default function AccountCard({
   onMoveDown,
   onDelete
 }) {
+  // Marketing viewer can only edit their own card
+  const isOwnCard = isViewerMarketing && viewerAccountId && viewerAccountId === account.id
+  const canEdit = !isViewerMarketing || isOwnCard
+  const canDelete = !isViewerMarketing
   return (
     <div 
       className={`glass-panel group relative flex flex-col overflow-hidden rounded-[2rem] border p-6 transition-all shadow-sm ${
@@ -30,35 +36,40 @@ export default function AccountCard({
           }`}>
             #{index + 1}
           </span>
-          <div className="flex flex-col mt-1 opacity-0 transition-opacity group-hover:opacity-100">
-            <button 
-              onClick={() => onMoveUp(index)}
-              disabled={isFirst}
-              className="p-1 text-soft transition hover:text-[#C9AA4A] disabled:opacity-30 disabled:hover:text-soft"
-            >
-              <ChevronUp className="h-4 w-4" />
-            </button>
-            <button 
-              onClick={() => onMoveDown(index)}
-              disabled={isLast}
-              className="p-1 text-soft transition hover:text-[#D4AF37] disabled:opacity-30 disabled:hover:text-soft"
-            >
-              <ChevronDown className="h-4 w-4" />
-            </button>
-          </div>
+          {/* Only admin can reorder the queue */}
+          {!isViewerMarketing && (
+            <div className="flex flex-col mt-1 opacity-0 transition-opacity group-hover:opacity-100">
+              <button 
+                onClick={() => onMoveUp(index)}
+                disabled={isFirst}
+                className="p-1 text-soft transition hover:text-[#C9AA4A] disabled:opacity-30 disabled:hover:text-soft"
+              >
+                <ChevronUp className="h-4 w-4" />
+              </button>
+              <button 
+                onClick={() => onMoveDown(index)}
+                disabled={isLast}
+                className="p-1 text-soft transition hover:text-[#D4AF37] disabled:opacity-30 disabled:hover:text-soft"
+              >
+                <ChevronDown className="h-4 w-4" />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
       {/* Action Buttons (Hover) */}
       <div className="absolute right-4 top-4 z-10 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
-        <Link 
-          to={`/admin/accounts/edit/${account.id}`}
-          className="rounded-full bg-white/90 p-2 text-soft shadow-sm backdrop-blur-sm transition hover:text-[#D4AF37]"
-          title="Edit Akun"
-        >
-          <Pencil className="h-4 w-4" />
-        </Link>
-        {account.name !== 'Super Admin' && (
+        {canEdit && (
+          <Link 
+            to={`/admin/accounts/edit/${account.id}`}
+            className="rounded-full bg-white/90 p-2 text-soft shadow-sm backdrop-blur-sm transition hover:text-[#D4AF37]"
+            title="Edit Akun"
+          >
+            <Pencil className="h-4 w-4" />
+          </Link>
+        )}
+        {canDelete && account.name !== 'Super Admin' && (
           <button 
             onClick={() => onDelete(account)}
             className="rounded-full bg-white/90 p-2 text-soft shadow-sm backdrop-blur-sm transition hover:text-red-500"

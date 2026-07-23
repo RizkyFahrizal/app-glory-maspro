@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, ImagePlus, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ImagePlus, ChevronDown, X } from 'lucide-react'
 import axios from 'axios'
 import SuccessModal from '../../components/admin/SuccessModal'
 import AlertModal from '../../components/admin/AlertModal'
@@ -17,17 +17,21 @@ export default function AccountForm() {
 
   useEffect(() => {
     if (isMarketing) {
-      if (!isEdit || userData.id !== parseInt(id)) {
+      // marketing can ONLY access edit page for their own account
+      const canAccess = isEdit && String(userData.id) === String(id)
+      if (!canAccess) {
         navigate('/admin/accounts', { state: { restricted: true } })
       }
     }
   }, [isMarketing, isEdit, id, navigate, userData.id])
+
   const [isFetching, setIsFetching] = useState(isEdit)
   const [isSuperAdmin, setIsSuperAdmin] = useState(false)
   const [loading, setLoading] = useState(false)
   const fileInputRef = useRef(null)
   const [photoPreview, setPhotoPreview] = useState(null)
   const [photoBase64, setPhotoBase64] = useState(null)
+  const [removePhoto, setRemovePhoto] = useState(false)
 
   const [formData, setFormData] = useState({
     name: '',
@@ -87,6 +91,16 @@ export default function AccountForm() {
     }
   }
 
+  const handleRemovePhoto = (e) => {
+    e.stopPropagation()
+    setPhotoPreview(null)
+    setPhotoBase64(null)
+    setRemovePhoto(true)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -118,6 +132,8 @@ export default function AccountForm() {
 
       if (photoBase64) {
         payload.photo_base64 = photoBase64;
+      } else if (removePhoto) {
+        payload.remove_photo = true;
       }
 
       if (formData.role === 'Marketing') {
@@ -178,6 +194,7 @@ export default function AccountForm() {
         ) : (
           <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
+            {/* === KOLOM KIRI === */}
             <div className="space-y-6">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Lengkap</label>
@@ -196,19 +213,26 @@ export default function AccountForm() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Role (Hak Akses)</label>
-                  <div className="relative">
-                    <select
-                      name="role"
-                      value={formData.role}
-                      onChange={handleInputChange}
-                      disabled={isSuperAdmin}
-                      className={`input-minimal w-full appearance-none rounded-2xl py-3 pl-4 pr-10 ${isSuperAdmin ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white cursor-pointer'}`}
-                    >
-                      <option value="Marketing">Marketing</option>
-                      <option value="Admin">Admin</option>
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-soft" />
-                  </div>
+                  {isMarketing ? (
+                    /* Marketing: role is view-only */
+                    <div className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-100 text-gray-500 cursor-not-allowed select-none">
+                      {formData.role}
+                    </div>
+                  ) : (
+                    <div className="relative">
+                      <select
+                        name="role"
+                        value={formData.role}
+                        onChange={handleInputChange}
+                        disabled={isSuperAdmin}
+                        className={`input-minimal w-full appearance-none rounded-2xl py-3 pl-4 pr-10 ${isSuperAdmin ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white cursor-pointer'}`}
+                      >
+                        <option value="Marketing">Marketing</option>
+                        <option value="Admin">Admin</option>
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-soft" />
+                    </div>
+                  )}
                 </div>
 
                 {formData.role === 'Marketing' && (
@@ -225,6 +249,20 @@ export default function AccountForm() {
                   </div>
                 )}
               </div>
+
+              {formData.role === 'Marketing' && (
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Area Cakupan (Coverage)</label>
+                  <input
+                    type="text"
+                    name="coverage_area"
+                    value={formData.coverage_area}
+                    onChange={handleInputChange}
+                    placeholder="Contoh: Semua Wilayah, Jakarta Selatan..."
+                    className="input-minimal w-full rounded-2xl py-3 px-4"
+                  />
+                </div>
+              )}
 
               {formData.role === 'Marketing' && (
                 <div>
@@ -254,19 +292,6 @@ export default function AccountForm() {
                 />
               </div>
 
-              {formData.role === 'Marketing' && (
-                <div>
-                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Area Cakupan (Coverage)</label>
-                  <textarea
-                    name="coverage_area"
-                    value={formData.coverage_area}
-                    onChange={handleInputChange}
-                    placeholder="Contoh: Semua Wilayah, Jakarta Selatan..."
-                    className="input-minimal w-full rounded-2xl py-3 px-4 min-h-[100px] resize-none"
-                  />
-                </div>
-              )}
-
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Password</label>
                 <input
@@ -281,6 +306,7 @@ export default function AccountForm() {
               </div>
             </div>
 
+            {/* === KOLOM KANAN === */}
             <div className="space-y-6">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Foto Profil</label>
@@ -295,10 +321,20 @@ export default function AccountForm() {
 
                 <div
                   onClick={handlePhotoClick}
-                  className="flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] py-16 transition hover:bg-[#F3F4F6] cursor-pointer"
+                  className="group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] py-16 transition hover:bg-[#F3F4F6] cursor-pointer"
                 >
                   {photoPreview ? (
-                    <img src={photoPreview} alt="Preview" className="h-full w-full object-cover max-h-[250px]" />
+                    <>
+                      <img src={photoPreview} alt="Preview" className="h-full w-full object-cover max-h-[250px]" />
+                      <button
+                        type="button"
+                        onClick={handleRemovePhoto}
+                        className="absolute right-4 top-4 rounded-full bg-red-500 p-2 text-white shadow-md transition-transform hover:scale-110 opacity-0 group-hover:opacity-100"
+                        title="Hapus Foto"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </>
                   ) : (
                     <>
                       <ImagePlus className="mb-3 h-10 w-10 text-[#D4AF37]" />
@@ -309,6 +345,7 @@ export default function AccountForm() {
                 </div>
               </div>
             </div>
+
 
             <div className="md:col-span-2 mt-6 flex gap-4 border-t border-[rgba(0,0,0,0.06)] pt-8">
               <button type="submit" disabled={loading} className="btn-gold flex-1 rounded-2xl py-4 font-bold text-sm transition disabled:opacity-50">
