@@ -268,305 +268,318 @@ export default function ProductForm() {
         </div>
       ) : (
         <form onSubmit={handleSave} className="glass-panel rounded-3xl p-6 md:p-10 border border-[rgba(0,0,0,0.06)] bg-white">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          
-          {/* Kiri: Info Utama */}
-          <div className="space-y-6">
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Properti</label>
-              <input 
-                required
-                type="text" 
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                placeholder="Contoh: Villa Mewah Bali..." 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+
+            {/* Kiri: Info Utama */}
+            <div className="space-y-6">
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Mulai</label>
-                <div className="relative flex items-center">
-                  <input 
-                    required
-                    type="number" 
-                    name="price_start"
-                    value={formData.price_start}
-                    onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
-                    {isView ? (
-                      <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_start_multiplier}</div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleInputChange({ target: { name: 'price_start_multiplier', value: formData.price_start_multiplier === 'Jt' ? 'M' : 'Jt' } })}
-                        className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
-                      >
-                        {formData.price_start_multiplier}
-                      </button>
-                    )}
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Properti</label>
+                <input
+                  required
+                  type="text"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  placeholder="Contoh: Villa Mewah Bali..."
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Mulai</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="price_start"
+                      value={formData.price_start}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
+                      {isView ? (
+                        <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_start_multiplier}</div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleInputChange({ target: { name: 'price_start_multiplier', value: formData.price_start_multiplier === 'Jt' ? 'M' : 'Jt' } })}
+                          className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
+                        >
+                          {formData.price_start_multiplier}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Sampai</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="price_end"
+                      value={formData.price_end}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
+                      {isView ? (
+                        <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_end_multiplier}</div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleInputChange({ target: { name: 'price_end_multiplier', value: formData.price_end_multiplier === 'Jt' ? 'M' : 'Jt' } })}
+                          className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
+                        >
+                          {formData.price_end_multiplier}
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Sampai</label>
-                <div className="relative flex items-center">
-                  <input 
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Tipe Properti</label>
+                  <input
                     required
-                    type="number" 
-                    name="price_end"
-                    value={formData.price_end}
+                    type="text"
+                    name="property_type"
+                    value={formData.property_type}
                     onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    placeholder="Contoh: Rumah / Gudang"
+                    disabled={isView}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
                   />
-                  <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
-                    {isView ? (
-                      <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_end_multiplier}</div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleInputChange({ target: { name: 'price_end_multiplier', value: formData.price_end_multiplier === 'Jt' ? 'M' : 'Jt' } })}
-                        className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
-                      >
-                        {formData.price_end_multiplier}
-                      </button>
-                    )}
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Status Ketersediaan</label>
+                  {isView ? (
+                    <input type="text" value={formData.status === 'sold' ? 'Terjual / Sold Out' : 'Tersedia'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                  ) : (
+                    <CustomSelect
+                      name="status"
+                      value={formData.status}
+                      onChange={handleInputChange}
+                      disabled={isView}
+                      placeholder="Pilih Status"
+                      options={[
+                        { label: "Tersedia", value: "available" },
+                        { label: "Terjual / Sold Out", value: "sold" }
+                      ]}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi Singkat</label>
+                <input
+                  required
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder="Contoh: Jakarta Selatan"
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Alamat Lengkap</label>
+                <textarea
+                  required
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  rows="2"
+                  placeholder="Alamat detail properti..."
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                ></textarea>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Catatan Tambahan (Internal)</label>
+                <textarea
+                  name="note"
+                  value={formData.note}
+                  onChange={handleInputChange}
+                  rows="2"
+                  placeholder="Tuliskan catatan tambahan..."
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                ></textarea>
+              </div>
+            </div>
+
+            {/* Kanan: Spesifikasi & Deskripsi */}
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Tidur</label>
+                  <input
+                    required
+                    type="number"
+                    name="bedrooms"
+                    value={formData.bedrooms}
+                    onChange={handleInputChange}
+                    placeholder="0"
+                    disabled={isView}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Mandi</label>
+                  <input
+                    required
+                    type="number"
+                    name="bathrooms"
+                    value={formData.bathrooms}
+                    onChange={handleInputChange}
+                    placeholder="0"
+                    disabled={isView}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Tanah</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="land_area"
+                      value={formData.land_area}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Bangunan</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="building_area"
+                      value={formData.building_area}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Tipe Properti</label>
-                <input 
-                  required
-                  type="text" 
-                  name="property_type" 
-                  value={formData.property_type} 
-                  onChange={handleInputChange} 
-                  placeholder="Contoh: Rumah / Gudang"
-                  disabled={isView} 
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Status Ketersediaan</label>
-                {isView ? (
-                  <input type="text" value={formData.status === 'sold' ? 'Terjual / Sold Out' : 'Tersedia'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
-                ) : (
-                  <CustomSelect 
-                    name="status" 
-                    value={formData.status} 
-                    onChange={handleInputChange} 
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Sertifikat</label>
+                  <input
+                    type="text"
+                    name="certificate"
+                    value={formData.certificate}
+                    onChange={handleInputChange}
+                    placeholder="SHM / HGB"
                     disabled={isView}
-                    placeholder="Pilih Status"
-                    options={[
-                      { label: "Tersedia", value: "available" },
-                      { label: "Terjual / Sold Out", value: "sold" }
-                    ]}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
                   />
-                )}
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Listrik</label>
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      name="electricity"
+                      value={formData.electricity}
+                      onChange={handleInputChange}
+                      placeholder="2200"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">VA</span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi Singkat</label>
-              <input 
-                required
-                type="text" 
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                placeholder="Contoh: Jakarta Selatan" 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              />
-            </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kondisi Perabotan</label>
+                  {isView ? (
+                    <input type="text" value={formData.furnish} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                  ) : (
+                    <CustomSelect
+                      name="furnish"
+                      value={formData.furnish}
+                      onChange={handleInputChange}
+                      disabled={isView}
+                      placeholder="Pilih Perabotan"
+                      options={[
+                        { label: "Non-Furnished", value: "Non-Furnished" },
+                        { label: "Semi-Furnished", value: "Semi-Furnished" },
+                        { label: "Fully-Furnished", value: "Fully-Furnished" }
+                      ]}
+                    />
+                  )}
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Arah Hadap</label>
+                  {isView ? (
+                    <input type="text" value={formData.facing} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                  ) : (
+                    <CustomSelect
+                      name="facing"
+                      value={formData.facing}
+                      onChange={handleInputChange}
+                      disabled={isView}
+                      placeholder="Pilih Arah"
+                      options={[
+                        { label: "Utara", value: "Utara" },
+                        { label: "Timur laut", value: "Timur laut" },
+                        { label: "Timur", value: "Timur" },
+                        { label: "Tenggara", value: "Tenggara" },
+                        { label: "Selatan", value: "Selatan" },
+                        { label: "Barat daya", value: "Barat daya" },
+                        { label: "Barat", value: "Barat" },
+                        { label: "Barat laut", value: "Barat laut" }
+                      ]}
+                    />
+                  )}
+                </div>
+              </div>
 
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Alamat Lengkap</label>
-              <textarea 
-                required
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                rows="2"
-                placeholder="Alamat detail properti..." 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              ></textarea>
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Deskripsi Lengkap</label>
+                <textarea
+                  required
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows="7"
+                  placeholder="Tuliskan spesifikasi, keunggulan, dan deskripsi detail properti..."
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                ></textarea>
+              </div>
             </div>
           </div>
 
-          {/* Kanan: Spesifikasi & Deskripsi */}
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Tidur</label>
-                <input 
-                  required
-                  type="number" 
-                  name="bedrooms"
-                  value={formData.bedrooms}
-                  onChange={handleInputChange}
-                  placeholder="0" 
-                  disabled={isView} 
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Mandi</label>
-                <input 
-                  required
-                  type="number" 
-                  name="bathrooms"
-                  value={formData.bathrooms}
-                  onChange={handleInputChange}
-                  placeholder="0" 
-                  disabled={isView} 
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Tanah</label>
-                <div className="relative flex items-center">
-                  <input 
-                    required
-                    type="number" 
-                    name="land_area"
-                    value={formData.land_area}
-                    onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
-                </div>
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Bangunan</label>
-                <div className="relative flex items-center">
-                  <input 
-                    required
-                    type="number" 
-                    name="building_area"
-                    value={formData.building_area}
-                    onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Sertifikat</label>
-                <input 
-                  type="text" 
-                  name="certificate"
-                  value={formData.certificate}
-                  onChange={handleInputChange}
-                  placeholder="SHM / HGB" 
-                  disabled={isView} 
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Listrik</label>
-                <div className="relative flex items-center">
-                  <input 
-                    type="text" 
-                    name="electricity"
-                    value={formData.electricity}
-                    onChange={handleInputChange}
-                    placeholder="2200" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">VA</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kondisi Perabotan</label>
-                {isView ? (
-                  <input type="text" value={formData.furnish} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
-                ) : (
-                  <CustomSelect 
-                    name="furnish" 
-                    value={formData.furnish} 
-                    onChange={handleInputChange} 
-                    disabled={isView}
-                    placeholder="Pilih Perabotan"
-                    options={[
-                      { label: "Non-Furnished", value: "Non-Furnished" },
-                      { label: "Semi-Furnished", value: "Semi-Furnished" },
-                      { label: "Fully-Furnished", value: "Fully-Furnished" }
-                    ]}
-                  />
-                )}
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Arah Hadap</label>
-                {isView ? (
-                  <input type="text" value={formData.facing} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
-                ) : (
-                  <CustomSelect 
-                    name="facing" 
-                    value={formData.facing} 
-                    onChange={handleInputChange} 
-                    disabled={isView}
-                    placeholder="Pilih Arah"
-                    options={[
-                      { label: "Utara", value: "Utara" },
-                      { label: "Timur laut", value: "Timur laut" },
-                      { label: "Timur", value: "Timur" },
-                      { label: "Tenggara", value: "Tenggara" },
-                      { label: "Selatan", value: "Selatan" },
-                      { label: "Barat daya", value: "Barat daya" },
-                      { label: "Barat", value: "Barat" },
-                      { label: "Barat laut", value: "Barat laut" }
-                    ]}
-                  />
-                )}
-              </div>
-            </div>
-            
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Deskripsi Lengkap</label>
-              <textarea 
-                required
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows="4"
-                placeholder="Tuliskan spesifikasi, keunggulan, dan deskripsi detail properti..." 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              ></textarea>
-            </div>
-          </div>
-        </div>
-
-        {/* Media Section */}
+          {/* Media Section */}
           <div className="mt-8 border-t border-[rgba(0,0,0,0.06)] pt-8">
             <h2 className="mb-4 text-lg font-bold text-[#1F2937]">Media Properti (Foto & Video)</h2>
 
@@ -662,7 +675,7 @@ export default function ProductForm() {
         </form>
       )}
 
-      <AlertModal 
+      <AlertModal
         isOpen={alertInfo.isOpen}
         title={alertInfo.title}
         message={alertInfo.message}
