@@ -5,6 +5,16 @@ import { MapPin, BedDouble, Bath, Scaling, ChevronLeft, ChevronRight } from 'luc
 export default function ProductCard({ product }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
+  const formatShortPrice = (price) => {
+    if (!price) return 'Rp 0'
+    if (price >= 1000000000) {
+      return `Rp ${(price / 1000000000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} M`
+    } else if (price >= 1000000) {
+      return `Rp ${(price / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 })} Jt`
+    }
+    return `Rp ${price.toLocaleString('id-ID')}`
+  }
+
   const handleNextImage = (e) => {
     e.preventDefault()
     if (product.images && product.images.length > 0) {
@@ -24,20 +34,32 @@ export default function ProductCard({ product }) {
       to={`/product/${product.slug}`}
       className="card-minimal group flex flex-col overflow-hidden rounded-[1.5rem] transition duration-300"
     >
-      <div className="relative h-52 w-full overflow-hidden bg-[#181818]">
+      <div className="relative h-52 w-full overflow-hidden bg-[#F3F4F6]">
         {product.images && product.images.length > 0 ? (
           <>
             <div 
               className="flex h-full w-full transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
             >
-              {product.images.map((img) => (
-                <div key={img.id} className="h-full w-full flex-shrink-0 overflow-hidden">
-                  <img
-                    src={img.image_path}
-                    alt={product.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
+              {[...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1)).map((img) => (
+                <div key={img.id} className="h-full w-full flex-shrink-0 overflow-hidden bg-gray-100">
+                  {img.image_path.match(/\.(mp4|webm)$/) ? (
+                    <video
+                      src={img.image_path}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      muted loop playsInline autoPlay
+                    />
+                  ) : (
+                    <img
+                      src={img.image_path}
+                      alt={product.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
+                      }}
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -45,13 +67,13 @@ export default function ProductCard({ product }) {
               <>
                 <button
                   onClick={handlePrevImage}
-                  className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white opacity-0 backdrop-blur-sm transition hover:bg-[#C9AA4A] hover:text-black group-hover:opacity-100"
+                  className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/40 p-1.5 text-black opacity-0 backdrop-blur-sm transition hover:bg-[#D4AF37] hover:text-white group-hover:opacity-100"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
                 <button
                   onClick={handleNextImage}
-                  className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/40 p-1.5 text-white opacity-0 backdrop-blur-sm transition hover:bg-[#C9AA4A] hover:text-black group-hover:opacity-100"
+                  className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/40 p-1.5 text-black opacity-0 backdrop-blur-sm transition hover:bg-[#D4AF37] hover:text-white group-hover:opacity-100"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
@@ -60,7 +82,7 @@ export default function ProductCard({ product }) {
                     <div 
                       key={idx} 
                       className={`h-1.5 rounded-full transition-all ${
-                        idx === currentImageIndex ? 'w-4 bg-[#C9AA4A]' : 'w-1.5 bg-white/50'
+                        idx === currentImageIndex ? 'w-4 bg-[#D4AF37]' : 'w-1.5 bg-black/30'
                       }`}
                     />
                   ))}
@@ -71,34 +93,54 @@ export default function ProductCard({ product }) {
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-soft">No Image</div>
         )}
-        <span className="absolute right-3 top-3 z-10 rounded-full border border-[rgba(245,242,234,0.1)] bg-[#101010]/86 px-3 py-1 text-[10px] font-semibold tracking-[0.18em] text-[#E7D48A]">
-          {product.status === 'Available' ? 'TERSEDIA' : 'TERJUAL'}
+        <span className="absolute right-3 top-3 z-10 rounded-full border border-[rgba(212,175,55,0.2)] bg-white/86 px-3 py-1 text-[10px] font-semibold tracking-[0.18em] text-[#D4AF37]">
+          {product.status?.toLowerCase() === 'available' ? 'TERSEDIA' : 'TERJUAL'}
         </span>
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <h3 className="line-clamp-1 text-lg font-semibold text-[#F5F2EA] transition-colors group-hover:text-[#E7D48A]">
+        <div className="mb-2 flex items-start justify-between gap-2">
+          <span className="h-fit shrink-0 rounded-full bg-[#D4AF37]/10 px-2.5 py-0.5 text-[10px] font-semibold tracking-wider text-[#B8860B] border border-[#D4AF37]/20 uppercase">
+            {product.property_type || 'Rumah'}
+          </span>
+          <div className="flex flex-col items-end text-right">
+            <div className="flex items-center gap-1 text-[#1F2937]">
+              <MapPin className="h-3 w-3 text-[#D4AF37]" />
+              <span className="text-xs font-semibold">{product.location}</span>
+            </div>
+            {product.address && (
+              <span className="mt-0.5 max-w-[160px] line-clamp-1 text-[10px] text-soft">{product.address}</span>
+            )}
+          </div>
+        </div>
+        <h3 className="line-clamp-2 text-lg font-bold leading-snug text-[#1F2937] transition-colors group-hover:text-[#B8860B]">
           {product.title}
         </h3>
-        <p className="mt-2 flex items-center gap-2 text-sm text-soft">
-          <MapPin className="h-4 w-4 text-[#C9AA4A]" /> {product.location}
-        </p>
 
-        <div className="mt-4 text-2xl font-semibold text-[#E7D48A]">
-          {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price)}
+        <div className="mt-3 text-xl font-bold text-[#B8860B] md:text-2xl">
+          {product.price_start === product.price_end 
+            ? formatShortPrice(product.price_start)
+            : `${formatShortPrice(product.price_start)} - ${formatShortPrice(product.price_end)}`
+          }
         </div>
+        
+        {product.description && (
+          <p className="mt-2 text-xs text-soft line-clamp-2 leading-relaxed">
+            {product.description}
+          </p>
+        )}
 
-        <div className="mt-auto border-t border-[rgba(245,242,234,0.06)] pt-4">
-          <div className="grid grid-cols-3 gap-2 text-[11px] font-medium text-[#F5F2EA] md:text-xs">
-            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">
+        <div className="mt-auto border-t border-[rgba(0,0,0,0.06)] pt-4">
+          <div className="grid grid-cols-3 gap-2 text-[11px] font-medium text-[#1F2937] md:text-xs">
+            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] px-2 py-2 text-center">
               <BedDouble className="h-3.5 w-3.5 text-soft" />
               <span>{product.bedrooms} KT</span>
             </div>
-            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">
+            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] px-2 py-2 text-center">
               <Bath className="h-3.5 w-3.5 text-soft" />
               <span>{product.bathrooms} KM</span>
             </div>
-            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(245,242,234,0.06)] bg-[rgba(245,242,234,0.03)] px-2 py-2 text-center">
+            <div className="flex items-center justify-center gap-1.5 rounded-xl border border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] px-2 py-2 text-center">
               <Scaling className="h-3.5 w-3.5 text-soft" />
               <span>{product.building_area} m²</span>
             </div>
