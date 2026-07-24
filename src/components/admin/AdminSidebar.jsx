@@ -10,7 +10,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
     try {
       const token = localStorage.getItem('token')
       if (token) {
-        await axios.post('http://127.0.0.1:8000/api/logout', {}, {
+        await axios.post('https://api.glorymaspro.biz.id/api/logout', {}, {
           headers: { Authorization: `Bearer ${token}` }
         })
       }
@@ -50,8 +50,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
             to="/admin/dashboard"
             onClick={onClose}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname === '/admin/dashboard'
-                ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
-                : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
+              ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
+              : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
               }`}
           >
             <LayoutDashboard className="h-5 w-5" /> Dashboard
@@ -61,8 +61,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
             to="/admin/products"
             onClick={onClose}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/products')
-                ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
-                : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
+              ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
+              : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
               }`}
           >
             <PackageSearch className="h-5 w-5" /> Kelola Katalog
@@ -72,8 +72,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
             to="/admin/accounts"
             onClick={onClose}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/accounts')
-                ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
-                : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
+              ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
+              : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
               }`}
           >
             <Users className="h-5 w-5" /> Kelola Akun

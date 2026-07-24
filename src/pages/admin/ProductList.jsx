@@ -27,7 +27,7 @@ export default function ProductList() {
   const fetchProducts = async () => {
     try {
       setLoading(true)
-      const res = await axios.get('http://127.0.0.1:8000/api/products')
+      const res = await axios.get('https://api.glorymaspro.biz.id/api/products')
       if (res.data && res.data.success) {
         setProducts(res.data.data)
       }
@@ -57,7 +57,7 @@ export default function ProductList() {
 
     try {
       const token = localStorage.getItem('token') || ''
-      const res = await axios.delete(`http://127.0.0.1:8000/api/products/${productToDelete.id}`, {
+      const res = await axios.delete(`https://api.glorymaspro.biz.id/api/products/${productToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (res.data && res.data.success) {
@@ -189,8 +189,8 @@ export default function ProductList() {
                     </td>
                     <td className="px-6 py-6">
                       <span className={`inline-flex rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${product.status?.toLowerCase() === 'available'
-                          ? 'bg-[#E5F5E5] text-[#2E7D32]'
-                          : 'bg-red-100 text-red-600'
+                        ? 'bg-[#E5F5E5] text-[#2E7D32]'
+                        : 'bg-red-100 text-red-600'
                         }`}>
                         {product.status?.toLowerCase() === 'available' ? 'Tersedia' : 'Terjual'}
                       </span>

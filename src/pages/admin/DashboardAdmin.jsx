@@ -16,16 +16,16 @@ export default function DashboardAdmin() {
       try {
         const token = localStorage.getItem('token') || ''
         const [productsRes, accountsRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/api/products'),
-          axios.get('http://127.0.0.1:8000/api/accounts', {
+          axios.get('https://api.glorymaspro.biz.id/api/products'),
+          axios.get('https://api.glorymaspro.biz.id/api/accounts', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: { success: false, data: [] } }))
         ])
-        
+
         if (productsRes.data && productsRes.data.success) {
           setProducts(productsRes.data.data)
         }
-        
+
         if (accountsRes.data && accountsRes.data.success) {
           const mkt = accountsRes.data.data.filter(u => u.role?.toLowerCase() === 'marketing')
           setMarketingCount(mkt.length)
@@ -42,7 +42,7 @@ export default function DashboardAdmin() {
   const totalProducts = products.length
   const availableProducts = products.filter(p => p.status?.toLowerCase() === 'available')
   const totalAvailable = availableProducts.length
-  
+
   const locationCount = {}
   products.forEach(p => {
     const loc = p.location || 'Lainnya'
@@ -78,12 +78,12 @@ export default function DashboardAdmin() {
           <h1 className="text-2xl font-semibold text-[#1F2937]">Dashboard Overview</h1>
           <p className="mt-2 text-sm text-soft">Statistik ringkas dari katalog properti Anda saat ini.</p>
         </div>
-        
+
         <div className="flex items-center gap-4 rounded-2xl bg-white p-3 pr-4 border border-[rgba(0,0,0,0.06)] shadow-sm">
-          <img 
-            src={userData.photo ? `http://127.0.0.1:8000/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
-            alt={userName} 
-            className="h-11 w-11 rounded-full border-2 border-[#D4AF37] object-cover" 
+          <img
+            src={userData.photo ? `https://api.glorymaspro.biz.id/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
+            alt={userName}
+            className="h-11 w-11 rounded-full border-2 border-[#D4AF37] object-cover"
           />
           <div className="text-left">
             <p className="text-sm font-semibold text-[#1F2937]">Hai, {userName}</p>
@@ -91,7 +91,7 @@ export default function DashboardAdmin() {
           </div>
         </div>
       </div>
-      
+
       {/* Summary Cards */}
       <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         <div className="glass-panel rounded-3xl p-6 border border-[rgba(0,0,0,0.06)] bg-white">
@@ -105,7 +105,7 @@ export default function DashboardAdmin() {
             </div>
           </div>
         </div>
-        
+
         <div className="glass-panel rounded-3xl p-6 border border-[rgba(0,0,0,0.06)] bg-white">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D4AF37]/10 text-[#B8860B]">
@@ -117,7 +117,7 @@ export default function DashboardAdmin() {
             </div>
           </div>
         </div>
-        
+
         <div className="glass-panel rounded-3xl p-6 border border-[rgba(0,0,0,0.06)] bg-white">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D4AF37]/10 text-[#B8860B]">
@@ -130,7 +130,7 @@ export default function DashboardAdmin() {
           </div>
         </div>
       </div>
-      
+
       {/* Chart Section */}
       <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="glass-panel rounded-3xl p-8 border border-[rgba(0,0,0,0.06)] bg-white flex flex-col">
@@ -152,13 +152,13 @@ export default function DashboardAdmin() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
                   itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
                 />
-                <Legend 
-                  verticalAlign="bottom" 
-                  height={36} 
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
                   iconType="circle"
                   wrapperStyle={{ color: '#4B5563', fontSize: '12px' }}
                 />
@@ -186,13 +186,13 @@ export default function DashboardAdmin() {
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
                 </Pie>
-                <Tooltip 
+                <Tooltip
                   contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
                   itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
                 />
-                <Legend 
-                  verticalAlign="bottom" 
-                  height={36} 
+                <Legend
+                  verticalAlign="bottom"
+                  height={36}
                   iconType="circle"
                   wrapperStyle={{ color: '#4B5563', fontSize: '12px' }}
                 />

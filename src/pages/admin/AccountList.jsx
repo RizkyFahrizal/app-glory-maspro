@@ -71,7 +71,7 @@ export default function AccountList() {
     try {
       if (showLoading) setLoading(true)
       const token = localStorage.getItem('token') || ''
-      const res = await axios.get('http://127.0.0.1:8000/api/accounts', {
+      const res = await axios.get('https://api.glorymaspro.biz.id/api/accounts', {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (res.data && res.data.success) {
@@ -106,7 +106,7 @@ export default function AccountList() {
 
     try {
       const token = localStorage.getItem('token') || ''
-      await axios.delete(`http://127.0.0.1:8000/api/accounts/${accountToDelete.id}`, {
+      await axios.delete(`https://api.glorymaspro.biz.id/api/accounts/${accountToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setShowSuccessDelete(true)
@@ -125,7 +125,7 @@ export default function AccountList() {
       const token = localStorage.getItem('token') || ''
       const orderedIds = queue.map(acc => acc.wa_marketing?.id).filter(Boolean)
       if (orderedIds.length > 0) {
-        await axios.post('http://127.0.0.1:8000/api/wa-marketing/reorder', { ordered_ids: orderedIds }, {
+        await axios.post('https://api.glorymaspro.biz.id/api/wa-marketing/reorder', { ordered_ids: orderedIds }, {
           headers: { Authorization: `Bearer ${token}` }
         })
       }

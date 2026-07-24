@@ -24,17 +24,17 @@ export default function Login() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
+
     try {
-      const res = await axios.post('http://127.0.0.1:8000/api/login', {
+      const res = await axios.post('https://api.glorymaspro.biz.id/api/login', {
         email,
         password
       })
-      
+
       if (res.data && res.data.data && res.data.data.token) {
         localStorage.setItem('token', res.data.data.token)
         localStorage.setItem('user', JSON.stringify(res.data.data.user))
-        
+
         setSuccess('Login berhasil! Mengarahkan ke dashboard...')
         setTimeout(() => {
           navigate('/admin/dashboard')
@@ -57,7 +57,7 @@ export default function Login() {
           <ArrowLeft className="h-4 w-4" /> Kembali ke Beranda
         </Link>
       </div>
-      
+
       <div className="w-full max-w-md">
         <div className="mb-10 text-center">
           <p className="section-label">Admin Portal</p>
@@ -80,29 +80,29 @@ export default function Login() {
           <form onSubmit={handleLogin} className="flex flex-col gap-6">
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Email Admin</label>
-              <input 
+              <input
                 required
-                type="email" 
+                type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@glorymaspro.com" 
+                placeholder="admin@glorymaspro.com"
                 className="input-minimal w-full rounded-2xl py-3 px-4"
               />
             </div>
-            
+
             <div>
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Password</label>
               <div className="relative">
-                <input 
+                <input
                   required
-                  type={showPassword ? 'text' : 'password'} 
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••" 
+                  placeholder="••••••••"
                   className="input-minimal w-full rounded-2xl py-3 pl-4 pr-12"
                 />
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
@@ -111,8 +111,8 @@ export default function Login() {
               </div>
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={loading}
               className="btn-gold mt-2 flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-semibold transition disabled:opacity-70"
             >
@@ -120,7 +120,7 @@ export default function Login() {
             </button>
           </form>
         </div>
-        
+
         <p className="mt-8 text-center text-xs text-soft">
           &copy; 2026 Glory Maspro. Restricted Access.
         </p>
