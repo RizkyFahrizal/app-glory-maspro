@@ -20,7 +20,7 @@ export default function ProductImageUploader({
             {existingImages.map(img => (
               <div key={img.id} className="relative h-32 w-32 rounded-xl border border-[rgba(0,0,0,0.1)] shadow-sm overflow-hidden group">
                 {img.image_path.endsWith('.webm') || img.image_path.endsWith('.mp4') ? (
-                  <video src={img.image_path} className="h-full w-full object-cover" muted loop playsInline autoPlay />
+                  <video src={`${img.image_path}#t=0.001`} preload="metadata" className="h-full w-full object-cover bg-black" muted loop playsInline autoPlay />
                 ) : (
                   <img src={img.image_path} alt="Existing" className="h-full w-full object-cover" />
                 )}
@@ -66,7 +66,7 @@ export default function ProductImageUploader({
             {newImagePreviews.map((preview, idx) => (
               <div key={idx} className="relative h-32 w-32 rounded-xl border border-[rgba(0,0,0,0.1)] shadow-sm overflow-hidden group">
                 {preview.type === 'video' ? (
-                  <video src={preview.url} className="h-full w-full object-cover" muted loop playsInline autoPlay />
+                  <video src={`${preview.url}#t=0.001`} preload="metadata" className="h-full w-full object-cover bg-black" muted loop playsInline autoPlay />
                 ) : (
                   <img src={preview.url} alt={`Preview ${idx}`} className="h-full w-full object-cover" />
                 )}

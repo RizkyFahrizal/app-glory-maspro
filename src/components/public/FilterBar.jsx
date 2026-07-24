@@ -118,7 +118,10 @@ export default function FilterBar({
               </div>
             </div>
             <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Range Harga</label>
+              <div className="mb-2 flex items-end justify-between">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-soft">Range Harga</label>
+                <span className="text-[10px] font-medium text-[#B8860B] opacity-80">*Klik JT/M u/ ubah satuan</span>
+              </div>
               <div className="flex items-center gap-2">
                 <div className="relative flex flex-1">
                   <input type="number" min="0" name="min_price" value={filters.min_price} onChange={onFilterChange} placeholder="Min" className="input-minimal w-full rounded-xl py-2.5 pl-3 pr-16" />
@@ -127,10 +130,13 @@ export default function FilterBar({
                       <X className="h-4 w-4" />
                     </button>
                   )}
-                  <select name="min_price_unit" value={filters.min_price_unit} onChange={onFilterChange} className="absolute right-0 top-0 bottom-0 rounded-r-xl bg-transparent px-2 text-xs font-semibold text-[#8B6508] appearance-none focus:outline-none cursor-pointer border-l border-[rgba(212,175,55,0.2)]">
-                    <option value="JT">JT</option>
-                    <option value="M">M</option>
-                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setFilters(prev => ({ ...prev, min_price_unit: prev.min_price_unit === 'JT' ? 'M' : 'JT' }))}
+                    className="absolute right-0 top-0 bottom-0 rounded-r-xl bg-[rgba(212,175,55,0.1)] px-3 text-xs font-bold text-[#8B6508] transition hover:bg-[rgba(212,175,55,0.2)] border-l border-[rgba(212,175,55,0.2)]"
+                  >
+                    {filters.min_price_unit}
+                  </button>
                 </div>
                 <span className="text-soft">-</span>
                 <div className="relative flex flex-1">
@@ -140,10 +146,13 @@ export default function FilterBar({
                       <X className="h-4 w-4" />
                     </button>
                   )}
-                  <select name="max_price_unit" value={filters.max_price_unit} onChange={onFilterChange} className="absolute right-0 top-0 bottom-0 rounded-r-xl bg-transparent px-2 text-xs font-semibold text-[#8B6508] appearance-none focus:outline-none cursor-pointer border-l border-[rgba(212,175,55,0.2)]">
-                    <option value="JT">JT</option>
-                    <option value="M">M</option>
-                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setFilters(prev => ({ ...prev, max_price_unit: prev.max_price_unit === 'JT' ? 'M' : 'JT' }))}
+                    className="absolute right-0 top-0 bottom-0 rounded-r-xl bg-[rgba(212,175,55,0.1)] px-3 text-xs font-bold text-[#8B6508] transition hover:bg-[rgba(212,175,55,0.2)] border-l border-[rgba(212,175,55,0.2)]"
+                  >
+                    {filters.max_price_unit}
+                  </button>
                 </div>
               </div>
             </div>

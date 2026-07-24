@@ -15,7 +15,7 @@ export default function Home() {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6
+  const itemsPerPage = 3
 
   // Filter States
   const [filters, setFilters] = useState({
@@ -117,7 +117,7 @@ export default function Home() {
       transition={{ duration: 0.4 }}
     >
       <HeroSection />
-      <FilterBar 
+      <FilterBar
         filters={filters}
         locations={locations}
         propertyTypes={propertyTypes}
