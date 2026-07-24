@@ -45,7 +45,7 @@ export default function Home() {
 
   const fetchLocations = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/products/locations')
+      const res = await axios.get('https://api.glorymaspro.com/api/products/locations')
       if (res.data && res.data.success) {
         setLocations(res.data.data)
       }
@@ -56,7 +56,7 @@ export default function Home() {
 
   const fetchPropertyTypes = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/products/types')
+      const res = await axios.get('https://api.glorymaspro.com/api/products/types')
       if (res.data && res.data.success) {
         setPropertyTypes(res.data.data)
       }
@@ -73,7 +73,7 @@ export default function Home() {
       const minP = filters.min_price ? Number(filters.min_price) * getMultiplier(filters.min_price_unit) : undefined;
       const maxP = filters.max_price ? Number(filters.max_price) * getMultiplier(filters.max_price_unit) : undefined;
 
-      const response = await axios.get('http://127.0.0.1:8000/api/products', {
+      const response = await axios.get('https://api.glorymaspro.com/api/products', {
         params: {
           search: filters.search || undefined,
           location: filters.location || undefined,

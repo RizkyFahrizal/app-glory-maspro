@@ -59,7 +59,7 @@ export default function ProductForm() {
     if (isEdit || isView) {
       const fetchProduct = async () => {
         try {
-          const res = await axios.get(`http://127.0.0.1:8000/api/products/${id}`)
+          const res = await axios.get(`https://api.glorymaspro.com/api/products/${id}`)
           if (res.data && res.data.success) {
             const data = res.data.data
 
@@ -178,7 +178,7 @@ export default function ProductForm() {
     if (!imageToDelete) return
     try {
       const token = localStorage.getItem('token') || ''
-      await axios.delete(`http://127.0.0.1:8000/api/products/images/${imageToDelete}`, {
+      await axios.delete(`https://api.glorymaspro.com/api/products/images/${imageToDelete}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setExistingImages(prev => prev.filter(img => img.id !== imageToDelete))
@@ -223,14 +223,14 @@ export default function ProductForm() {
 
       if (isEdit) {
         payload.append('_method', 'PUT')
-        await axios.post(`http://127.0.0.1:8000/api/products/${id}`, payload, {
+        await axios.post(`https://api.glorymaspro.com/api/products/${id}`, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         })
       } else {
-        await axios.post('http://127.0.0.1:8000/api/products', payload, {
+        await axios.post('https://api.glorymaspro.com/api/products', payload, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
