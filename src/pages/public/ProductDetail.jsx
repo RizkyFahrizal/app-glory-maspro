@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { createPortal } from 'react-dom'
 import { useParams, Link } from 'react-router-dom'
 import axios from 'axios'
-import { ArrowLeft, MapPin, X, ChevronLeft, ChevronRight, Play } from 'lucide-react'
+import { ArrowLeft, MapPin, Play } from 'lucide-react'
 import { motion } from 'framer-motion'
+import ProductLightbox from '../../components/public/ProductLightbox'
 
 export default function ProductDetail() {
   const { slug } = useParams()
@@ -114,7 +114,7 @@ export default function ProductDetail() {
       <div className={`relative h-full w-full ${className}`}>
         {isVideo ? (
           <>
-            <video src={media.image_path} className="h-full w-full object-cover" />
+            <video src={media.image_path} muted className="h-full w-full object-cover" />
             <div className="absolute inset-0 flex items-center justify-center bg-black/20">
               <div className="rounded-full bg-white/30 p-3 backdrop-blur-md">
                 <Play className="h-6 w-6 text-white fill-white" />
@@ -248,67 +248,13 @@ export default function ProductDetail() {
       </div>
 
       {/* Lightbox / Media Preview Modal */}
-      {isLightboxOpen && images.length > 0 && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-md animate-fade-in" onClick={() => setIsLightboxOpen(false)}>
-          {/* Close Btn */}
-          <button
-            onClick={() => setIsLightboxOpen(false)}
-            className="absolute top-4 right-4 md:top-8 md:right-8 rounded-full bg-white/10 p-2 text-white/70 backdrop-blur-md transition hover:bg-white/20 hover:text-white"
-          >
-            <X className="h-6 w-6" />
-          </button>
-
-          {/* Nav Btns */}
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={(e) => { e.stopPropagation(); setLightboxIndex(prev => (prev - 1 + images.length) % images.length) }}
-                className="absolute left-4 md:left-8 rounded-full bg-white/10 p-3 text-white/70 backdrop-blur-md transition hover:bg-white/20 hover:text-white"
-              >
-                <ChevronLeft className="h-8 w-8" />
-              </button>
-              <button
-                onClick={(e) => { e.stopPropagation(); setLightboxIndex(prev => (prev + 1) % images.length) }}
-                className="absolute right-4 md:right-8 rounded-full bg-white/10 p-3 text-white/70 backdrop-blur-md transition hover:bg-white/20 hover:text-white"
-              >
-                <ChevronRight className="h-8 w-8" />
-              </button>
-            </>
-          )}
-
-          {/* Main Media Content */}
-          <div
-            className="flex max-h-[85vh] max-w-[85vw] flex-col items-center justify-center overflow-hidden rounded-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {images[lightboxIndex].image_path.match(/\.(webm|mp4)$/i) ? (
-              <video
-                src={images[lightboxIndex].image_path}
-                controls
-                autoPlay
-                className="max-h-[80vh] max-w-full rounded-md object-contain shadow-2xl"
-              />
-            ) : (
-              <img
-                src={images[lightboxIndex].image_path}
-                alt="Preview"
-                className="max-h-[80vh] max-w-full rounded-md object-contain shadow-2xl"
-              />
-            )}
-          </div>
-
-          {/* Indicator */}
-          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-1.5 md:bottom-10">
-            {images.map((_, idx) => (
-              <div
-                key={idx}
-                className={`h-1.5 rounded-full transition-all duration-300 ${idx === lightboxIndex ? 'w-6 bg-[#D4AF37]' : 'w-1.5 bg-white/30'}`}
-              />
-            ))}
-          </div>
-        </div>,
-        document.body
-      )}
+      <ProductLightbox 
+        isOpen={isLightboxOpen}
+        onClose={() => setIsLightboxOpen(false)}
+        images={images}
+        lightboxIndex={lightboxIndex}
+        setLightboxIndex={setLightboxIndex}
+      />
     </motion.div>
   )
 }

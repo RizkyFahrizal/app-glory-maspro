@@ -73,8 +73,8 @@ export default function ProductList() {
     }
   }
 
-  const filteredProducts = products.filter(p => 
-    p.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+  const filteredProducts = products.filter(p =>
+    p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.listing_id.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -83,12 +83,12 @@ export default function ProductList() {
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-[#1F2937]">Kelola Katalog</h1>
-          <p className="mt-2 text-sm text-soft">Manajemen data properti eksklusif perusahaan.</p>
+          <p className="mt-2 text-sm text-soft">Manajemen data properti KPR.</p>
         </div>
-        
+
         {!isMarketing && (
-          <Link 
-            to="/admin/products/create" 
+          <Link
+            to="/admin/products/create"
             className="btn-gold flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition"
           >
             <Plus className="h-5 w-5" /> Tambah Properti Baru
@@ -100,20 +100,20 @@ export default function ProductList() {
         <RoleNotice message="Role Marketing hanya dapat melihat data properti. Tambah, ubah, dan hapus properti hanya bisa dilakukan oleh Admin." />
       )}
 
-      <div className="mt-8 glass-panel animate-fade-in overflow-hidden rounded-3xl border border-[rgba(0,0,0,0.06)] bg-white">
+      <div className="mt-8 glass-panel overflow-hidden rounded-3xl border border-[rgba(0,0,0,0.06)] bg-white">
         {/* Table Toolbar */}
         <div className="flex flex-col gap-4 border-b border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] p-5 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative w-full max-w-sm">
             <Search className="pointer-events-none absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Cari nama properti atau ID..." 
+              placeholder="Cari nama properti atau ID..."
               className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-white border border-[rgba(0,0,0,0.1)] shadow-sm"
             />
             {searchTerm && (
-              <button 
+              <button
                 onClick={() => setSearchTerm('')}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
               >
@@ -127,7 +127,7 @@ export default function ProductList() {
         {/* Table Body */}
         <div className="overflow-x-auto">
           {loading ? (
-             <div className="p-8 text-center text-soft">Memuat data...</div>
+            <div className="p-8 text-center text-soft">Memuat data...</div>
           ) : (
             <table className="w-full text-left text-sm text-[#1F2937]">
               <thead className="bg-[#F3F4F6] text-xs uppercase tracking-wider text-soft">
@@ -150,17 +150,17 @@ export default function ProductList() {
                           const coverImg = [...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1))[0]
                           if (coverImg.image_path.match(/\.(mp4|webm)$/)) {
                             return (
-                              <video 
-                                src={coverImg.image_path} 
+                              <video
+                                src={coverImg.image_path}
                                 className="h-20 w-32 rounded-xl object-cover border border-[rgba(0,0,0,0.1)] shadow-sm"
                                 muted loop playsInline autoPlay
                               />
                             )
                           }
                           return (
-                            <img 
-                              src={coverImg.image_path} 
-                              alt={product.title} 
+                            <img
+                              src={coverImg.image_path}
+                              alt={product.title}
                               className="h-20 w-32 rounded-xl object-cover border border-[rgba(0,0,0,0.1)] shadow-sm bg-gray-100"
                               onError={(e) => {
                                 e.target.onerror = null;
@@ -181,24 +181,23 @@ export default function ProductList() {
                     </td>
                     <td className="px-6 py-6">
                       <div className="font-medium text-[#B8860B]">
-                        {product.price_start === product.price_end 
+                        {product.price_start === product.price_end
                           ? formatShortPrice(product.price_start)
                           : `${formatShortPrice(product.price_start)} - ${formatShortPrice(product.price_end)}`}
                       </div>
                       <div className="mt-1 text-xs text-soft">{product.property_type} - {product.certificate}</div>
                     </td>
                     <td className="px-6 py-6">
-                      <span className={`inline-flex rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${
-                        product.status?.toLowerCase() === 'available' 
+                      <span className={`inline-flex rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${product.status?.toLowerCase() === 'available'
                           ? 'bg-[#E5F5E5] text-[#2E7D32]'
                           : 'bg-red-100 text-red-600'
-                      }`}>
+                        }`}>
                         {product.status?.toLowerCase() === 'available' ? 'Tersedia' : 'Terjual'}
                       </span>
                     </td>
                     <td className="px-6 py-6 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link 
+                        <Link
                           to={`/admin/products/view/${product.id}`}
                           className="rounded-xl p-2 text-soft transition hover:bg-white hover:text-[#4F46E5] hover:shadow-sm"
                           title="Lihat Properti"
@@ -207,14 +206,14 @@ export default function ProductList() {
                         </Link>
                         {!isMarketing && (
                           <>
-                            <Link 
+                            <Link
                               to={`/admin/products/edit/${product.id}`}
                               className="rounded-xl p-2 text-soft transition hover:bg-white hover:text-[#D4AF37] hover:shadow-sm"
                               title="Edit Properti"
                             >
                               <Pencil className="h-4 w-4" />
                             </Link>
-                            <button 
+                            <button
                               onClick={() => setProductToDelete(product)}
                               className="rounded-xl p-2 text-soft transition hover:bg-white hover:text-red-500 hover:shadow-sm"
                               title="Hapus Properti"
@@ -238,7 +237,7 @@ export default function ProductList() {
             </table>
           )}
         </div>
-        
+
         {/* Pagination Dummy */}
         <div className="flex items-center justify-between border-t border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] px-6 py-4 text-sm text-soft">
           <div>Menampilkan hasil pencarian</div>
@@ -250,14 +249,14 @@ export default function ProductList() {
         </div>
       </div>
 
-      <DeleteModal 
+      <DeleteModal
         isOpen={!!productToDelete}
         itemName={productToDelete?.title}
         onCancel={() => setProductToDelete(null)}
         onConfirm={confirmDelete}
       />
 
-      <SuccessModal 
+      <SuccessModal
         isOpen={showSuccess}
         title="Berhasil Dihapus"
         message="Data properti telah dihapus dari katalog."

@@ -5,6 +5,7 @@ import PublicLayout from './layouts/PublicLayout'
 import SplashScreen from './components/public/SplashScreen'
 import Home from './pages/public/Home'
 import ProductDetail from './pages/public/ProductDetail'
+import NotFound from './pages/public/NotFound'
 import Login from './pages/auth/Login'
 
 import AdminLayout from './layouts/AdminLayout'
@@ -35,6 +36,8 @@ function AnimatedRoutes() {
           <Route path="accounts/create" element={<AccountForm />} />
           <Route path="accounts/edit/:id" element={<AccountForm />} />
         </Route>
+        {/* Fallback for 404 Routes */}
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
   )

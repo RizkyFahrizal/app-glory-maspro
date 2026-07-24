@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
 import axios from 'axios'
 import AdminTopbar from '../components/admin/AdminTopbar'
 import AdminSidebar from '../components/admin/AdminSidebar'
@@ -25,9 +24,14 @@ export default function AdminLayout() {
         })
         setIsChecking(false)
       } catch (error) {
-        localStorage.removeItem('token')
-        localStorage.removeItem('user')
-        navigate('/admin/login')
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
+          navigate('/admin/login')
+        } else {
+          console.error("Token verification error:", error)
+          setIsChecking(false) // Lanjut saja jika error server (misal 500 SQLite lock)
+        }
       }
     }
 
@@ -65,18 +69,12 @@ export default function AdminLayout() {
 
       {/* Main Content Area */}
       <main className="relative mt-16 flex-1 w-full p-4 md:mt-0 md:ml-64 md:p-8 overflow-x-hidden" style={{ zIndex: 1 }}>
-        <AnimatePresence mode="wait">
-          <motion.div 
-            key={location.pathname}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="mx-auto w-full max-w-6xl"
-          >
-            <Outlet />
-          </motion.div>
-        </AnimatePresence>
+        <div 
+          key={location.pathname}
+          className="mx-auto w-full max-w-6xl animate-fade-in"
+        >
+          <Outlet />
+        </div>
       </main>
     </div>
   )

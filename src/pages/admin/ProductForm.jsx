@@ -6,6 +6,7 @@ import SuccessModal from '../../components/admin/SuccessModal'
 import AlertModal from '../../components/admin/AlertModal'
 import DeleteModal from '../../components/admin/DeleteModal'
 import CustomSelect from '../../components/public/CustomSelect'
+import ProductImageUploader from '../../components/admin/ProductImageUploader'
 
 export default function ProductForm() {
   const { id } = useParams()
@@ -130,6 +131,25 @@ export default function ProductForm() {
         return
       }
 
+      let hasOversizedVideo = false;
+      let hasOversizedImage = false;
+      for (const file of selectedFiles) {
+        if (file.type.startsWith('video/') && file.size > 15 * 1024 * 1024) {
+          hasOversizedVideo = true;
+        } else if (file.type.startsWith('image/') && file.size > 5 * 1024 * 1024) {
+          hasOversizedImage = true;
+        }
+      }
+
+      if (hasOversizedVideo) {
+        setAlertInfo({ isOpen: true, title: 'Ukuran Video Terlalu Besar', message: 'Maksimal ukuran file video adalah 15MB.' })
+        return
+      }
+      if (hasOversizedImage) {
+        setAlertInfo({ isOpen: true, title: 'Ukuran Foto Terlalu Besar', message: 'Maksimal ukuran file foto adalah 5MB.' })
+        return
+      }
+
       setImages(prev => [...prev, ...selectedFiles])
 
       // Generate Previews
@@ -178,7 +198,6 @@ export default function ProductForm() {
       const payload = new FormData()
 
       // Additional required fields by backend not directly in form
-      payload.append('listing_id', 'PR-' + Math.floor(Math.random() * 10000))
       payload.append('listing_type', 'Dijual')
       payload.append('status', 'available')
 
@@ -233,7 +252,7 @@ export default function ProductForm() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl animate-fade-in">
+    <div className="mx-auto max-w-5xl">
       <div className="mb-8">
         <Link
           to="/admin/products"
@@ -268,379 +287,326 @@ export default function ProductForm() {
         </div>
       ) : (
         <form onSubmit={handleSave} className="glass-panel rounded-3xl p-6 md:p-10 border border-[rgba(0,0,0,0.06)] bg-white">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-          
-          {/* Kiri: Info Utama */}
-          <div className="space-y-6">
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Properti</label>
-              <input 
-                required
-                type="text" 
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                placeholder="Contoh: Villa Mewah Bali..." 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Mulai</label>
-                <div className="relative flex items-center">
-                  <input 
-                    required
-                    type="number" 
-                    name="price_start"
-                    value={formData.price_start}
-                    onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
-                    {isView ? (
-                      <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_start_multiplier}</div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleInputChange({ target: { name: 'price_start_multiplier', value: formData.price_start_multiplier === 'Jt' ? 'M' : 'Jt' } })}
-                        className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
-                      >
-                        {formData.price_start_multiplier}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Sampai</label>
-                <div className="relative flex items-center">
-                  <input 
-                    required
-                    type="number" 
-                    name="price_end"
-                    value={formData.price_end}
-                    onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
-                    {isView ? (
-                      <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_end_multiplier}</div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleInputChange({ target: { name: 'price_end_multiplier', value: formData.price_end_multiplier === 'Jt' ? 'M' : 'Jt' } })}
-                        className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
-                      >
-                        {formData.price_end_multiplier}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
 
-            <div className="grid grid-cols-2 gap-4">
+            {/* Kiri: Info Utama */}
+            <div className="space-y-6">
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Tipe Properti</label>
-                <input 
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Properti</label>
+                <input
                   required
-                  type="text" 
-                  name="property_type" 
-                  value={formData.property_type} 
-                  onChange={handleInputChange} 
-                  placeholder="Contoh: Rumah / Gudang"
-                  disabled={isView} 
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Status Ketersediaan</label>
-                {isView ? (
-                  <input type="text" value={formData.status === 'sold' ? 'Terjual / Sold Out' : 'Tersedia'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
-                ) : (
-                  <CustomSelect 
-                    name="status" 
-                    value={formData.status} 
-                    onChange={handleInputChange} 
-                    disabled={isView}
-                    placeholder="Pilih Status"
-                    options={[
-                      { label: "Tersedia", value: "available" },
-                      { label: "Terjual / Sold Out", value: "sold" }
-                    ]}
-                  />
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi Singkat</label>
-              <input 
-                required
-                type="text" 
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                placeholder="Contoh: Jakarta Selatan" 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Alamat Lengkap</label>
-              <textarea 
-                required
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                rows="2"
-                placeholder="Alamat detail properti..." 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              ></textarea>
-            </div>
-          </div>
-
-          {/* Kanan: Spesifikasi & Deskripsi */}
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Tidur</label>
-                <input 
-                  required
-                  type="number" 
-                  name="bedrooms"
-                  value={formData.bedrooms}
+                  type="text"
+                  name="title"
+                  value={formData.title}
                   onChange={handleInputChange}
-                  placeholder="0" 
-                  disabled={isView} 
+                  placeholder="Contoh: Villa Mewah Bali..."
+                  disabled={isView}
                   className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
                 />
               </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Mandi</label>
-                <input 
-                  required
-                  type="number" 
-                  name="bathrooms"
-                  value={formData.bathrooms}
-                  onChange={handleInputChange}
-                  placeholder="0" 
-                  disabled={isView} 
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Tanah</label>
-                <div className="relative flex items-center">
-                  <input 
-                    required
-                    type="number" 
-                    name="land_area"
-                    value={formData.land_area}
-                    onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
-                </div>
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Bangunan</label>
-                <div className="relative flex items-center">
-                  <input 
-                    required
-                    type="number" 
-                    name="building_area"
-                    value={formData.building_area}
-                    onChange={handleInputChange}
-                    placeholder="0" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
-                </div>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Sertifikat</label>
-                <input 
-                  type="text" 
-                  name="certificate"
-                  value={formData.certificate}
-                  onChange={handleInputChange}
-                  placeholder="SHM / HGB" 
-                  disabled={isView} 
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Listrik</label>
-                <div className="relative flex items-center">
-                  <input 
-                    type="text" 
-                    name="electricity"
-                    value={formData.electricity}
-                    onChange={handleInputChange}
-                    placeholder="2200" 
-                    disabled={isView} 
-                    className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                  />
-                  <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">VA</span>
-                </div>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kondisi Perabotan</label>
-                {isView ? (
-                  <input type="text" value={formData.furnish} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
-                ) : (
-                  <CustomSelect 
-                    name="furnish" 
-                    value={formData.furnish} 
-                    onChange={handleInputChange} 
-                    disabled={isView}
-                    placeholder="Pilih Perabotan"
-                    options={[
-                      { label: "Non-Furnished", value: "Non-Furnished" },
-                      { label: "Semi-Furnished", value: "Semi-Furnished" },
-                      { label: "Fully-Furnished", value: "Fully-Furnished" }
-                    ]}
-                  />
-                )}
-              </div>
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Arah Hadap</label>
-                {isView ? (
-                  <input type="text" value={formData.facing} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
-                ) : (
-                  <CustomSelect 
-                    name="facing" 
-                    value={formData.facing} 
-                    onChange={handleInputChange} 
-                    disabled={isView}
-                    placeholder="Pilih Arah"
-                    options={[
-                      { label: "Utara", value: "Utara" },
-                      { label: "Timur laut", value: "Timur laut" },
-                      { label: "Timur", value: "Timur" },
-                      { label: "Tenggara", value: "Tenggara" },
-                      { label: "Selatan", value: "Selatan" },
-                      { label: "Barat daya", value: "Barat daya" },
-                      { label: "Barat", value: "Barat" },
-                      { label: "Barat laut", value: "Barat laut" }
-                    ]}
-                  />
-                )}
-              </div>
-            </div>
-            
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Deskripsi Lengkap</label>
-              <textarea 
-                required
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                rows="4"
-                placeholder="Tuliskan spesifikasi, keunggulan, dan deskripsi detail properti..." 
-                disabled={isView} 
-                className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-              ></textarea>
-            </div>
-          </div>
-        </div>
-
-        {/* Media Section */}
-          <div className="mt-8 border-t border-[rgba(0,0,0,0.06)] pt-8">
-            <h2 className="mb-4 text-lg font-bold text-[#1F2937]">Media Properti (Foto & Video)</h2>
-
-            {(isEdit || isView) && existingImages.length > 0 && (
-              <div className="mb-6">
-                <p className="mb-3 text-sm font-semibold text-soft">Media Saat Ini:</p>
-                <div className="flex flex-wrap gap-4">
-                  {existingImages.map(img => (
-                    <div key={img.id} className="relative h-32 w-32 rounded-xl border border-[rgba(0,0,0,0.1)] shadow-sm overflow-hidden group">
-                      {img.image_path.endsWith('.webm') || img.image_path.endsWith('.mp4') ? (
-                        <video src={img.image_path} className="h-full w-full object-cover" muted loop playsInline autoPlay />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Mulai</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="price_start"
+                      value={formData.price_start}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
+                      {isView ? (
+                        <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_start_multiplier}</div>
                       ) : (
-                        <img src={img.image_path} alt="Existing" className="h-full w-full object-cover" />
-                      )}
-                      {!isView && (
                         <button
                           type="button"
-                          onClick={() => setImageToDelete(img.id)}
-                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition shadow-sm hover:bg-red-600"
-                          title="Hapus media ini"
+                          onClick={() => handleInputChange({ target: { name: 'price_start_multiplier', value: formData.price_start_multiplier === 'Jt' ? 'M' : 'Jt' } })}
+                          className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
                         >
-                          <X className="h-3 w-3" />
+                          {formData.price_start_multiplier}
                         </button>
                       )}
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-            )}
-
-            {!isView && (
-              <div className="mb-6">
-                <p className="mb-3 text-sm font-semibold text-soft">Tambahkan Media Baru:</p>
-                <label className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] py-12 transition hover:bg-[#F3F4F6] cursor-pointer">
-                  <ImagePlus className="mb-3 h-8 w-8 text-[#D4AF37]" />
-                  <p className="text-sm font-medium text-[#1F2937]">Klik untuk unggah foto & video</p>
-                  <p className="mt-1 text-xs text-soft text-center px-4">Maks 7 media (PNG/JPG up to 5MB, maks. 1 video WebM)</p>
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/png, image/jpeg, image/webp, video/webm"
-                    onChange={handleImageChange}
-                    className="hidden"
-                    disabled={isView}
-                  />
-                </label>
-              </div>
-            )}
-
-            {newImagePreviews.length > 0 && !isView && (
-              <div className="mt-6">
-                <p className="mb-3 text-sm font-semibold text-soft">Pratinjau Media Baru:</p>
-                <div className="flex flex-wrap gap-4">
-                  {newImagePreviews.map((preview, idx) => (
-                    <div key={idx} className="relative h-32 w-32 rounded-xl border border-[rgba(0,0,0,0.1)] shadow-sm overflow-hidden group">
-                      {preview.type === 'video' ? (
-                        <video src={preview.url} className="h-full w-full object-cover" muted loop playsInline autoPlay />
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Harga Sampai</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="price_end"
+                      value={formData.price_end}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <div className="absolute right-0 top-0 bottom-0 w-16 border-l border-[rgba(212,175,55,0.2)]">
+                      {isView ? (
+                        <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-gray-400 bg-gray-50 rounded-r-2xl">{formData.price_end_multiplier}</div>
                       ) : (
-                        <img src={preview.url} alt={`Preview ${idx}`} className="h-full w-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => handleInputChange({ target: { name: 'price_end_multiplier', value: formData.price_end_multiplier === 'Jt' ? 'M' : 'Jt' } })}
+                          className="h-full w-full bg-transparent flex items-center justify-center text-sm font-semibold text-[#8B6508] outline-none cursor-pointer rounded-r-2xl hover:bg-[#D4AF37]/10 transition-colors"
+                        >
+                          {formData.price_end_multiplier}
+                        </button>
                       )}
-                      <button
-                        type="button"
-                        onClick={() => removeNewImage(idx)}
-                        className="absolute top-2 right-2 bg-gray-800/70 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition shadow-sm hover:bg-gray-900"
-                        title="Batal unggah file ini"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
-            )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Tipe Properti</label>
+                  <input
+                    required
+                    type="text"
+                    name="property_type"
+                    value={formData.property_type}
+                    onChange={handleInputChange}
+                    placeholder="Contoh: Rumah / Gudang"
+                    disabled={isView}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Status Ketersediaan</label>
+                  {isView ? (
+                    <input type="text" value={formData.status === 'sold' ? 'Terjual / Sold Out' : 'Tersedia'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                  ) : (
+                    <CustomSelect
+                      name="status"
+                      value={formData.status}
+                      onChange={handleInputChange}
+                      disabled={isView}
+                      placeholder="Pilih Status"
+                      options={[
+                        { label: "Tersedia", value: "available" },
+                        { label: "Terjual / Sold Out", value: "sold" }
+                      ]}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi</label>
+                <input
+                  required
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder="Contoh: Jakarta Selatan"
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Alamat Lengkap</label>
+                <textarea
+                  required
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  rows="2"
+                  placeholder="Alamat detail properti..."
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                ></textarea>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Catatan Tambahan</label>
+                <textarea
+                  name="note"
+                  value={formData.note}
+                  onChange={handleInputChange}
+                  rows="2"
+                  placeholder="Tuliskan catatan tambahan..."
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                ></textarea>
+              </div>
+            </div>
+
+            {/* Kanan: Spesifikasi & Deskripsi */}
+            <div className="space-y-6">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Tidur</label>
+                  <input
+                    required
+                    type="number"
+                    name="bedrooms"
+                    value={formData.bedrooms}
+                    onChange={handleInputChange}
+                    placeholder="0"
+                    disabled={isView}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Mandi</label>
+                  <input
+                    required
+                    type="number"
+                    name="bathrooms"
+                    value={formData.bathrooms}
+                    onChange={handleInputChange}
+                    placeholder="0"
+                    disabled={isView}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Tanah</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="land_area"
+                      value={formData.land_area}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
+                  </div>
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Luas Bangunan</label>
+                  <div className="relative flex items-center">
+                    <input
+                      required
+                      type="number"
+                      name="building_area"
+                      value={formData.building_area}
+                      onChange={handleInputChange}
+                      placeholder="0"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-12 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">m²</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Sertifikat</label>
+                  <input
+                    type="text"
+                    name="certificate"
+                    value={formData.certificate}
+                    onChange={handleInputChange}
+                    placeholder="SHM / HGB"
+                    disabled={isView}
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Listrik</label>
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      name="electricity"
+                      value={formData.electricity}
+                      onChange={handleInputChange}
+                      placeholder="2200"
+                      disabled={isView}
+                      className={`input-minimal w-full rounded-2xl py-3 pl-4 pr-16 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                    />
+                    <span className="absolute right-4 text-sm font-semibold text-gray-400 pointer-events-none">VA</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Perabotan</label>
+                  {isView ? (
+                    <input type="text" value={formData.furnish} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                  ) : (
+                    <CustomSelect
+                      name="furnish"
+                      value={formData.furnish}
+                      onChange={handleInputChange}
+                      disabled={isView}
+                      placeholder="Pilih Perabotan"
+                      options={[
+                        { label: "Non-Furnished", value: "Non-Furnished" },
+                        { label: "Semi-Furnished", value: "Semi-Furnished" },
+                        { label: "Fully-Furnished", value: "Fully-Furnished" }
+                      ]}
+                    />
+                  )}
+                </div>
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Arah Hadap</label>
+                  {isView ? (
+                    <input type="text" value={formData.facing} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                  ) : (
+                    <CustomSelect
+                      name="facing"
+                      value={formData.facing}
+                      onChange={handleInputChange}
+                      disabled={isView}
+                      placeholder="Pilih Arah"
+                      options={[
+                        { label: "Utara", value: "Utara" },
+                        { label: "Timur laut", value: "Timur laut" },
+                        { label: "Timur", value: "Timur" },
+                        { label: "Tenggara", value: "Tenggara" },
+                        { label: "Selatan", value: "Selatan" },
+                        { label: "Barat daya", value: "Barat daya" },
+                        { label: "Barat", value: "Barat" },
+                        { label: "Barat laut", value: "Barat laut" }
+                      ]}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Deskripsi Lengkap</label>
+                <textarea
+                  required
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows="7"
+                  placeholder="Tuliskan spesifikasi, keunggulan, dan deskripsi detail properti..."
+                  disabled={isView}
+                  className={`input-minimal w-full rounded-2xl py-3 px-4 resize-none ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
+                ></textarea>
+              </div>
+            </div>
           </div>
+
+          <ProductImageUploader
+            isView={isView}
+            isEdit={isEdit}
+            existingImages={existingImages}
+            newImagePreviews={newImagePreviews}
+            onImageChange={handleImageChange}
+            onSetImageToDelete={setImageToDelete}
+            onRemoveNewImage={removeNewImage}
+          />
 
           <div className="mt-10 flex items-center justify-end gap-4 border-t border-[rgba(0,0,0,0.06)] pt-6">
             <Link
@@ -662,7 +628,7 @@ export default function ProductForm() {
         </form>
       )}
 
-      <AlertModal 
+      <AlertModal
         isOpen={alertInfo.isOpen}
         title={alertInfo.title}
         message={alertInfo.message}

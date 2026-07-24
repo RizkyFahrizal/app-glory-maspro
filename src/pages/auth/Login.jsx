@@ -111,14 +111,6 @@ export default function Login() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between text-sm">
-              <label className="flex cursor-pointer items-center gap-2 text-soft">
-                <input type="checkbox" className="rounded border-[rgba(245,242,234,0.08)] bg-[rgba(245,242,234,0.03)] accent-[#C9AA4A]" />
-                Ingat Saya
-              </label>
-              <a href="#" className="text-[#4A3000] font-medium transition hover:text-[#2C1A00] hover:underline">Lupa Password?</a>
-            </div>
-
             <button 
               type="submit" 
               disabled={loading}
