@@ -33,7 +33,7 @@ const EmptyState = ({ onReset }) => (
     <p className="mb-6 max-w-md text-sm text-soft">
       Tidak ada data akun yang cocok dengan kata kunci pencarian Anda. Coba gunakan kata kunci lain.
     </p>
-    <button 
+    <button
       onClick={onReset}
       className="rounded-xl bg-gray-100 px-5 py-2.5 text-sm font-semibold text-[#1F2937] transition hover:bg-gray-200"
     >
@@ -63,7 +63,7 @@ export default function AccountList() {
     const intervalId = setInterval(() => {
       fetchAccounts(false) // false means background refresh, no loading screen
     }, 10000)
-    
+
     return () => clearInterval(intervalId)
   }, [])
 
@@ -103,7 +103,7 @@ export default function AccountList() {
 
   const confirmDelete = async () => {
     if (!accountToDelete) return
-    
+
     try {
       const token = localStorage.getItem('token') || ''
       await axios.delete(`http://127.0.0.1:8000/api/accounts/${accountToDelete.id}`, {
@@ -154,13 +154,13 @@ export default function AccountList() {
     saveReorder(newQueue)
   }
 
-  const filteredAdmin = adminAccounts.filter(acc => 
-    acc.name.toLowerCase().includes(adminSearch.toLowerCase()) || 
+  const filteredAdmin = adminAccounts.filter(acc =>
+    acc.name.toLowerCase().includes(adminSearch.toLowerCase()) ||
     acc.email.toLowerCase().includes(adminSearch.toLowerCase())
   )
 
-  const filteredMarketing = marketingQueue.filter(acc => 
-    acc.name.toLowerCase().includes(marketingSearch.toLowerCase()) || 
+  const filteredMarketing = marketingQueue.filter(acc =>
+    acc.name.toLowerCase().includes(marketingSearch.toLowerCase()) ||
     acc.email.toLowerCase().includes(marketingSearch.toLowerCase())
   )
 
@@ -183,10 +183,10 @@ export default function AccountList() {
           <h1 className="text-2xl font-semibold text-[#1F2937]">Kelola Akun</h1>
           <p className="mt-2 text-sm text-soft">Manajemen akses admin dan tim marketing.</p>
         </div>
-        
+
         {!isMarketing && (
-          <Link 
-            to="/admin/accounts/create" 
+          <Link
+            to="/admin/accounts/create"
             className="btn-gold flex shrink-0 items-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold transition"
           >
             <Plus className="h-5 w-5" /> Tambah Akun Baru
@@ -204,15 +204,15 @@ export default function AccountList() {
           <h2 className="text-xl font-bold text-[#1F2937]">Tim Admin</h2>
           <div className="relative w-full max-w-sm sm:w-64">
             <Search className="pointer-events-none absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               value={adminSearch}
               onChange={(e) => setAdminSearch(e.target.value)}
-              placeholder="Cari admin..." 
+              placeholder="Cari admin..."
               className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-gray-50 border border-[rgba(0,0,0,0.05)] focus:bg-white"
             />
             {adminSearch && (
-              <button 
+              <button
                 onClick={() => setAdminSearch('')}
                 className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
               >
@@ -229,9 +229,9 @@ export default function AccountList() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredAdmin.length > 0 ? (
               filteredAdmin.map((account) => (
-                <AccountCard 
-                  key={account.id} 
-                  account={account} 
+                <AccountCard
+                  key={account.id}
+                  account={account}
                   isViewerMarketing={isMarketing}
                   onDelete={() => setAccountToDelete(account)}
                 />
@@ -247,12 +247,12 @@ export default function AccountList() {
       <div className="mt-8 mb-10 rounded-3xl bg-white p-6 md:p-8 border border-[rgba(0,0,0,0.06)] shadow-sm">
         <div className="mb-8 flex flex-col md:flex-row md:items-start md:justify-between gap-4 border-b border-[rgba(0,0,0,0.06)] pb-6">
           <div>
-            <h2 className="text-xl font-bold text-[#1F2937]">Antrean Tim Marketing (Round-Robin)</h2>
+            <h2 className="text-xl font-bold text-[#1F2937]">Tim Marketing</h2>
             <p className="mt-2 text-sm text-soft max-w-xl">
-              Urutan penerimaan prospek. Nomor urut #1 akan menerima prospek (leads) berikutnya.
+              Informasi Tim Marketing Sekaligus Petunjuk Sistem Urutan Prospek Client Masuk.
             </p>
           </div>
-          
+
           <div className="flex w-full max-w-sm sm:w-auto items-center gap-2 shrink-0">
             <button
               onClick={handleManualRefresh}
@@ -263,15 +263,15 @@ export default function AccountList() {
             </button>
             <div className="relative w-full sm:w-64">
               <Search className="pointer-events-none absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={marketingSearch}
                 onChange={(e) => setMarketingSearch(e.target.value)}
-                placeholder="Cari marketing..." 
+                placeholder="Cari marketing..."
                 className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-gray-50 border border-[rgba(0,0,0,0.05)] focus:bg-white"
               />
               {marketingSearch && (
-                <button 
+                <button
                   onClick={() => setMarketingSearch('')}
                   className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                 >
@@ -281,7 +281,7 @@ export default function AccountList() {
             </div>
           </div>
         </div>
-        
+
         {loading ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {[1, 2, 3].map(i => <SkeletonAccountCard key={i} />)}
@@ -290,20 +290,20 @@ export default function AccountList() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {filteredMarketing.length > 0 ? (
               filteredMarketing.map((account, index) => (
-                <AccountCard 
-                   key={account.id}
-                   account={account}
-                   index={index}
-                   isMarketing={true}
-                   isViewerMarketing={isMarketing}
-                   viewerAccountId={userData.id}
-                   isCurrentTurn={account.id === currentTurnId}
-                   isFirst={index === 0}
-                   isLast={index === marketingQueue.length - 1}
-                   onMoveUp={() => moveUp(index)}
-                   onMoveDown={() => moveDown(index)}
-                   onDelete={() => setAccountToDelete(account)}
-                 />
+                <AccountCard
+                  key={account.id}
+                  account={account}
+                  index={index}
+                  isMarketing={true}
+                  isViewerMarketing={isMarketing}
+                  viewerAccountId={userData.id}
+                  isCurrentTurn={account.id === currentTurnId}
+                  isFirst={index === 0}
+                  isLast={index === marketingQueue.length - 1}
+                  onMoveUp={() => moveUp(index)}
+                  onMoveDown={() => moveDown(index)}
+                  onDelete={() => setAccountToDelete(account)}
+                />
               ))
             ) : (
               <EmptyState onReset={() => setMarketingSearch('')} />
@@ -312,14 +312,14 @@ export default function AccountList() {
         )}
       </div>
 
-      <DeleteModal 
+      <DeleteModal
         isOpen={!!accountToDelete}
         itemName={accountToDelete?.name}
         onCancel={() => setAccountToDelete(null)}
         onConfirm={confirmDelete}
       />
 
-      <SuccessModal 
+      <SuccessModal
         isOpen={showSuccessDelete}
         title="Berhasil Dihapus"
         message="Akun pengguna telah dihapus dari sistem."

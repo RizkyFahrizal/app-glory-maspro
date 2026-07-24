@@ -8,7 +8,7 @@ export default function PublicFooter() {
         <div>
           <p className="section-label">Glory Maspro</p>
           <p className="mt-4 max-w-sm text-sm leading-7 text-soft">
-            Properti minimalis dengan presentasi bersih, informasi jelas, dan nuansa premium yang tetap nyaman dilihat.
+            Tentukan pilihan property mu yang tepat hanya di Glory Maspro. Kami menyediakan kurasi terbaik untuk gaya hidup Anda.
           </p>
         </div>
 

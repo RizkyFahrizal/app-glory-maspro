@@ -114,7 +114,7 @@ export default function ProductDetail() {
       <div className={`relative h-full w-full ${className}`}>
         {isVideo ? (
           <>
-            <video src={media.image_path} className="h-full w-full object-cover" />
+            <video src={media.image_path} muted className="h-full w-full object-cover" />
             <div className="absolute inset-0 flex items-center justify-center bg-black/20">
               <div className="rounded-full bg-white/30 p-3 backdrop-blur-md">
                 <Play className="h-6 w-6 text-white fill-white" />
@@ -286,6 +286,7 @@ export default function ProductDetail() {
                 src={images[lightboxIndex].image_path}
                 controls
                 autoPlay
+                muted
                 className="max-h-[80vh] max-w-full rounded-md object-contain shadow-2xl"
               />
             ) : (

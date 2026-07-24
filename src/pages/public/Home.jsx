@@ -131,7 +131,7 @@ export default function Home() {
           {/* LEFT: Text content — flush left, padded */}
           <div className="flex flex-1 flex-col justify-center px-7 py-8 md:px-10 md:py-10">
             <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-[#D4AF37]">
-              Katalog Properti Premium
+              Katalog Properti KPR
             </p>
             <h1 className="mt-3 text-4xl font-bold leading-[1.15] text-[#1F2937] md:text-5xl lg:text-6xl">
               Satu <span className="text-[#B8860B]">Tempat</span> <br />

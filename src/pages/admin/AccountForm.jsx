@@ -4,6 +4,7 @@ import { ArrowLeft, ImagePlus, ChevronDown, X } from 'lucide-react'
 import axios from 'axios'
 import SuccessModal from '../../components/admin/SuccessModal'
 import AlertModal from '../../components/admin/AlertModal'
+import CustomSelect from '../../components/public/CustomSelect'
 
 export default function AccountForm() {
   const { id } = useParams()
@@ -170,7 +171,7 @@ export default function AccountForm() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl animate-fade-in">
+    <div className="mx-auto max-w-4xl">
       <div className="mb-8">
         <Link
           to="/admin/accounts"
@@ -218,20 +219,20 @@ export default function AccountForm() {
                     <div className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-100 text-gray-500 cursor-not-allowed select-none">
                       {formData.role}
                     </div>
-                  ) : (
-                    <div className="relative">
-                      <select
-                        name="role"
-                        value={formData.role}
-                        onChange={handleInputChange}
-                        disabled={isSuperAdmin}
-                        className={`input-minimal w-full appearance-none rounded-2xl py-3 pl-4 pr-10 ${isSuperAdmin ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : 'bg-white cursor-pointer'}`}
-                      >
-                        <option value="Marketing">Marketing</option>
-                        <option value="Admin">Admin</option>
-                      </select>
-                      <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-soft" />
+                  ) : isSuperAdmin ? (
+                    <div className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-100 text-gray-500 cursor-not-allowed select-none">
+                      {formData.role}
                     </div>
+                  ) : (
+                    <CustomSelect
+                      name="role"
+                      value={formData.role}
+                      onChange={handleInputChange}
+                      options={[
+                        { label: "Admin", value: "Admin" },
+                        { label: "Marketing", value: "Marketing" }
+                      ]}
+                    />
                   )}
                 </div>
 
@@ -252,13 +253,13 @@ export default function AccountForm() {
 
               {formData.role === 'Marketing' && (
                 <div>
-                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Area Cakupan (Coverage)</label>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Area Cakupan</label>
                   <input
                     type="text"
                     name="coverage_area"
                     value={formData.coverage_area}
                     onChange={handleInputChange}
-                    placeholder="Contoh: Semua Wilayah, Jakarta Selatan..."
+                    placeholder="Contoh: Semua Wilayah, Sidoarjo - Surabaya"
                     className="input-minimal w-full rounded-2xl py-3 px-4"
                   />
                 </div>
@@ -363,7 +364,7 @@ export default function AccountForm() {
         )}
       </div>
 
-      <AlertModal 
+      <AlertModal
         isOpen={alertInfo.isOpen}
         title={alertInfo.title}
         message={alertInfo.message}

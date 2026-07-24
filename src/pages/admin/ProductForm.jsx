@@ -130,6 +130,25 @@ export default function ProductForm() {
         return
       }
 
+      let hasOversizedVideo = false;
+      let hasOversizedImage = false;
+      for (const file of selectedFiles) {
+        if (file.type.startsWith('video/') && file.size > 15 * 1024 * 1024) {
+          hasOversizedVideo = true;
+        } else if (file.type.startsWith('image/') && file.size > 5 * 1024 * 1024) {
+          hasOversizedImage = true;
+        }
+      }
+
+      if (hasOversizedVideo) {
+        setAlertInfo({ isOpen: true, title: 'Ukuran Video Terlalu Besar', message: 'Maksimal ukuran file video adalah 15MB.' })
+        return
+      }
+      if (hasOversizedImage) {
+        setAlertInfo({ isOpen: true, title: 'Ukuran Foto Terlalu Besar', message: 'Maksimal ukuran file foto adalah 5MB.' })
+        return
+      }
+
       setImages(prev => [...prev, ...selectedFiles])
 
       // Generate Previews
@@ -178,7 +197,6 @@ export default function ProductForm() {
       const payload = new FormData()
 
       // Additional required fields by backend not directly in form
-      payload.append('listing_id', 'PR-' + Math.floor(Math.random() * 10000))
       payload.append('listing_type', 'Dijual')
       payload.append('status', 'available')
 
@@ -233,7 +251,7 @@ export default function ProductForm() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl animate-fade-in">
+    <div className="mx-auto max-w-5xl">
       <div className="mb-8">
         <Link
           to="/admin/products"
@@ -380,7 +398,7 @@ export default function ProductForm() {
               </div>
 
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi Singkat</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi</label>
                 <input
                   required
                   type="text"
@@ -408,7 +426,7 @@ export default function ProductForm() {
               </div>
 
               <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Catatan Tambahan (Internal)</label>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Catatan Tambahan</label>
                 <textarea
                   name="note"
                   value={formData.note}
@@ -519,7 +537,7 @@ export default function ProductForm() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kondisi Perabotan</label>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Perabotan</label>
                   {isView ? (
                     <input type="text" value={formData.furnish} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
                   ) : (
@@ -616,11 +634,11 @@ export default function ProductForm() {
                 <label className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] py-12 transition hover:bg-[#F3F4F6] cursor-pointer">
                   <ImagePlus className="mb-3 h-8 w-8 text-[#D4AF37]" />
                   <p className="text-sm font-medium text-[#1F2937]">Klik untuk unggah foto & video</p>
-                  <p className="mt-1 text-xs text-soft text-center px-4">Maks 7 media (PNG/JPG up to 5MB, maks. 1 video WebM)</p>
+                  <p className="mt-1 text-xs text-soft text-center px-4">Maks 7 media (PNG/JPG up to 5MB, maks. 1 video WebM/MP4 up to 15MB)</p>
                   <input
                     type="file"
                     multiple
-                    accept="image/png, image/jpeg, image/webp, video/webm"
+                    accept="image/png, image/jpeg, image/webp, video/webm, video/mp4"
                     onChange={handleImageChange}
                     className="hidden"
                     disabled={isView}
