@@ -1,10 +1,22 @@
+import { useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, PackageSearch, Users, LogOut, X } from 'lucide-react'
+import { LayoutDashboard, PackageSearch, Users, LogOut, X, Globe } from 'lucide-react'
 import axios from 'axios'
 
 export default function AdminSidebar({ isOpen, onClose }) {
   const location = useLocation()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'auto'
+    }
+    return () => {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isOpen])
 
   const handleLogout = async () => {
     try {
@@ -19,7 +31,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
     } finally {
       localStorage.removeItem('token')
       localStorage.removeItem('user')
-      navigate('/admin/login')
+      navigate('/')
     }
   }
 
@@ -34,8 +46,8 @@ export default function AdminSidebar({ isOpen, onClose }) {
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed left-0 top-0 z-50 h-screen w-64 transform border-r border-white/40 bg-white/60 p-6 backdrop-blur-xl shadow-lg shadow-[#b8860b]/5 transition-transform duration-300 ease-in-out md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="mb-10 flex items-center justify-between">
+      <aside className={`fixed left-0 top-0 z-50 flex h-[100dvh] w-64 flex-col transform border-r border-white/40 bg-white/60 p-6 backdrop-blur-xl shadow-lg shadow-[#b8860b]/5 transition-transform duration-300 ease-in-out md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div className="mb-10 shrink-0 flex items-center justify-between">
           <div>
             <p className="text-[10px] font-bold tracking-[0.3em] text-[#B8860B] uppercase">Admin Portal</p>
             <h2 className="mt-1 text-xl font-semibold tracking-widest text-[#2C1A00]">GLORY MASPRO</h2>
@@ -45,7 +57,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
           </button>
         </div>
 
-        <nav className="flex flex-col gap-2 relative z-10">
+        <nav className="flex-1 overflow-y-auto flex flex-col gap-2 relative z-10 pb-4">
           <Link
             to="/admin/dashboard"
             onClick={onClose}
@@ -80,13 +92,22 @@ export default function AdminSidebar({ isOpen, onClose }) {
           </Link>
         </nav>
 
-        <div className="absolute bottom-8 left-6 right-6">
+        <div className="mt-auto shrink-0 pt-4 border-t border-[rgba(0,0,0,0.06)]">
+          <Link
+            to="/"
+            className="mb-2 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-[#B8860B] transition hover:bg-[#D4AF37]/10"
+          >
+            <Globe className="h-5 w-5" /> Kembali ke Website
+          </Link>
           <button
             onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-500 transition hover:bg-red-400/10 hover:text-red-600"
           >
             <LogOut className="h-5 w-5" /> Logout
           </button>
+          <p className="mt-4 text-center text-[10px] text-soft opacity-70">
+            Jangan lupa logout jika sudah tidak<br />menggunakan portal admin.
+          </p>
         </div>
       </aside>
     </>

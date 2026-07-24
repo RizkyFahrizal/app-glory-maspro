@@ -130,12 +130,12 @@ export default function ProductList() {
             <div className="p-8 text-center text-soft">Memuat data...</div>
           ) : (
             <table className="w-full text-left text-sm text-[#1F2937]">
-              <thead className="bg-[#F3F4F6] text-xs uppercase tracking-wider text-soft">
+              <thead className="bg-[#F3F4F6] text-xs uppercase tracking-wider text-soft whitespace-nowrap">
                 <tr>
-                  <th className="px-6 py-4 font-semibold">Properti</th>
-                  <th className="px-6 py-4 font-semibold">Harga & Tipe</th>
-                  <th className="px-6 py-4 font-semibold">Status</th>
-                  <th className="px-6 py-4 text-right font-semibold">Aksi</th>
+                  <th className="px-6 py-4 font-semibold min-w-[320px]">Properti</th>
+                  <th className="px-6 py-4 font-semibold min-w-[180px]">Harga & Tipe</th>
+                  <th className="px-6 py-4 font-semibold min-w-[120px]">Status</th>
+                  <th className="px-6 py-4 text-right font-semibold min-w-[120px]">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">

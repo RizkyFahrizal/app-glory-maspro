@@ -36,7 +36,7 @@ export default function AccountCard({
           </span>
           {/* Only admin can reorder the queue */}
           {!isViewerMarketing && (
-            <div className="flex flex-col mt-1 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="flex flex-col mt-1">
               <button
                 onClick={() => onMoveUp(index)}
                 disabled={isFirst}
@@ -56,8 +56,8 @@ export default function AccountCard({
         </div>
       )}
 
-      {/* Action Buttons (Hover) */}
-      <div className="absolute right-4 top-4 z-10 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+      {/* Action Buttons (Always Visible) */}
+      <div className="absolute right-4 top-4 z-10 flex gap-1">
         {canEdit && (
           <Link
             to={`/admin/accounts/edit/${account.id}`}
