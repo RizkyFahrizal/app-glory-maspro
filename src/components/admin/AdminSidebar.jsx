@@ -1,14 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, PackageSearch, Users, LogOut, X, Globe } from 'lucide-react'
+import { LayoutDashboard, PackageSearch, Users, LogOut, X, Globe, AlertTriangle } from 'lucide-react'
+import { createPortal } from 'react-dom'
 import axios from 'axios'
 
 export default function AdminSidebar({ isOpen, onClose }) {
   const location = useLocation()
   const navigate = useNavigate()
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  
+  const userData = JSON.parse(localStorage.getItem('user') || '{}')
+  const userName = userData.name || 'Admin'
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen || showLogoutModal) {
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.overflow = 'auto'
@@ -16,9 +21,14 @@ export default function AdminSidebar({ isOpen, onClose }) {
     return () => {
       document.body.style.overflow = 'auto'
     }
-  }, [isOpen])
+  }, [isOpen, showLogoutModal])
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
+  }
+
+  const handleConfirmLogout = async () => {
+    setShowLogoutModal(false)
     try {
       const token = localStorage.getItem('token')
       if (token) {
@@ -77,7 +87,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
               : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
               }`}
           >
-            <PackageSearch className="h-5 w-5" /> Kelola Katalog
+            <PackageSearch className="h-5 w-5" /> Kelola Properti
           </Link>
 
           <Link
@@ -100,7 +110,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
             <Globe className="h-5 w-5" /> Kembali ke Website
           </Link>
           <button
-            onClick={handleLogout}
+            onClick={handleLogoutClick}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-500 transition hover:bg-red-400/10 hover:text-red-600"
           >
             <LogOut className="h-5 w-5" /> Logout
@@ -110,6 +120,37 @@ export default function AdminSidebar({ isOpen, onClose }) {
           </p>
         </div>
       </aside>
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutModal && createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 p-4 backdrop-blur-sm animate-fade-in">
+          <div className="glass-panel w-full max-w-md rounded-[2rem] p-8 text-center border border-[rgba(0,0,0,0.06)] bg-white">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-red-500">
+              <LogOut className="h-8 w-8 ml-1" />
+            </div>
+            <h3 className="text-xl font-semibold text-[#1F2937]">Konfirmasi Logout</h3>
+            <p className="mt-2 text-sm text-soft">
+              Apakah <strong>{userName}</strong> yakin ingin keluar dari portal admin? Anda harus login kembali untuk masuk.
+            </p>
+            
+            <div className="mt-8 flex items-center justify-center gap-4">
+              <button 
+                onClick={() => setShowLogoutModal(false)}
+                className="rounded-2xl px-6 py-3 text-sm font-medium text-soft transition hover:text-[#1F2937]"
+              >
+                Batal
+              </button>
+              <button 
+                onClick={handleConfirmLogout}
+                className="rounded-2xl bg-red-500/10 px-6 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/20"
+              >
+                Ya, Logout
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </>
   )
 }

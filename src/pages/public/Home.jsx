@@ -15,7 +15,7 @@ export default function Home() {
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 3
+  const itemsPerPage = 6
 
   // Filter States
   const [filters, setFilters] = useState({

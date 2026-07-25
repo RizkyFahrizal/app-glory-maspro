@@ -184,7 +184,7 @@ export default function ProductForm() {
       setExistingImages(prev => prev.filter(img => img.id !== imageToDelete))
     } catch (error) {
       console.error('Failed to delete image:', error)
-      alert('Gagal menghapus gambar')
+      setAlertInfo({ isOpen: true, title: 'Gagal Menghapus', message: 'Gagal menghapus gambar dari server.' })
     } finally {
       setImageToDelete(null)
     }
@@ -192,6 +192,12 @@ export default function ProductForm() {
 
   const handleSave = async (e) => {
     e.preventDefault()
+
+    if (images.length === 0 && existingImages.length === 0) {
+      setAlertInfo({ isOpen: true, title: 'Validasi Gagal', message: 'Anda harus mengunggah minimal 1 media (foto/video) untuk properti ini.' })
+      return
+    }
+
     setLoading(true)
     try {
       const token = localStorage.getItem('token') || ''
@@ -240,7 +246,7 @@ export default function ProductForm() {
       setShowSuccess(true)
     } catch (error) {
       console.error('Failed to save product:', error)
-      alert(error.response?.data?.message || 'Gagal menyimpan properti')
+      setAlertInfo({ isOpen: true, title: 'Gagal Menyimpan', message: error.response?.data?.message || 'Pastikan semua kolom (termasuk minimal 1 foto) sudah terisi dengan benar.' })
     } finally {
       setLoading(false)
     }

@@ -13,6 +13,8 @@ export default function ProductList() {
   const [productToDelete, setProductToDelete] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
   const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
 
   const userData = JSON.parse(localStorage.getItem('user') || '{}')
@@ -78,6 +80,12 @@ export default function ProductList() {
     p.listing_id.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
+  const currentProducts = filteredProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
   return (
     <div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -108,13 +116,19 @@ export default function ProductList() {
             <input
               type="text"
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value)
+                setCurrentPage(1)
+              }}
               placeholder="Cari nama properti atau ID..."
               className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-white border border-[rgba(0,0,0,0.1)] shadow-sm"
             />
             {searchTerm && (
               <button
-                onClick={() => setSearchTerm('')}
+                onClick={() => {
+                  setSearchTerm('')
+                  setCurrentPage(1)
+                }}
                 className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
               >
                 <X className="h-4 w-4" />
@@ -139,7 +153,7 @@ export default function ProductList() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">
-                {filteredProducts.map((product) => (
+                {currentProducts.map((product) => (
                   <tr key={product.id} className="transition-colors hover:bg-[#F9FAFB]">
                     <td className="px-6 py-6">
                       <div className="flex items-center gap-4">
@@ -238,15 +252,46 @@ export default function ProductList() {
           )}
         </div>
 
-        {/* Pagination Dummy */}
-        <div className="flex items-center justify-between border-t border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] px-6 py-4 text-sm text-soft">
-          <div>Menampilkan hasil pencarian</div>
-          <div className="flex gap-2">
-            <button className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937]" disabled>Prev</button>
-            <button className="rounded-lg bg-[#D4AF37]/10 px-3 py-1 text-[#B8860B]">1</button>
-            <button className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937]" disabled>Next</button>
+        {filteredProducts.length > 0 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] px-6 py-4 text-sm text-soft">
+            <div>
+              Menampilkan {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredProducts.length)} dari {filteredProducts.length} data
+            </div>
+            
+            {totalPages > 1 && (
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <button 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Prev
+                </button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`rounded-lg px-3 py-1 transition ${currentPage === page
+                      ? 'bg-[#D4AF37]/10 text-[#B8860B] font-medium'
+                      : 'border border-[rgba(0,0,0,0.1)] hover:bg-white hover:text-[#1F2937]'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+
+                <button 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
-        </div>
+        )}
       </div>
 
       <DeleteModal
