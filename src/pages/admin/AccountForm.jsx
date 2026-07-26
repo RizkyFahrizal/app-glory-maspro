@@ -49,7 +49,7 @@ export default function AccountForm() {
       const fetchAccount = async () => {
         try {
           const token = localStorage.getItem('token') || ''
-          const res = await axios.get(`http://127.0.0.1:8000/api/accounts/${id}`, {
+          const res = await axios.get(`https://api.glorymaspro.com/api/accounts/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
           })
           if (res.data && res.data.success) {
@@ -67,7 +67,7 @@ export default function AccountForm() {
               setIsSuperAdmin(true)
             }
             if (data.photo) {
-              setPhotoPreview(`http://127.0.0.1:8000/storage/${data.photo}`)
+              setPhotoPreview(`https://api.glorymaspro.com/storage/${data.photo}`)
             }
           }
         } catch (error) {
@@ -146,14 +146,14 @@ export default function AccountForm() {
       }
 
       if (isEdit) {
-        const response = await axios.put(`http://127.0.0.1:8000/api/accounts/${id}`, payload, config)
+        const response = await axios.put(`https://api.glorymaspro.com/api/accounts/${id}`, payload, config)
 
         const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
         if (currentUser.id === parseInt(id) && response.data?.data) {
           localStorage.setItem('user', JSON.stringify(response.data.data))
         }
       } else {
-        await axios.post('http://127.0.0.1:8000/api/accounts', payload, config)
+        await axios.post('https://api.glorymaspro.com/api/accounts', payload, config)
       }
 
       setShowSuccess(true)

@@ -49,6 +49,9 @@ export default function AccountList() {
   const [marketingQueue, setMarketingQueue] = useState([])
   const [loading, setLoading] = useState(true)
   const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
+  const [adminCurrentPage, setAdminCurrentPage] = useState(1)
+  const [marketingCurrentPage, setMarketingCurrentPage] = useState(1)
+  const itemsPerPage = 6
 
   const userData = JSON.parse(localStorage.getItem('user') || '{}')
   const isMarketing = userData.role?.toLowerCase() === 'marketing'
@@ -71,7 +74,7 @@ export default function AccountList() {
     try {
       if (showLoading) setLoading(true)
       const token = localStorage.getItem('token') || ''
-      const res = await axios.get('http://127.0.0.1:8000/api/accounts', {
+      const res = await axios.get('https://api.glorymaspro.com/api/accounts', {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (res.data && res.data.success) {
@@ -106,7 +109,7 @@ export default function AccountList() {
 
     try {
       const token = localStorage.getItem('token') || ''
-      await axios.delete(`http://127.0.0.1:8000/api/accounts/${accountToDelete.id}`, {
+      await axios.delete(`https://api.glorymaspro.com/api/accounts/${accountToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       setShowSuccessDelete(true)
@@ -125,7 +128,7 @@ export default function AccountList() {
       const token = localStorage.getItem('token') || ''
       const orderedIds = queue.map(acc => acc.wa_marketing?.id).filter(Boolean)
       if (orderedIds.length > 0) {
-        await axios.post('http://127.0.0.1:8000/api/wa-marketing/reorder', { ordered_ids: orderedIds }, {
+        await axios.post('https://api.glorymaspro.com/api/wa-marketing/reorder', { ordered_ids: orderedIds }, {
           headers: { Authorization: `Bearer ${token}` }
         })
       }
@@ -134,8 +137,9 @@ export default function AccountList() {
     }
   }
 
-  const moveUp = (index) => {
-    if (index === 0) return
+  const moveUp = (accountId) => {
+    const index = marketingQueue.findIndex(acc => acc.id === accountId)
+    if (index <= 0) return
     const newQueue = [...marketingQueue]
     const temp = newQueue[index]
     newQueue[index] = newQueue[index - 1]
@@ -144,8 +148,9 @@ export default function AccountList() {
     saveReorder(newQueue)
   }
 
-  const moveDown = (index) => {
-    if (index === marketingQueue.length - 1) return
+  const moveDown = (accountId) => {
+    const index = marketingQueue.findIndex(acc => acc.id === accountId)
+    if (index === -1 || index === marketingQueue.length - 1) return
     const newQueue = [...marketingQueue]
     const temp = newQueue[index]
     newQueue[index] = newQueue[index + 1]
@@ -158,11 +163,15 @@ export default function AccountList() {
     acc.name.toLowerCase().includes(adminSearch.toLowerCase()) ||
     acc.email.toLowerCase().includes(adminSearch.toLowerCase())
   )
+  const adminTotalPages = Math.ceil(filteredAdmin.length / itemsPerPage)
+  const currentAdmin = filteredAdmin.slice((adminCurrentPage - 1) * itemsPerPage, adminCurrentPage * itemsPerPage)
 
   const filteredMarketing = marketingQueue.filter(acc =>
     acc.name.toLowerCase().includes(marketingSearch.toLowerCase()) ||
     acc.email.toLowerCase().includes(marketingSearch.toLowerCase())
   )
+  const marketingTotalPages = Math.ceil(filteredMarketing.length / itemsPerPage)
+  const currentMarketing = filteredMarketing.slice((marketingCurrentPage - 1) * itemsPerPage, marketingCurrentPage * itemsPerPage)
 
   const getCurrentTurnId = () => {
     if (marketingQueue.length === 0) return null
@@ -207,13 +216,19 @@ export default function AccountList() {
             <input
               type="text"
               value={adminSearch}
-              onChange={(e) => setAdminSearch(e.target.value)}
+              onChange={(e) => {
+                setAdminSearch(e.target.value)
+                setAdminCurrentPage(1)
+              }}
               placeholder="Cari admin..."
               className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-gray-50 border border-[rgba(0,0,0,0.05)] focus:bg-white"
             />
             {adminSearch && (
               <button
-                onClick={() => setAdminSearch('')}
+                onClick={() => {
+                  setAdminSearch('')
+                  setAdminCurrentPage(1)
+                }}
                 className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
               >
                 <X className="h-4 w-4" />
@@ -226,20 +241,58 @@ export default function AccountList() {
             {[1, 2, 3].map(i => <SkeletonAccountCard key={i} />)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredAdmin.length > 0 ? (
-              filteredAdmin.map((account) => (
-                <AccountCard
-                  key={account.id}
-                  account={account}
-                  isViewerMarketing={isMarketing}
-                  onDelete={() => setAccountToDelete(account)}
-                />
-              ))
-            ) : (
-              <EmptyState onReset={() => setAdminSearch('')} />
+          <>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {currentAdmin.length > 0 ? (
+                currentAdmin.map((account) => (
+                  <AccountCard
+                    key={account.id}
+                    account={account}
+                    isViewerMarketing={isMarketing}
+                    onDelete={() => setAccountToDelete(account)}
+                  />
+                ))
+              ) : (
+                <EmptyState onReset={() => setAdminSearch('')} />
+              )}
+            </div>
+            
+            {filteredAdmin.length > 0 && adminTotalPages > 1 && (
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[rgba(0,0,0,0.06)] pt-6 text-sm text-soft">
+                <div>
+                  Menampilkan {((adminCurrentPage - 1) * itemsPerPage) + 1} - {Math.min(adminCurrentPage * itemsPerPage, filteredAdmin.length)} dari {filteredAdmin.length} data
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button 
+                    onClick={() => setAdminCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={adminCurrentPage === 1}
+                    className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Prev
+                  </button>
+                  {Array.from({ length: adminTotalPages }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      onClick={() => setAdminCurrentPage(page)}
+                      className={`rounded-lg px-3 py-1 transition ${adminCurrentPage === page
+                        ? 'bg-[#D4AF37]/10 text-[#B8860B] font-medium'
+                        : 'border border-[rgba(0,0,0,0.1)] hover:bg-gray-50 hover:text-[#1F2937]'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button 
+                    onClick={() => setAdminCurrentPage(p => Math.min(adminTotalPages, p + 1))}
+                    disabled={adminCurrentPage === adminTotalPages}
+                    className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
 
@@ -266,13 +319,19 @@ export default function AccountList() {
               <input
                 type="text"
                 value={marketingSearch}
-                onChange={(e) => setMarketingSearch(e.target.value)}
+                onChange={(e) => {
+                  setMarketingSearch(e.target.value)
+                  setMarketingCurrentPage(1)
+                }}
                 placeholder="Cari marketing..."
                 className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-gray-50 border border-[rgba(0,0,0,0.05)] focus:bg-white"
               />
               {marketingSearch && (
                 <button
-                  onClick={() => setMarketingSearch('')}
+                  onClick={() => {
+                    setMarketingSearch('')
+                    setMarketingCurrentPage(1)
+                  }}
                   className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                 >
                   <X className="h-4 w-4" />
@@ -287,28 +346,69 @@ export default function AccountList() {
             {[1, 2, 3].map(i => <SkeletonAccountCard key={i} />)}
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {filteredMarketing.length > 0 ? (
-              filteredMarketing.map((account, index) => (
-                <AccountCard
-                  key={account.id}
-                  account={account}
-                  index={index}
-                  isMarketing={true}
-                  isViewerMarketing={isMarketing}
-                  viewerAccountId={userData.id}
-                  isCurrentTurn={account.id === currentTurnId}
-                  isFirst={index === 0}
-                  isLast={index === marketingQueue.length - 1}
-                  onMoveUp={() => moveUp(index)}
-                  onMoveDown={() => moveDown(index)}
-                  onDelete={() => setAccountToDelete(account)}
-                />
-              ))
-            ) : (
-              <EmptyState onReset={() => setMarketingSearch('')} />
+          <>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {currentMarketing.length > 0 ? (
+                currentMarketing.map((account) => {
+                  const realIndex = marketingQueue.findIndex(acc => acc.id === account.id)
+                  return (
+                    <AccountCard
+                      key={account.id}
+                      account={account}
+                      index={realIndex}
+                      isMarketing={true}
+                      isViewerMarketing={isMarketing}
+                      viewerAccountId={userData.id}
+                      isCurrentTurn={account.id === currentTurnId}
+                      isFirst={realIndex === 0}
+                      isLast={realIndex === marketingQueue.length - 1}
+                      onMoveUp={() => moveUp(account.id)}
+                      onMoveDown={() => moveDown(account.id)}
+                      onDelete={() => setAccountToDelete(account)}
+                    />
+                  )
+                })
+              ) : (
+                <EmptyState onReset={() => setMarketingSearch('')} />
+              )}
+            </div>
+            
+            {filteredMarketing.length > 0 && marketingTotalPages > 1 && (
+              <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[rgba(0,0,0,0.06)] pt-6 text-sm text-soft">
+                <div>
+                  Menampilkan {((marketingCurrentPage - 1) * itemsPerPage) + 1} - {Math.min(marketingCurrentPage * itemsPerPage, filteredMarketing.length)} dari {filteredMarketing.length} data
+                </div>
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <button 
+                    onClick={() => setMarketingCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={marketingCurrentPage === 1}
+                    className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Prev
+                  </button>
+                  {Array.from({ length: marketingTotalPages }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      onClick={() => setMarketingCurrentPage(page)}
+                      className={`rounded-lg px-3 py-1 transition ${marketingCurrentPage === page
+                        ? 'bg-[#D4AF37]/10 text-[#B8860B] font-medium'
+                        : 'border border-[rgba(0,0,0,0.1)] hover:bg-gray-50 hover:text-[#1F2937]'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button 
+                    onClick={() => setMarketingCurrentPage(p => Math.min(marketingTotalPages, p + 1))}
+                    disabled={marketingCurrentPage === marketingTotalPages}
+                    className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
             )}
-          </div>
+          </>
         )}
       </div>
 

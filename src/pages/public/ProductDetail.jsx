@@ -17,7 +17,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/products/${slug}`)
+        const response = await axios.get(`https://api.glorymaspro.com/api/products/${slug}`)
         if (response.data && response.data.success) {
           setProduct(response.data.data)
         } else {
@@ -64,7 +64,7 @@ export default function ProductDetail() {
     if (isContacting) return
     setIsContacting(true)
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/wa-marketing/next')
+      const res = await axios.get('https://api.glorymaspro.com/api/wa-marketing/next')
       let waNumber = ''
       if (res.data && res.data.success && res.data.data?.phone_number) {
         waNumber = res.data.data.phone_number
@@ -248,7 +248,7 @@ export default function ProductDetail() {
       </div>
 
       {/* Lightbox / Media Preview Modal */}
-      <ProductLightbox 
+      <ProductLightbox
         isOpen={isLightboxOpen}
         onClose={() => setIsLightboxOpen(false)}
         images={images}

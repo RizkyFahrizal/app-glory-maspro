@@ -19,7 +19,7 @@ export default function AdminLayout() {
 
     const verifyToken = async () => {
       try {
-        await axios.get('http://127.0.0.1:8000/api/user', {
+        await axios.get('https://api.glorymaspro.com/api/user', {
           headers: { Authorization: `Bearer ${token}` }
         })
         setIsChecking(false)
@@ -61,15 +61,15 @@ export default function AdminLayout() {
       </div>
 
       <AdminTopbar onMenuClick={() => setIsMobileMenuOpen(true)} />
-      
-      <AdminSidebar 
-        isOpen={isMobileMenuOpen} 
-        onClose={() => setIsMobileMenuOpen(false)} 
+
+      <AdminSidebar
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
 
       {/* Main Content Area */}
       <main className="relative mt-16 flex-1 w-full p-4 md:mt-0 md:ml-64 md:p-8 overflow-x-hidden" style={{ zIndex: 1 }}>
-        <div 
+        <div
           key={location.pathname}
           className="mx-auto w-full max-w-6xl animate-fade-in"
         >
