@@ -167,17 +167,21 @@ export default function AccountForm() {
 
   const handleSuccessOk = () => {
     setShowSuccess(false)
-    navigate('/admin/accounts')
+    if (isMarketing) {
+      navigate('/admin/dashboard')
+    } else {
+      navigate('/admin/accounts')
+    }
   }
 
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8">
         <Link
-          to="/admin/accounts"
+          to={isMarketing ? "/admin/dashboard" : "/admin/accounts"}
           className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]"
         >
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Kelola Akun
+          <ArrowLeft className="h-4 w-4" /> {isMarketing ? 'Kembali ke Dashboard' : 'Kembali ke Kelola Akun'}
         </Link>
         <h1 className="text-2xl font-semibold text-[#1F2937]">
           {isEdit ? 'Edit Data Akun' : 'Tambah Akun Baru'}
@@ -274,9 +278,13 @@ export default function AccountForm() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
+                    disabled={isMarketing}
                     placeholder="Contoh: 081234567890"
-                    className="input-minimal w-full rounded-2xl py-3 px-4"
+                    className={`input-minimal w-full rounded-2xl py-3 px-4 ${isMarketing ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
                   />
+                  {isMarketing && (
+                    <p className="mt-2 text-xs text-soft text-amber-600">Nomor telepon hanya dapat diubah oleh Admin.</p>
+                  )}
                 </div>
               )}
 
@@ -354,7 +362,7 @@ export default function AccountForm() {
               </button>
               <button
                 type="button"
-                onClick={() => navigate('/admin/accounts')}
+                onClick={() => isMarketing ? navigate('/admin/dashboard') : navigate('/admin/accounts')}
                 className="flex-1 rounded-2xl bg-gray-100 py-4 font-bold text-sm text-[#1F2937] transition hover:bg-gray-200"
               >
                 Kembali

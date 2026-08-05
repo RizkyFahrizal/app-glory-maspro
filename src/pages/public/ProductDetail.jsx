@@ -129,15 +129,16 @@ export default function ProductDetail() {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -15 }}
-      transition={{ duration: 0.4 }}
-      className="pb-16 pt-4"
-    >
-      <div className="glass-panel rounded-[2rem] p-5 md:p-8">
-        <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]">
+    <div className="min-h-screen bg-gray-50 w-full">
+      <motion.div
+        className="mx-auto w-full max-w-7xl px-6 pt-10 pb-16"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -15 }}
+        transition={{ duration: 0.4 }}
+      >
+      <div className="bg-white rounded-[2rem] shadow-sm border border-[rgba(0,0,0,0.06)] p-5 md:p-8">
+        <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#6B7280] hover:text-[#B8860B] transition">
           <ArrowLeft className="h-4 w-4" /> Kembali ke Katalog
         </Link>
 
@@ -255,6 +256,7 @@ export default function ProductDetail() {
         lightboxIndex={lightboxIndex}
         setLightboxIndex={setLightboxIndex}
       />
-    </motion.div>
+      </motion.div>
+    </div>
   )
 }

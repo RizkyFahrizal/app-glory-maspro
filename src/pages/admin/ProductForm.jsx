@@ -8,6 +8,13 @@ import DeleteModal from '../../components/admin/DeleteModal'
 import CustomSelect from '../../components/public/CustomSelect'
 import ProductImageUploader from '../../components/admin/ProductImageUploader'
 
+// Dummy Projects untuk dropdown
+const dummyProjects = [
+  { id: 1, name: 'PT Lentera / Samesta Mahata Serpong' },
+  { id: 2, name: 'PT Kahuripan' },
+  { id: 3, name: 'Glory Residence' }
+]
+
 export default function ProductForm() {
   const { id } = useParams()
   const location = useLocation()
@@ -47,7 +54,8 @@ export default function ProductForm() {
     furnish: 'Non-Furnished',
     note: '',
     description: '',
-    status: 'available'
+    status: 'available',
+    project_id: ''
   })
 
   const [images, setImages] = useState([])
@@ -92,7 +100,8 @@ export default function ProductForm() {
               furnish: data.furnish || 'Non-Furnished',
               note: data.note || '',
               description: data.description || '',
-              status: data.status || 'available'
+              status: data.status || 'available',
+              project_id: data.project_id || ''
             })
             if (data.images) {
               setExistingImages(data.images)
@@ -297,6 +306,25 @@ export default function ProductForm() {
 
             {/* Kiri: Info Utama */}
             <div className="space-y-6">
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Proyek Terkait</label>
+                {isView ? (
+                  <input type="text" value={dummyProjects.find(p => p.id == formData.project_id)?.name || 'Tidak Ada (Berdiri Sendiri)'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                ) : (
+                  <CustomSelect
+                    name="project_id"
+                    value={formData.project_id}
+                    onChange={handleInputChange}
+                    disabled={isView}
+                    placeholder="Pilih Proyek (Opsional)"
+                    options={[
+                      { label: "Tidak Ada (Berdiri Sendiri)", value: "" },
+                      ...dummyProjects.map(p => ({ label: p.name, value: String(p.id) }))
+                    ]}
+                  />
+                )}
+              </div>
+
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Properti</label>
                 <input

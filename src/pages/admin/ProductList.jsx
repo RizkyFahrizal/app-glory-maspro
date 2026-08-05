@@ -13,7 +13,15 @@ export default function ProductList() {
   const [productToDelete, setProductToDelete] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
+  const [projectFilter, setProjectFilter] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+
+  // Dummy Projects untuk dropdown filter
+  const dummyProjects = [
+    { id: 1, name: 'PT Lentera / Samesta Mahata Serpong' },
+    { id: 2, name: 'PT Kahuripan' },
+    { id: 3, name: 'Glory Residence' }
+  ]
   const itemsPerPage = 10
   const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
 
@@ -75,10 +83,21 @@ export default function ProductList() {
     }
   }
 
-  const filteredProducts = products.filter(p =>
-    p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.listing_id.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredProducts = products.filter(p => {
+    const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                          p.listing_id.toLowerCase().includes(searchTerm.toLowerCase())
+    
+    let matchesProject = true
+    if (projectFilter !== '') {
+      if (projectFilter === 'none') {
+        matchesProject = !p.project_id
+      } else {
+        matchesProject = String(p.project_id) === String(projectFilter)
+      }
+    }
+
+    return matchesSearch && matchesProject
+  })
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
   const currentProducts = filteredProducts.slice(
@@ -111,29 +130,52 @@ export default function ProductList() {
       <div className="mt-8 glass-panel overflow-hidden rounded-3xl border border-[rgba(0,0,0,0.06)] bg-white">
         {/* Table Toolbar */}
         <div className="flex flex-col gap-4 border-b border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full max-w-sm">
-            <Search className="pointer-events-none absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value)
-                setCurrentPage(1)
-              }}
-              placeholder="Cari nama properti atau ID..."
-              className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-white border border-[rgba(0,0,0,0.1)] shadow-sm"
-            />
-            {searchTerm && (
-              <button
-                onClick={() => {
-                  setSearchTerm('')
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:max-w-3xl">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => {
+                  setSearchTerm(e.target.value)
                   setCurrentPage(1)
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                placeholder="Cari nama properti atau ID..."
+                className="input-minimal w-full rounded-2xl py-3 pl-12 pr-10 text-sm bg-white border border-[rgba(0,0,0,0.1)] shadow-sm"
+              />
+              {searchTerm && (
+                <button
+                  onClick={() => {
+                    setSearchTerm('')
+                    setCurrentPage(1)
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            
+            <div className="sm:w-64 relative">
+              <select
+                value={projectFilter}
+                onChange={(e) => {
+                  setProjectFilter(e.target.value)
+                  setCurrentPage(1)
+                }}
+                className="input-minimal w-full rounded-2xl py-3 px-4 text-sm bg-white border border-[rgba(0,0,0,0.1)] shadow-sm outline-none appearance-none cursor-pointer"
               >
-                <X className="h-4 w-4" />
-              </button>
-            )}
+                <option value="">Semua Proyek</option>
+                <option value="none">Tidak Ada (Berdiri Sendiri)</option>
+                {dummyProjects.map(p => (
+                  <option key={p.id} value={p.id}>{p.name}</option>
+                ))}
+              </select>
+              {/* Custom arrow for select */}
+              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+              </div>
+            </div>
           </div>
           <div className="text-sm font-medium text-[#B8860B]">Total: {filteredProducts.length} Data</div>
         </div>
