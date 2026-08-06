@@ -190,7 +190,7 @@ export default function About() {
             </div>
 
             <a 
-              href="https://maps.google.com" 
+              href="https://maps.app.goo.gl/ypjmHXKv6gwiDkm47" 
               target="_blank" 
               rel="noreferrer"
               className="mt-4 flex items-center justify-center gap-2 w-full bg-[#F5B041] hover:bg-[#E67E22] text-white font-bold py-4 rounded-2xl transition-colors shadow-md"
@@ -203,7 +203,7 @@ export default function About() {
           <div className="lg:col-span-8 h-[400px] lg:h-full min-h-[400px] w-full rounded-[2rem] overflow-hidden shadow-lg border-4 border-white bg-gray-200 relative">
             <iframe 
               title="Google Maps Lokasi Perusahaan"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126646.209706786!2d112.63004313554477!3d-7.275612030018042!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd7fbf8381ac47f%3A0x3027a76e352be40!2sSurabaya%2C%20East%20Java!5e0!3m2!1sen!2sid!4v1700000000000!5m2!1sen!2sid" 
+              src="https://maps.google.com/maps?q=-7.455827,112.6873922&t=&z=16&ie=UTF8&iwloc=&output=embed" 
               className="absolute inset-0 w-full h-full border-0"
               allowFullScreen="" 
               loading="lazy" 
