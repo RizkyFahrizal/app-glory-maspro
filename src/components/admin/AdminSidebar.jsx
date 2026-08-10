@@ -8,7 +8,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
   const location = useLocation()
   const navigate = useNavigate()
   const [showLogoutModal, setShowLogoutModal] = useState(false)
-  
+
   const userData = JSON.parse(localStorage.getItem('user') || '{}')
   const userName = userData.name || 'Admin'
 
@@ -32,7 +32,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
     try {
       const token = localStorage.getItem('token')
       if (token) {
-        await axios.post('https://api.glorymaspro.com/api/logout', {}, {
+        await axios.post('http://127.0.0.1:8000/api/logout', {}, {
           headers: { Authorization: `Bearer ${token}` }
         })
       }
@@ -169,15 +169,15 @@ export default function AdminSidebar({ isOpen, onClose }) {
             <p className="mt-2 text-sm text-soft">
               Apakah <strong>{userName}</strong> yakin ingin keluar dari portal admin? Anda harus login kembali untuk masuk.
             </p>
-            
+
             <div className="mt-8 flex items-center justify-center gap-4">
-              <button 
+              <button
                 onClick={() => setShowLogoutModal(false)}
                 className="rounded-2xl px-6 py-3 text-sm font-medium text-soft transition hover:text-[#1F2937]"
               >
                 Batal
               </button>
-              <button 
+              <button
                 onClick={handleConfirmLogout}
                 className="rounded-2xl bg-red-500/10 px-6 py-3 text-sm font-semibold text-red-400 transition hover:bg-red-500/20"
               >

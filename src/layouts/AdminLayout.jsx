@@ -19,7 +19,7 @@ export default function AdminLayout() {
 
     const verifyToken = async () => {
       try {
-        await axios.get('https://api.glorymaspro.com/api/user', {
+        await axios.get('http://127.0.0.1:8000/api/user', {
           headers: { Authorization: `Bearer ${token}` }
         })
         setIsChecking(false)

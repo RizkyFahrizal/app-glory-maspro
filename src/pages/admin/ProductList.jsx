@@ -37,7 +37,7 @@ export default function ProductList() {
   const fetchProducts = async () => {
     try {
       setLoading(true)
-      const res = await axios.get('https://api.glorymaspro.com/api/products')
+      const res = await axios.get('http://127.0.0.1:8000/api/products')
       if (res.data && res.data.success) {
         setProducts(res.data.data)
       }
@@ -67,7 +67,7 @@ export default function ProductList() {
 
     try {
       const token = localStorage.getItem('token') || ''
-      const res = await axios.delete(`https://api.glorymaspro.com/api/products/${productToDelete.id}`, {
+      const res = await axios.delete(`http://127.0.0.1:8000/api/products/${productToDelete.id}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (res.data && res.data.success) {
@@ -85,8 +85,8 @@ export default function ProductList() {
 
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          p.listing_id.toLowerCase().includes(searchTerm.toLowerCase())
-    
+      p.listing_id.toLowerCase().includes(searchTerm.toLowerCase())
+
     let matchesProject = true
     if (projectFilter !== '') {
       if (projectFilter === 'none') {
@@ -155,7 +155,7 @@ export default function ProductList() {
                 </button>
               )}
             </div>
-            
+
             <div className="sm:w-64 relative">
               <select
                 value={projectFilter}
@@ -299,17 +299,17 @@ export default function ProductList() {
             <div>
               Menampilkan {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, filteredProducts.length)} dari {filteredProducts.length} data
             </div>
-            
+
             {totalPages > 1 && (
               <div className="flex flex-wrap items-center justify-center gap-2">
-                <button 
+                <button
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
                   className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Prev
                 </button>
-                
+
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                   <button
                     key={page}
@@ -317,13 +317,13 @@ export default function ProductList() {
                     className={`rounded-lg px-3 py-1 transition ${currentPage === page
                       ? 'bg-[#D4AF37]/10 text-[#B8860B] font-medium'
                       : 'border border-[rgba(0,0,0,0.1)] hover:bg-white hover:text-[#1F2937]'
-                    }`}
+                      }`}
                   >
                     {page}
                   </button>
                 ))}
 
-                <button 
+                <button
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
                   className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"

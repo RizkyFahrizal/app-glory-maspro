@@ -17,7 +17,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
-        const response = await axios.get(`https://api.glorymaspro.com/api/products/${slug}`)
+        const response = await axios.get(`http://127.0.0.1:8000/api/products/${slug}`)
         if (response.data && response.data.success) {
           setProduct(response.data.data)
         } else {
@@ -79,7 +79,7 @@ export default function ProductDetail() {
     if (isContacting) return
     setIsContacting(true)
     try {
-      const res = await axios.get('https://api.glorymaspro.com/api/wa-marketing/next')
+      const res = await axios.get('http://127.0.0.1:8000/api/wa-marketing/next')
       let waNumber = ''
       if (res.data && res.data.success && res.data.data?.phone_number) {
         waNumber = res.data.data.phone_number
@@ -152,125 +152,125 @@ export default function ProductDetail() {
         exit={{ opacity: 0, y: -15 }}
         transition={{ duration: 0.4 }}
       >
-      <div className="bg-white rounded-[2rem] shadow-sm border border-[rgba(0,0,0,0.06)] p-5 md:p-8">
-        <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#6B7280] hover:text-[#B8860B] transition">
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Katalog
-        </Link>
+        <div className="bg-white rounded-[2rem] shadow-sm border border-[rgba(0,0,0,0.06)] p-5 md:p-8">
+          <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#6B7280] hover:text-[#B8860B] transition">
+            <ArrowLeft className="h-4 w-4" /> Kembali ke Katalog
+          </Link>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
-          {/* LEFT COLUMN: Images, Description, Note */}
-          <div className="md:col-span-7 space-y-6">
-            <div className="space-y-3">
-              {/* Main Image */}
-              <div
-                className="group relative aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] border border-[rgba(0,0,0,0.06)] bg-[#F3F4F6] cursor-pointer"
-                onClick={() => images.length > 0 && openLightbox(0)}
-              >
-                {images.length > 0 ? (
-                  <>
-                    {renderMediaThumb(images[0], "transition duration-500 group-hover:scale-105")}
-                    <div className="absolute inset-0 bg-black/0 transition duration-300 group-hover:bg-black/10" />
-                  </>
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center text-sm text-soft">No Image</div>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
+            {/* LEFT COLUMN: Images, Description, Note */}
+            <div className="md:col-span-7 space-y-6">
+              <div className="space-y-3">
+                {/* Main Image */}
+                <div
+                  className="group relative aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] border border-[rgba(0,0,0,0.06)] bg-[#F3F4F6] cursor-pointer"
+                  onClick={() => images.length > 0 && openLightbox(0)}
+                >
+                  {images.length > 0 ? (
+                    <>
+                      {renderMediaThumb(images[0], "transition duration-500 group-hover:scale-105")}
+                      <div className="absolute inset-0 bg-black/0 transition duration-300 group-hover:bg-black/10" />
+                    </>
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center text-sm text-soft">No Image</div>
+                  )}
+                </div>
+
+                {/* Thumbnails (Max 3) */}
+                {images.length > 1 && (
+                  <div className="grid grid-cols-3 gap-3">
+                    {images.slice(1, 4).map((img, idx) => {
+                      const isLastThumb = idx === 2
+                      return (
+                        <div
+                          key={img.id}
+                          className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[#F3F4F6] cursor-pointer"
+                          onClick={() => openLightbox(idx + 1)}
+                        >
+                          {renderMediaThumb(img, "transition duration-500 group-hover:scale-110")}
+
+                          {/* Overlay "Lihat Semua" on 3rd thumbnail if there are more than 4 images total */}
+                          {hasMoreImages && isLastThumb ? (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 text-white backdrop-blur-[2px] transition hover:bg-black/50">
+                              <span className="font-semibold tracking-wide">Lihat Semua</span>
+                              <span className="text-[10px] uppercase tracking-wider text-white/80 mt-1">{images.length} Media</span>
+                            </div>
+                          ) : (
+                            <div className="absolute inset-0 bg-black/0 transition duration-300 group-hover:bg-black/10" />
+                          )}
+                        </div>
+                      )
+                    })}
+                  </div>
                 )}
               </div>
 
-              {/* Thumbnails (Max 3) */}
-              {images.length > 1 && (
-                <div className="grid grid-cols-3 gap-3">
-                  {images.slice(1, 4).map((img, idx) => {
-                    const isLastThumb = idx === 2
-                    return (
-                      <div
-                        key={img.id}
-                        className="group relative aspect-[4/3] overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.06)] bg-[#F3F4F6] cursor-pointer"
-                        onClick={() => openLightbox(idx + 1)}
-                      >
-                        {renderMediaThumb(img, "transition duration-500 group-hover:scale-110")}
+              <div className="mt-8">
+                <h3 className="text-sm font-semibold tracking-[0.18em] text-[#B8860B] uppercase">Deskripsi</h3>
+                <p className="mt-3 whitespace-pre-line text-sm leading-7 text-soft">{product.description || '-'}</p>
+              </div>
+            </div>
 
-                        {/* Overlay "Lihat Semua" on 3rd thumbnail if there are more than 4 images total */}
-                        {hasMoreImages && isLastThumb ? (
-                          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 text-white backdrop-blur-[2px] transition hover:bg-black/50">
-                            <span className="font-semibold tracking-wide">Lihat Semua</span>
-                            <span className="text-[10px] uppercase tracking-wider text-white/80 mt-1">{images.length} Media</span>
-                          </div>
-                        ) : (
-                          <div className="absolute inset-0 bg-black/0 transition duration-300 group-hover:bg-black/10" />
-                        )}
-                      </div>
-                    )
-                  })}
+            {/* RIGHT COLUMN: Details */}
+            <div className="md:col-span-5">
+              <p className="section-label">Detail Properti</p>
+              <h1 className="mt-3 text-3xl font-semibold text-[#1F2937] md:text-4xl leading-tight">{product.title}</h1>
+              <div className="mt-3 flex items-start gap-2 text-sm text-soft">
+                <MapPin className="mt-1 h-4 w-4 shrink-0 text-[#D4AF37]" />
+                <div className="flex flex-col">
+                  <span className="font-medium text-[#1F2937]">{product.location}</span>
+                  {product.address && <span className="text-xs">{product.address}</span>}
+                </div>
+              </div>
+
+              <div className="mt-6 text-3xl font-semibold text-[#B8860B]">
+                {product.price_start === product.price_end
+                  ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price_start)
+                  : `${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price_start)} - ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price_end)}`
+                }
+              </div>
+
+              <div className="mt-7 grid grid-cols-2 gap-3 rounded-[1.5rem] border border-[rgba(0,0,0,0.06)] bg-white p-4 md:p-5 shadow-sm">
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Tipe Properti</span><p className="mt-1 font-medium text-[#1F2937]">{product.property_type || '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Sertifikat</span><p className="mt-1 font-medium text-[#1F2937]">{product.certificate || '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Luas Tanah</span><p className="mt-1 font-medium text-[#1F2937]">{product.land_area ? `${product.land_area} m²` : '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Luas Bangunan</span><p className="mt-1 font-medium text-[#1F2937]">{product.building_area ? `${product.building_area} m²` : '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Kamar Tidur</span><p className="mt-1 font-medium text-[#1F2937]">{product.bedrooms || '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Kamar Mandi</span><p className="mt-1 font-medium text-[#1F2937]">{product.bathrooms || '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Listrik</span><p className="mt-1 font-medium text-[#1F2937]">{product.electricity ? `${product.electricity} Watt` : '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Arah Hadap</span><p className="mt-1 font-medium text-[#1F2937]">{product.facing || '-'}</p></div>
+                <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Furnish</span><p className="mt-1 font-medium text-[#1F2937]">{product.furnish || '-'}</p></div>
+              </div>
+
+              {product.note && (
+                <div className="mt-7 rounded-[1.5rem] bg-[#D4AF37]/10 p-5 border border-[#D4AF37]/20">
+                  <h3 className="text-xs font-semibold tracking-[0.18em] text-[#B8860B] uppercase mb-2">Catatan Tambahan</h3>
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-[#8B6508]">{product.note}</p>
                 </div>
               )}
-            </div>
 
-            <div className="mt-8">
-              <h3 className="text-sm font-semibold tracking-[0.18em] text-[#B8860B] uppercase">Deskripsi</h3>
-              <p className="mt-3 whitespace-pre-line text-sm leading-7 text-soft">{product.description || '-'}</p>
-            </div>
-          </div>
-
-          {/* RIGHT COLUMN: Details */}
-          <div className="md:col-span-5">
-            <p className="section-label">Detail Properti</p>
-            <h1 className="mt-3 text-3xl font-semibold text-[#1F2937] md:text-4xl leading-tight">{product.title}</h1>
-            <div className="mt-3 flex items-start gap-2 text-sm text-soft">
-              <MapPin className="mt-1 h-4 w-4 shrink-0 text-[#D4AF37]" />
-              <div className="flex flex-col">
-                <span className="font-medium text-[#1F2937]">{product.location}</span>
-                {product.address && <span className="text-xs">{product.address}</span>}
+              <div className="mt-8 border-t border-[rgba(0,0,0,0.06)] pt-6">
+                <p className="mb-4 text-sm text-soft">Tertarik dengan properti ini? Segera hubungi marketing kami untuk penawaran terbaik:</p>
+                <button
+                  onClick={handleContactClick}
+                  disabled={isContacting}
+                  className="btn-gold block w-full rounded-2xl py-3.5 px-4 text-center text-sm font-bold tracking-wide transition shadow-lg hover:shadow-xl hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0"
+                >
+                  {isContacting ? 'Menghubungkan...' : 'Hubungi via WhatsApp'}
+                </button>
               </div>
-            </div>
-
-            <div className="mt-6 text-3xl font-semibold text-[#B8860B]">
-              {product.price_start === product.price_end
-                ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price_start)
-                : `${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price_start)} - ${new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(product.price_end)}`
-              }
-            </div>
-
-            <div className="mt-7 grid grid-cols-2 gap-3 rounded-[1.5rem] border border-[rgba(0,0,0,0.06)] bg-white p-4 md:p-5 shadow-sm">
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Tipe Properti</span><p className="mt-1 font-medium text-[#1F2937]">{product.property_type || '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Sertifikat</span><p className="mt-1 font-medium text-[#1F2937]">{product.certificate || '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Luas Tanah</span><p className="mt-1 font-medium text-[#1F2937]">{product.land_area ? `${product.land_area} m²` : '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Luas Bangunan</span><p className="mt-1 font-medium text-[#1F2937]">{product.building_area ? `${product.building_area} m²` : '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Kamar Tidur</span><p className="mt-1 font-medium text-[#1F2937]">{product.bedrooms || '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Kamar Mandi</span><p className="mt-1 font-medium text-[#1F2937]">{product.bathrooms || '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Listrik</span><p className="mt-1 font-medium text-[#1F2937]">{product.electricity ? `${product.electricity} Watt` : '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Arah Hadap</span><p className="mt-1 font-medium text-[#1F2937]">{product.facing || '-'}</p></div>
-              <div><span className="text-xs uppercase tracking-[0.16em] text-[#D4AF37]">Furnish</span><p className="mt-1 font-medium text-[#1F2937]">{product.furnish || '-'}</p></div>
-            </div>
-
-            {product.note && (
-              <div className="mt-7 rounded-[1.5rem] bg-[#D4AF37]/10 p-5 border border-[#D4AF37]/20">
-                <h3 className="text-xs font-semibold tracking-[0.18em] text-[#B8860B] uppercase mb-2">Catatan Tambahan</h3>
-                <p className="whitespace-pre-line text-sm leading-relaxed text-[#8B6508]">{product.note}</p>
-              </div>
-            )}
-
-            <div className="mt-8 border-t border-[rgba(0,0,0,0.06)] pt-6">
-              <p className="mb-4 text-sm text-soft">Tertarik dengan properti ini? Segera hubungi marketing kami untuk penawaran terbaik:</p>
-              <button
-                onClick={handleContactClick}
-                disabled={isContacting}
-                className="btn-gold block w-full rounded-2xl py-3.5 px-4 text-center text-sm font-bold tracking-wide transition shadow-lg hover:shadow-xl hover:-translate-y-1 disabled:opacity-70 disabled:hover:translate-y-0"
-              >
-                {isContacting ? 'Menghubungkan...' : 'Hubungi via WhatsApp'}
-              </button>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Lightbox / Media Preview Modal */}
-      <ProductLightbox
-        isOpen={isLightboxOpen}
-        onClose={() => setIsLightboxOpen(false)}
-        images={images}
-        lightboxIndex={lightboxIndex}
-        setLightboxIndex={setLightboxIndex}
-      />
+        {/* Lightbox / Media Preview Modal */}
+        <ProductLightbox
+          isOpen={isLightboxOpen}
+          onClose={() => setIsLightboxOpen(false)}
+          images={images}
+          lightboxIndex={lightboxIndex}
+          setLightboxIndex={setLightboxIndex}
+        />
       </motion.div>
     </div>
   )

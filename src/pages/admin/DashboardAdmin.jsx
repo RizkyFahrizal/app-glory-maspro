@@ -16,8 +16,8 @@ export default function DashboardAdmin() {
       try {
         const token = localStorage.getItem('token') || ''
         const [productsRes, accountsRes] = await Promise.all([
-          axios.get('https://api.glorymaspro.com/api/products'),
-          axios.get('https://api.glorymaspro.com/api/accounts', {
+          axios.get('http://127.0.0.1:8000/api/products'),
+          axios.get('http://127.0.0.1:8000/api/accounts', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: { success: false, data: [] } }))
         ])
@@ -81,7 +81,7 @@ export default function DashboardAdmin() {
 
         <div className="flex items-center gap-4 rounded-2xl bg-white p-3 pr-4 border border-[rgba(0,0,0,0.06)] shadow-sm">
           <img
-            src={userData.photo ? `https://api.glorymaspro.com/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
+            src={userData.photo ? `http://127.0.0.1:8000/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
             alt={userName}
             className="h-11 w-11 rounded-full border-2 border-[#D4AF37] object-cover"
           />
@@ -142,19 +142,19 @@ export default function DashboardAdmin() {
                 margin={{ top: 10, right: 10, left: -20, bottom: 40 }}
               >
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
-                <XAxis 
-                  dataKey="name" 
-                  tick={{ fontSize: 11, fill: '#6B7280' }} 
-                  axisLine={false} 
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: '#6B7280' }}
+                  axisLine={false}
                   tickLine={false}
                   angle={-45}
                   textAnchor="end"
                   height={60}
                 />
-                <YAxis 
-                  tick={{ fontSize: 12, fill: '#6B7280' }} 
-                  axisLine={false} 
-                  tickLine={false} 
+                <YAxis
+                  tick={{ fontSize: 12, fill: '#6B7280' }}
+                  axisLine={false}
+                  tickLine={false}
                   allowDecimals={false}
                 />
                 <Tooltip
@@ -162,10 +162,10 @@ export default function DashboardAdmin() {
                   itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
                   cursor={{ fill: 'rgba(0,0,0,0.02)' }}
                 />
-                <Bar 
-                  dataKey="value" 
-                  fill="#D4AF37" 
-                  radius={[4, 4, 0, 0]} 
+                <Bar
+                  dataKey="value"
+                  fill="#D4AF37"
+                  radius={[4, 4, 0, 0]}
                   barSize={40}
                 >
                   {locationChartData.map((entry, index) => (
