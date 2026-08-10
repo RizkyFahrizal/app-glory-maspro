@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
 import { Home, CheckCircle, Users } from 'lucide-react'
 
 export default function DashboardAdmin() {
@@ -132,71 +132,47 @@ export default function DashboardAdmin() {
       </div>
 
       {/* Chart Section */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-8">
         <div className="glass-panel rounded-3xl p-8 border border-[rgba(0,0,0,0.06)] bg-white flex flex-col">
           <h3 className="mb-6 text-lg font-semibold tracking-wide text-[#1F2937]">Distribusi Berdasarkan Lokasi</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={locationChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={4}
-                  dataKey="value"
-                  stroke="none"
+              <BarChart
+                data={locationChartData}
+                margin={{ top: 10, right: 10, left: -20, bottom: 40 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fontSize: 11, fill: '#6B7280' }} 
+                  axisLine={false} 
+                  tickLine={false}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
+                <YAxis 
+                  tick={{ fontSize: 12, fill: '#6B7280' }} 
+                  axisLine={false} 
+                  tickLine={false} 
+                  allowDecimals={false}
+                />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
+                  itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
+                  cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                />
+                <Bar 
+                  dataKey="value" 
+                  fill="#D4AF37" 
+                  radius={[4, 4, 0, 0]} 
+                  barSize={40}
                 >
                   {locationChartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
-                  itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  iconType="circle"
-                  wrapperStyle={{ color: '#4B5563', fontSize: '12px' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="glass-panel rounded-3xl p-8 border border-[rgba(0,0,0,0.06)] bg-white flex flex-col">
-          <h3 className="mb-6 text-lg font-semibold tracking-wide text-[#1F2937]">Distribusi Berdasarkan Tipe</h3>
-          <div className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={typeChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={4}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {typeChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
-                  itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  iconType="circle"
-                  wrapperStyle={{ color: '#4B5563', fontSize: '12px' }}
-                />
-              </PieChart>
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>

@@ -28,7 +28,7 @@ export default function PublicLayout() {
 
       <PublicNavbar />
 
-      <main className="relative mx-auto w-full max-w-7xl flex-1 px-6 pt-4 pb-10" style={{ zIndex: 1 }}>
+      <main className="relative w-full flex-1" style={{ zIndex: 1 }}>
         <Outlet />
       </main>
 

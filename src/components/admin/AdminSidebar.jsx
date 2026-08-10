@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, PackageSearch, Users, LogOut, X, Globe, AlertTriangle } from 'lucide-react'
+import { LayoutDashboard, PackageSearch, Users, LogOut, X, Globe, AlertTriangle, Building2, Trophy } from 'lucide-react'
 import { createPortal } from 'react-dom'
 import axios from 'axios'
 
@@ -80,6 +80,17 @@ export default function AdminSidebar({ isOpen, onClose }) {
           </Link>
 
           <Link
+            to="/admin/projects"
+            onClick={onClose}
+            className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/projects')
+              ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
+              : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
+              }`}
+          >
+            <Building2 className="h-5 w-5" /> Kelola Proyek
+          </Link>
+
+          <Link
             to="/admin/products"
             onClick={onClose}
             className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/products')
@@ -90,16 +101,42 @@ export default function AdminSidebar({ isOpen, onClose }) {
             <PackageSearch className="h-5 w-5" /> Kelola Properti
           </Link>
 
-          <Link
-            to="/admin/accounts"
-            onClick={onClose}
-            className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/accounts')
-              ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
-              : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
-              }`}
-          >
-            <Users className="h-5 w-5" /> Kelola Akun
-          </Link>
+          {userData.role !== 'marketing' && (
+            <Link
+              to="/admin/awards"
+              onClick={onClose}
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/awards')
+                ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
+                : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
+                }`}
+            >
+              <Trophy className="h-5 w-5" /> Kelola Penghargaan
+            </Link>
+          )}
+
+          {userData.role !== 'marketing' ? (
+            <Link
+              to="/admin/accounts"
+              onClick={onClose}
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/accounts') && !location.pathname.includes('/edit/')
+                ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
+                : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
+                }`}
+            >
+              <Users className="h-5 w-5" /> Kelola Akun
+            </Link>
+          ) : (
+            <Link
+              to={`/admin/accounts/edit/${userData.id || 1}`}
+              onClick={onClose}
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-300 ${location.pathname.includes('/admin/accounts/edit/')
+                ? 'bg-white text-[#B8860B] shadow-sm ring-1 ring-black/5'
+                : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
+                }`}
+            >
+              <Users className="h-5 w-5" /> Profil Saya
+            </Link>
+          )}
         </nav>
 
         <div className="mt-auto shrink-0 pt-4 border-t border-[rgba(0,0,0,0.06)]">

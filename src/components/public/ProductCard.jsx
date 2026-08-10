@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
   return (
     <Link
       to={`/product/${product.slug}`}
-      className="card-minimal group flex flex-col overflow-hidden rounded-[1.5rem] transition duration-300"
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white border border-[rgba(0,0,0,0.07)] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
     >
       <div className="relative h-52 w-full overflow-hidden bg-[#F3F4F6]">
         {product.images && product.images.length > 0 ? (
@@ -46,14 +46,14 @@ export default function ProductCard({ product }) {
                   {img.image_path.match(/\.(mp4|webm)$/) ? (
                     <video
                       src={img.image_path}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       muted loop playsInline autoPlay
                     />
                   ) : (
                     <img
                       src={img.image_path}
                       alt={product.title}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
                         e.target.onerror = null;
                         e.target.src = "https://via.placeholder.com/400x300?text=No+Image";
@@ -67,13 +67,13 @@ export default function ProductCard({ product }) {
               <>
                 <button
                   onClick={handlePrevImage}
-                  className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/40 p-1.5 text-black opacity-0 backdrop-blur-sm transition hover:bg-[#D4AF37] hover:text-white group-hover:opacity-100"
+                  className="absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-1.5 text-white opacity-0 backdrop-blur-sm transition hover:bg-[#D4AF37] group-hover:opacity-100"
                 >
                   <ChevronLeft className="h-4 w-4" />
                 </button>
                 <button
                   onClick={handleNextImage}
-                  className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/40 p-1.5 text-black opacity-0 backdrop-blur-sm transition hover:bg-[#D4AF37] hover:text-white group-hover:opacity-100"
+                  className="absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-black/30 p-1.5 text-white opacity-0 backdrop-blur-sm transition hover:bg-[#D4AF37] group-hover:opacity-100"
                 >
                   <ChevronRight className="h-4 w-4" />
                 </button>
@@ -82,7 +82,7 @@ export default function ProductCard({ product }) {
                     <div 
                       key={idx} 
                       className={`h-1.5 rounded-full transition-all ${
-                        idx === currentImageIndex ? 'w-4 bg-[#D4AF37]' : 'w-1.5 bg-black/30'
+                        idx === currentImageIndex ? 'w-4 bg-[#D4AF37]' : 'w-1.5 bg-white/60'
                       }`}
                     />
                   ))}
@@ -93,7 +93,7 @@ export default function ProductCard({ product }) {
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-soft">No Image</div>
         )}
-        <span className="absolute right-3 top-3 z-10 rounded-full border border-[rgba(212,175,55,0.2)] bg-white/86 px-3 py-1 text-[10px] font-semibold tracking-[0.18em] text-[#D4AF37]">
+        <span className="absolute right-3 top-3 z-10 rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-bold tracking-widest text-[#B8860B] uppercase shadow-sm">
           {product.status?.toLowerCase() === 'available' ? 'TERSEDIA' : 'TERJUAL'}
         </span>
       </div>
@@ -149,4 +149,4 @@ export default function ProductCard({ product }) {
       </div>
     </Link>
   )
-}
+}
