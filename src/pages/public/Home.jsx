@@ -1,7 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Building2, Users, Trophy, ArrowRight, MapPin, Search, ChevronDown, ChevronUp } from 'lucide-react'
+import { Building2, Users, Trophy, ArrowRight, MapPin, Search, ChevronDown, ChevronUp, ArrowUp } from 'lucide-react'
 import Katalog from './Katalog'
 
 // Dummy Data untuk Proyek
@@ -46,7 +46,20 @@ const awards = [
 
 export default function Home() {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false)
+  const [showScrollTop, setShowScrollTop] = useState(false)
   const catalogRef = useRef(null)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400)
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   const scrollToCatalog = () => {
     if (catalogRef.current) {
@@ -101,6 +114,36 @@ export default function Home() {
                 Lihat Proyek Kami
               </a>
             </div>
+
+            {/* Social Media Links */}
+            <div className="mt-10 flex items-center justify-center gap-4">
+              <a
+                href="https://instagram.com/glorymaspro"
+                target="_blank"
+                rel="noreferrer"
+                className="w-12 h-12 flex items-center justify-center hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(255,20,147,0.3)]"
+              >
+                <img src="/ig-icon.svg" alt="Instagram" className="w-full h-full object-contain" />
+              </a>
+              <a
+                href="https://tiktok.com/@glory.maspro2"
+                target="_blank"
+                rel="noreferrer"
+                className="w-12 h-12 rounded-full bg-white flex items-center justify-center hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all duration-300 text-black shadow-lg shadow-black/20 relative group"
+              >
+                <div className="relative w-6 h-6">
+                  <svg viewBox="0 0 24 24" fill="#25F4EE" className="w-6 h-6 absolute -top-[1.5px] -left-[1.5px] transition-all group-hover:-top-[2px] group-hover:-left-[2px]">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
+                  </svg>
+                  <svg viewBox="0 0 24 24" fill="#FE2C55" className="w-6 h-6 absolute top-[1.5px] left-[1.5px] transition-all group-hover:top-[2px] group-hover:left-[2px]">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
+                  </svg>
+                  <svg viewBox="0 0 24 24" fill="#000000ff" className="w-6 h-6 absolute top-0 left-0 relative z-10">
+                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
+                  </svg>
+                </div>
+              </a>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -150,6 +193,23 @@ export default function Home() {
           />
         </div>
       </section>
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 20 }}
+            onClick={scrollToTop}
+            className="fixed bottom-8 right-8 z-50 p-3 rounded-full bg-[#D4AF37] text-white shadow-xl hover:bg-[#B8860B] hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group"
+            aria-label="Kembali ke atas"
+          >
+            <ArrowUp className="w-6 h-6 group-hover:animate-bounce" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       {/* Pencapaian Proyek */}
       <section className="py-20 bg-[#1F2937] text-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -170,9 +230,9 @@ export default function Home() {
                 className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm group"
               >
                 <div className="h-48 w-full overflow-hidden relative">
-                  <img 
-                    src={award.image} 
-                    alt={award.title} 
+                  <img
+                    src={award.image}
+                    alt={award.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#1F2937] via-transparent to-transparent opacity-80" />

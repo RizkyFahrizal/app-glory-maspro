@@ -1,0 +1,31 @@
+@startuml
+title Flow Pengunjung (Guest) Website Glory Maspro
+
+|Guest (Calon Pembeli)|
+start
+:Kunjungi Website (Landing Page);
+if (Tujuan Utama?) then (Melihat Profil Perusahaan)
+  :Buka Halaman Tentang Kami;
+else (Mencari Properti)
+  :Buka Halaman Katalog;
+endif
+
+:Pilih Proyek / Produk;
+:Lihat Detail Properti & Galeri;
+
+if (Tertarik dengan Properti?) then (Ya)
+  :Klik Tombol "Hubungi Agen";
+  
+  |Sistem / API|
+  :Ambil Nomor Marketing (Rotasi Otomatis);
+  :Buat Tautan (Link) WhatsApp;
+  
+  |Guest (Calon Pembeli)|
+  :Otomatis Terbuka Aplikasi WhatsApp;
+  :Mulai Percakapan dengan Agen;
+else (Tidak)
+  :Kembali ke Beranda / Katalog;
+endif
+stop
+
+@enduml

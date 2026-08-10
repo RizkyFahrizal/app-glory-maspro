@@ -167,18 +167,21 @@ export default function ProjectDetail() {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-[#D4AF37]"></div>
+      <div className="flex min-h-screen bg-gray-50 items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-[#D4AF37]"></div>
+          <div className="text-lg font-medium text-[#B8860B]">Memuat detail properti...</div>
+        </div>
       </div>
     )
   }
 
   if (!project) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center px-6">
+      <div className="flex min-h-screen bg-gray-50 flex-col items-center justify-center text-center px-6">
         <h2 className="text-3xl font-bold text-[#1F2937] mb-4">Proyek Tidak Ditemukan</h2>
         <p className="text-gray-500 mb-8">Maaf, data proyek yang Anda cari tidak tersedia.</p>
-        <Link to="/" className="bg-[#D4AF37] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#B8860B] transition">
+        <Link to="/" className="bg-[#D4AF37] text-white px-8 py-3 rounded-xl font-medium hover:bg-[#B8860B] transition shadow-lg shadow-[#D4AF37]/30">
           Kembali ke Beranda
         </Link>
       </div>

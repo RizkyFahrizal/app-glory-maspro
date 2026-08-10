@@ -1,0 +1,34 @@
+@startuml
+title Flowchart CRUD Prestasi (Penghargaan)
+
+|User Admin|
+start
+:Login ke Dashboard Admin;
+:Pilih Menu Kelola Penghargaan (Awards);
+fork
+  :Tambah Penghargaan (Create);
+fork again
+  :Edit Penghargaan (Update);
+fork again
+  :Hapus Penghargaan (Delete);
+end fork
+
+|Sistem / Database|
+:Validasi Form (Judul, Deskripsi, Gambar);
+:Simpan Perubahan ke Database;
+
+|Sistem / Database|
+:Data Penghargaan Tersimpan & Diperbarui;
+
+|Guest (Calon Pembeli)|
+:Buka Halaman Utama (Landing Page);
+
+|Sistem / Database|
+:Ambil Data Penghargaan Terbaru dari Database;
+:Tampilkan di Bagian "Pencapaian";
+
+|Guest (Calon Pembeli)|
+:Melihat Prestasi & Penghargaan Terbaru Perusahaan;
+stop
+
+@enduml
