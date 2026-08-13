@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 import { ArrowLeft, MapPin, Play } from 'lucide-react'
 import { motion } from 'framer-motion'
 import ProductLightbox from '../../components/public/ProductLightbox'
@@ -17,7 +17,7 @@ export default function ProductDetail() {
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:8000/api/products/${slug}`)
+        const response = await api.get(`/products/${slug}`)
         if (response.data && response.data.success) {
           setProduct(response.data.data)
         } else {
@@ -79,7 +79,7 @@ export default function ProductDetail() {
     if (isContacting) return
     setIsContacting(true)
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/wa-marketing/next')
+      const res = await api.get('/wa-marketing/next')
       let waNumber = ''
       if (res.data && res.data.success && res.data.data?.phone_number) {
         waNumber = res.data.data.phone_number

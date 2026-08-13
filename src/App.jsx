@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 import PublicLayout from './layouts/PublicLayout'
@@ -59,9 +60,20 @@ function AnimatedRoutes() {
   )
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <SplashScreen />
       <AnimatedRoutes />
     </BrowserRouter>

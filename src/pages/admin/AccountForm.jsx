@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, ImagePlus, ChevronDown, X } from 'lucide-react'
-import axios from 'axios'
+import api from '../../utils/api'
 import SuccessModal from '../../components/admin/SuccessModal'
 import AlertModal from '../../components/admin/AlertModal'
 import CustomSelect from '../../components/public/CustomSelect'
@@ -48,10 +48,7 @@ export default function AccountForm() {
     if (isEdit) {
       const fetchAccount = async () => {
         try {
-          const token = localStorage.getItem('token') || ''
-          const res = await axios.get(`http://127.0.0.1:8000/api/accounts/${id}`, {
-            headers: { Authorization: `Bearer ${token}` }
-          })
+          const res = await api.get(`/accounts/${id}`)
           if (res.data && res.data.success) {
             const data = res.data.data
             setFormData({
@@ -120,8 +117,7 @@ export default function AccountForm() {
     e.preventDefault()
     setLoading(true)
     try {
-      const token = localStorage.getItem('token') || ''
-      const config = { headers: { Authorization: `Bearer ${token}` } }
+
 
       const payload = {
         name: formData.name,
@@ -146,14 +142,14 @@ export default function AccountForm() {
       }
 
       if (isEdit) {
-        const response = await axios.put(`http://127.0.0.1:8000/api/accounts/${id}`, payload, config)
+        const response = await api.put(`/accounts/${id}`, payload)
 
         const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
         if (currentUser.id === parseInt(id) && response.data?.data) {
           localStorage.setItem('user', JSON.stringify(response.data.data))
         }
       } else {
-        await axios.post('http://127.0.0.1:8000/api/accounts', payload, config)
+        await api.post('/accounts', payload)
       }
 
       setShowSuccess(true)
@@ -296,7 +292,7 @@ export default function AccountForm() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  placeholder="Contoh: email@glorymaspro.com"
+                  placeholder="Contoh: glorymaspro@gmail.com"
                   className="input-minimal w-full rounded-2xl py-3 px-4"
                 />
               </div>

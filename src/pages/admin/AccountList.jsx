@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Plus, Search, X, SearchX, RefreshCcw } from 'lucide-react'
-import axios from 'axios'
+import api from '../../utils/api'
 import AccountCard from '../../components/admin/AccountCard'
 import SuccessModal from '../../components/admin/SuccessModal'
 import DeleteModal from '../../components/admin/DeleteModal'
@@ -73,10 +73,7 @@ export default function AccountList() {
   const fetchAccounts = async (showLoading = true) => {
     try {
       if (showLoading) setLoading(true)
-      const token = localStorage.getItem('token') || ''
-      const res = await axios.get('http://127.0.0.1:8000/api/accounts', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      const res = await api.get('/accounts')
       if (res.data && res.data.success) {
         const users = res.data.data
         setAdminAccounts(users.filter(u => u.role?.toLowerCase() === 'admin' || u.name === 'Super Admin'))
@@ -108,10 +105,7 @@ export default function AccountList() {
     if (!accountToDelete) return
 
     try {
-      const token = localStorage.getItem('token') || ''
-      await axios.delete(`http://127.0.0.1:8000/api/accounts/${accountToDelete.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await api.delete(`/accounts/${accountToDelete.id}`)
       setShowSuccessDelete(true)
       setTimeout(() => setShowSuccessDelete(false), 2000)
       fetchAccounts() // Refresh list after delete
@@ -125,12 +119,9 @@ export default function AccountList() {
 
   const saveReorder = async (queue) => {
     try {
-      const token = localStorage.getItem('token') || ''
       const orderedIds = queue.map(acc => acc.wa_marketing?.id).filter(Boolean)
       if (orderedIds.length > 0) {
-        await axios.post('http://127.0.0.1:8000/api/wa-marketing/reorder', { ordered_ids: orderedIds }, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        await api.post('/wa-marketing/reorder', { ordered_ids: orderedIds })
       }
     } catch (error) {
       console.error('Failed to reorder:', error)

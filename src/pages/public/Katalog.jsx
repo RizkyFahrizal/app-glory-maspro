@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../../utils/api'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import ProductCard from '../../components/public/ProductCard'
 import HeroSection from '../../components/public/HeroSection'
@@ -10,6 +10,7 @@ import { SearchX } from 'lucide-react'
 export default function Katalog() {
   const [products, setProducts] = useState([])
   const [locations, setLocations] = useState([])
+  const [allProjects, setAllProjects] = useState([])
   const [propertyTypes, setPropertyTypes] = useState([])
   const [loading, setLoading] = useState(true)
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -20,6 +21,7 @@ export default function Katalog() {
   // Filter States
   const [filters, setFilters] = useState({
     search: '',
+    project_id: '',
     location: '',
     property_type: '',
     bedrooms: '',
@@ -33,6 +35,7 @@ export default function Katalog() {
   useEffect(() => {
     fetchLocations()
     fetchPropertyTypes()
+    fetchProjects()
   }, [])
 
   useEffect(() => {
@@ -40,12 +43,12 @@ export default function Katalog() {
       fetchProducts()
     }, 300)
     return () => clearTimeout(delayDebounceFn)
-  }, [filters.search])
+  }, [filters.search, filters.project_id, filters.location])
 
 
   const fetchLocations = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/products/locations')
+      const res = await api.get('/products/locations')
       if (res.data && res.data.success) {
         setLocations(res.data.data)
       }
@@ -54,9 +57,20 @@ export default function Katalog() {
     }
   }
 
+  const fetchProjects = async () => {
+    try {
+      const res = await api.get('/projects')
+      if (res.data && res.data.data) {
+        setAllProjects(res.data.data)
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const fetchPropertyTypes = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/products/types')
+      const res = await api.get('/products/types')
       if (res.data && res.data.success) {
         setPropertyTypes(res.data.data)
       }
@@ -73,9 +87,10 @@ export default function Katalog() {
       const minP = filters.min_price ? Number(filters.min_price) * getMultiplier(filters.min_price_unit) : undefined;
       const maxP = filters.max_price ? Number(filters.max_price) * getMultiplier(filters.max_price_unit) : undefined;
 
-      const response = await axios.get('http://127.0.0.1:8000/api/products', {
+      const response = await api.get('/products', {
         params: {
           search: filters.search || undefined,
+          project_id: filters.project_id || undefined,
           location: filters.location || undefined,
           property_type: filters.property_type || undefined,
           bedrooms: filters.bedrooms || undefined,
@@ -109,6 +124,36 @@ export default function Katalog() {
   const currentItems = products.slice(indexOfFirstItem, indexOfLastItem)
   const totalPages = Math.ceil(products.length / itemsPerPage)
 
+  const getPageNumbers = () => {
+    const pages = [];
+    if (totalPages <= 6) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+      return pages;
+    }
+
+    let start = Math.max(1, currentPage - 2);
+    let end = Math.min(totalPages, currentPage + 2);
+
+    if (currentPage <= 3) {
+      start = 1;
+      end = 5;
+    } else if (currentPage >= totalPages - 2) {
+      start = totalPages - 4;
+      end = totalPages;
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < totalPages) {
+      if (end < totalPages - 1) pages.push('...');
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
+
   return (
     <motion.div
       className="mx-auto w-full max-w-7xl px-6 pt-4"
@@ -121,12 +166,13 @@ export default function Katalog() {
         filters={filters}
         locations={locations}
         propertyTypes={propertyTypes}
+        allProjects={allProjects}
         isFilterOpen={isFilterOpen}
         onFilterChange={handleFilterChange}
         onSearch={handleSearch}
         onToggleFilter={() => setIsFilterOpen(!isFilterOpen)}
         onClearFilter={() => setFilters({
-          search: '', location: '', property_type: '', bedrooms: '', bathrooms: '',
+          search: '', project_id: '', location: '', property_type: '', bedrooms: '', bathrooms: '',
           min_price: '', max_price: '', min_price_unit: 'JT', max_price_unit: 'JT'
         })}
         setFilters={setFilters}
@@ -194,23 +240,38 @@ export default function Katalog() {
           {totalPages > 1 && (
             <div className="mt-12 mb-10 flex items-center justify-center gap-4">
               <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${currentPage === 1 ? 'cursor-not-allowed border border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] text-[rgba(0,0,0,0.3)]' : 'btn-gold'}`}
+                className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                <ArrowLeft className="h-4 w-4" /> Prev
+                <ArrowLeft className="w-5 h-5" />
               </button>
-
-              <span className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-4 py-2 text-sm font-semibold text-[#1F2937] shadow-sm">
-                Halaman {currentPage} dari {totalPages}
-              </span>
+              
+              <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-full px-2 py-1.5">
+                {getPageNumbers().map((page, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => typeof page === 'number' && setCurrentPage(page)}
+                    disabled={page === '...'}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center font-medium transition ${
+                      currentPage === page
+                        ? 'text-[#D4AF37] font-bold'
+                        : page === '...'
+                        ? 'text-gray-400 cursor-default'
+                        : 'text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ))}
+              </div>
 
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition ${currentPage === totalPages ? 'cursor-not-allowed border border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] text-[rgba(0,0,0,0.3)]' : 'btn-gold'}`}
+                className="w-10 h-10 rounded-full flex items-center justify-center border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
-                Next <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="w-5 h-5" />
               </button>
             </div>
           )}

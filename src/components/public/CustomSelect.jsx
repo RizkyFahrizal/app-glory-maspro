@@ -58,7 +58,7 @@ export default function CustomSelect({ options, value, name, onChange, placehold
           disabled={disabled}
           className={`input-minimal flex w-full items-center justify-between rounded-2xl py-3 pr-4 transition shadow-sm ${Icon ? 'pl-12' : 'px-4'} ${disabled ? 'bg-gray-50 cursor-not-allowed text-gray-500' : ''}`}
         >
-          <span className={selectedOption && selectedOption.value !== '' ? 'text-[#1F2937]' : 'text-soft'}>
+          <span className={`truncate ${selectedOption && selectedOption.value !== '' ? 'text-[#1F2937]' : 'text-soft'}`}>
             {selectedOption ? selectedOption.label : placeholder}
           </span>
           <div className="flex items-center gap-2">

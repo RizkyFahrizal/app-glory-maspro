@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, LogIn } from 'lucide-react'
 import logoImg from '../../assets/public/logo-glory-maspro.webp'
 
 export default function PublicNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const location = useLocation()
 
   useEffect(() => {
     if (isMenuOpen) {
@@ -28,27 +29,36 @@ export default function PublicNavbar() {
               className="h-10 w-10 md:h-12 md:w-12 rounded-full object-cover shadow-sm border border-white/40" 
             />
             <div>
-              <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-[#4A3000]/70">Property Collection</p>
+              <p className="text-[9px] md:text-[10px] font-bold uppercase tracking-[0.2em] text-[#4A3000]/70">Koleksi Properti</p>
               <h1 className="mt-0.5 md:mt-1 text-lg font-bold tracking-[0.28em] text-[#2C1A00] md:text-2xl">
                 GLORY MASPRO
               </h1>
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-6 mr-4">
+            <Link 
+              to="/"
+              style={{ color: location.pathname === '/' ? 'oklch(0.72 0.16 88.92)' : '#2C1A00' }}
+              className="text-sm font-bold uppercase tracking-widest transition-all hover:opacity-80"
+            >
+              Beranda
+            </Link>
             <Link 
               to="/about"
-              className="text-sm font-bold text-[#2C1A00] uppercase tracking-widest hover:text-[#B8860B] transition-colors"
+              style={{ color: location.pathname.startsWith('/about') ? 'oklch(0.72 0.16 88.92)' : '#2C1A00' }}
+              className="text-sm font-bold uppercase tracking-widest transition-all hover:opacity-80"
             >
               Tentang Kami
             </Link>
-          <Link
-            to="/admin/login"
-            className="group relative hidden md:flex items-center justify-center overflow-hidden rounded-full bg-white border border-[rgba(0,0,0,0.1)] px-8 py-2.5 text-sm font-bold text-[#1F2937] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-md active:translate-y-0 active:shadow-sm"
-          >
-            <span className="relative z-10 tracking-widest uppercase">Login Admin</span>
-            <div className="absolute inset-0 w-[150%] bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full skew-x-[-20deg] transition-transform duration-700 ease-out group-hover:translate-x-full" />
-          </Link>
+            <Link
+              to="/admin/login"
+              style={{ backgroundColor: 'oklch(0.85 0.17 90.89)' }}
+              className="group relative hidden md:flex items-center justify-center overflow-hidden rounded-xl border border-transparent px-8 py-2.5 text-sm font-bold text-[#1F2937] shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:shadow-sm"
+            >
+              <span className="relative z-10 tracking-widest uppercase">Masuk Admin</span>
+              <div className="absolute inset-0 w-[150%] bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full skew-x-[-20deg] transition-transform duration-700 ease-out group-hover:translate-x-full" />
+            </Link>
           </div>
 
           {/* Mobile Hamburger */}
@@ -86,9 +96,28 @@ export default function PublicNavbar() {
 
         <div className="flex flex-col gap-4">
           <Link
+            to="/"
+            onClick={() => setIsMenuOpen(false)}
+            style={{ 
+              color: location.pathname === '/' ? 'oklch(0.72 0.16 88.92)' : '#2C1A00',
+              borderColor: location.pathname === '/' ? 'oklch(0.72 0.16 88.92)' : 'transparent'
+            }}
+            className={`flex items-center gap-3 px-2 py-3 text-sm font-medium transition hover:opacity-80 ${
+              location.pathname === '/' ? 'font-bold border-r-4' : ''
+            }`}
+          >
+            Beranda
+          </Link>
+          <Link
             to="/about"
             onClick={() => setIsMenuOpen(false)}
-            className="flex items-center gap-3 rounded-xl bg-white/40 px-4 py-3 text-sm font-medium text-[#2C1A00] transition hover:bg-white/80"
+            style={{ 
+              color: location.pathname.startsWith('/about') ? 'oklch(0.72 0.16 88.92)' : '#2C1A00',
+              borderColor: location.pathname.startsWith('/about') ? 'oklch(0.72 0.16 88.92)' : 'transparent'
+            }}
+            className={`flex items-center gap-3 px-2 py-3 text-sm font-medium transition hover:opacity-80 ${
+              location.pathname.startsWith('/about') ? 'font-bold border-r-4' : ''
+            }`}
           >
             Tentang Kami
           </Link>
@@ -98,7 +127,7 @@ export default function PublicNavbar() {
             className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-sm font-medium text-[#B8860B] shadow-sm ring-1 ring-black/5 transition hover:bg-white/80"
           >
             <LogIn className="h-5 w-5" />
-            Login Admin
+            Masuk Admin
           </Link>
         </div>
       </div>

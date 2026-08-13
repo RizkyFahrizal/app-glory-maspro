@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { LayoutDashboard, PackageSearch, Users, LogOut, X, Globe, AlertTriangle, Building2, Trophy } from 'lucide-react'
 import { createPortal } from 'react-dom'
-import axios from 'axios'
+import api from '../../utils/api'
 
 export default function AdminSidebar({ isOpen, onClose }) {
   const location = useLocation()
@@ -32,9 +32,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
     try {
       const token = localStorage.getItem('token')
       if (token) {
-        await axios.post('http://127.0.0.1:8000/api/logout', {}, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        await api.post('/logout')
       }
     } catch (error) {
       console.error('Logout failed', error)
@@ -59,7 +57,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
       <aside className={`fixed left-0 top-0 z-50 flex h-[100dvh] w-64 flex-col transform border-r border-white/40 bg-white/60 p-6 backdrop-blur-xl shadow-lg shadow-[#b8860b]/5 transition-transform duration-300 ease-in-out md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="mb-10 shrink-0 flex items-center justify-between">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.3em] text-[#B8860B] uppercase">Admin Portal</p>
+            <p className="text-[10px] font-bold tracking-[0.3em] text-[#B8860B] uppercase">Portal Admin</p>
             <h2 className="mt-1 text-xl font-semibold tracking-widest text-[#2C1A00]">GLORY MASPRO</h2>
           </div>
           <button onClick={onClose} className="p-1 text-soft md:hidden hover:text-[#2C1A00]">
@@ -76,7 +74,7 @@ export default function AdminSidebar({ isOpen, onClose }) {
               : 'text-[#6b7280] hover:bg-white/40 hover:text-[#2C1A00]'
               }`}
           >
-            <LayoutDashboard className="h-5 w-5" /> Dashboard
+            <LayoutDashboard className="h-5 w-5" /> Dasbor Visualisasi
           </Link>
 
           <Link

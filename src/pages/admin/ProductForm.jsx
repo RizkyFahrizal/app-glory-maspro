@@ -1,21 +1,32 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeft, Save, ImagePlus, X } from 'lucide-react'
-import axios from 'axios'
+import api from '../../utils/api'
 import SuccessModal from '../../components/admin/SuccessModal'
 import AlertModal from '../../components/admin/AlertModal'
 import DeleteModal from '../../components/admin/DeleteModal'
 import CustomSelect from '../../components/public/CustomSelect'
 import ProductImageUploader from '../../components/admin/ProductImageUploader'
 
-// Dummy Projects untuk dropdown
-const dummyProjects = [
-  { id: 1, name: 'PT Lentera / Samesta Mahata Serpong' },
-  { id: 2, name: 'PT Kahuripan' },
-  { id: 3, name: 'Glory Residence' }
-]
-
 export default function ProductForm() {
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await api.get('/projects')
+        if (res.data && res.data.data) {
+          setProjects(res.data.data)
+        } else {
+          setProjects(Array.isArray(res.data) ? res.data : [])
+        }
+      } catch (err) {
+        console.error('Failed to fetch projects', err)
+      }
+    }
+    fetchProjects()
+  }, [])
+
   const { id } = useParams()
   const location = useLocation()
   const isView = location.pathname.includes('/view/')
@@ -67,7 +78,7 @@ export default function ProductForm() {
     if (isEdit || isView) {
       const fetchProduct = async () => {
         try {
-          const res = await axios.get(`http://127.0.0.1:8000/api/products/${id}`)
+          const res = await api.get(`/products/${id}`)
           if (res.data && res.data.success) {
             const data = res.data.data
 
@@ -186,10 +197,7 @@ export default function ProductForm() {
   const handleConfirmDeleteImage = async () => {
     if (!imageToDelete) return
     try {
-      const token = localStorage.getItem('token') || ''
-      await axios.delete(`http://127.0.0.1:8000/api/products/images/${imageToDelete}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await api.delete(`/products/images/${imageToDelete}`)
       setExistingImages(prev => prev.filter(img => img.id !== imageToDelete))
     } catch (error) {
       console.error('Failed to delete image:', error)
@@ -238,16 +246,14 @@ export default function ProductForm() {
 
       if (isEdit) {
         payload.append('_method', 'PUT')
-        await axios.post(`http://127.0.0.1:8000/api/products/${id}`, payload, {
+        await api.post(`/products/${id}`, payload, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         })
       } else {
-        await axios.post('http://127.0.0.1:8000/api/products', payload, {
+        await api.post('/products', payload, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         })
@@ -309,7 +315,7 @@ export default function ProductForm() {
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Proyek Terkait</label>
                 {isView ? (
-                  <input type="text" value={dummyProjects.find(p => p.id == formData.project_id)?.name || 'Tidak Ada (Berdiri Sendiri)'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                  <input type="text" value={projects.find(p => p.id == formData.project_id)?.title || 'Tidak Ada (Berdiri Sendiri)'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
                 ) : (
                   <CustomSelect
                     name="project_id"
@@ -319,7 +325,7 @@ export default function ProductForm() {
                     placeholder="Pilih Proyek (Opsional)"
                     options={[
                       { label: "Tidak Ada (Berdiri Sendiri)", value: "" },
-                      ...dummyProjects.map(p => ({ label: p.name, value: String(p.id) }))
+                      ...projects.map(p => ({ label: p.title, value: String(p.id) }))
                     ]}
                   />
                 )}

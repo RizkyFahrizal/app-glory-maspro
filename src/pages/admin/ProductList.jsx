@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Plus, Pencil, Trash2, Search, X, Eye } from 'lucide-react'
-import axios from 'axios'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Plus, Pencil, Trash2, Search, X, Eye, MapPin, Building2, ChevronDown } from 'lucide-react'
+import api from '../../utils/api'
 import DeleteModal from '../../components/admin/DeleteModal'
 import SuccessModal from '../../components/admin/SuccessModal'
 import AlertModal from '../../components/admin/AlertModal'
@@ -14,14 +15,13 @@ export default function ProductList() {
   const [showSuccess, setShowSuccess] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [projectFilter, setProjectFilter] = useState('')
+  const [locationFilter, setLocationFilter] = useState('Semua Lokasi')
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Dummy Projects untuk dropdown filter
-  const dummyProjects = [
-    { id: 1, name: 'PT Lentera / Samesta Mahata Serpong' },
-    { id: 2, name: 'PT Kahuripan' },
-    { id: 3, name: 'Glory Residence' }
-  ]
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false)
+  const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false)
+
+  const [projects, setProjects] = useState([])
   const itemsPerPage = 10
   const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
 
@@ -30,16 +30,14 @@ export default function ProductList() {
   const location = useLocation()
   const wasRedirected = location.state?.restricted
 
-  useEffect(() => {
-    fetchProducts()
-  }, [])
-
   const fetchProducts = async () => {
     try {
       setLoading(true)
-      const res = await axios.get('http://127.0.0.1:8000/api/products')
-      if (res.data && res.data.success) {
+      const res = await api.get('/products')
+      if (res.data && res.data.data) {
         setProducts(res.data.data)
+      } else {
+        setProducts(Array.isArray(res.data) ? res.data : [])
       }
     } catch (error) {
       console.error('Failed to fetch products:', error)
@@ -47,6 +45,25 @@ export default function ProductList() {
       setLoading(false)
     }
   }
+
+  const fetchProjects = async () => {
+    try {
+      const res = await api.get('/projects')
+      if (res.data && res.data.data) {
+        setProjects(res.data.data)
+      } else {
+        setProjects(Array.isArray(res.data) ? res.data : [])
+      }
+    } catch (err) {
+      console.error('Failed to fetch projects for filter:', err)
+    }
+  }
+
+  useEffect(() => {
+    fetchProducts()
+    fetchProjects()
+  }, [])
+
 
   const formatShortPrice = (price) => {
     if (!price) return 'Rp 0'
@@ -66,11 +83,8 @@ export default function ProductList() {
     if (!productToDelete) return
 
     try {
-      const token = localStorage.getItem('token') || ''
-      const res = await axios.delete(`http://127.0.0.1:8000/api/products/${productToDelete.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      if (res.data && res.data.success) {
+      const res = await api.delete(`/products/${productToDelete.id}`)
+      if (res.data) {
         setProducts(products.filter(p => p.id !== productToDelete.id))
         setShowSuccess(true)
         setTimeout(() => setShowSuccess(false), 2500)
@@ -87,16 +101,18 @@ export default function ProductList() {
     const matchesSearch = p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.listing_id.toLowerCase().includes(searchTerm.toLowerCase())
 
-    let matchesProject = true
-    if (projectFilter !== '') {
-      if (projectFilter === 'none') {
-        matchesProject = !p.project_id
-      } else {
-        matchesProject = String(p.project_id) === String(projectFilter)
-      }
+    let matchesLocation = true
+    if (locationFilter !== '' && locationFilter !== 'Semua Lokasi') {
+      const parentProject = projects.find(proj => String(proj.id) === String(p.project_id))
+      matchesLocation = parentProject ? parentProject.location === locationFilter : false
     }
 
-    return matchesSearch && matchesProject
+    let matchesProject = true
+    if (projectFilter !== '' && projectFilter !== 'Semua Proyek') {
+      matchesProject = String(p.project_id) === String(projectFilter)
+    }
+
+    return matchesSearch && matchesLocation && matchesProject
   })
 
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage)
@@ -130,7 +146,7 @@ export default function ProductList() {
       <div className="mt-8 glass-panel overflow-hidden rounded-3xl border border-[rgba(0,0,0,0.06)] bg-white">
         {/* Table Toolbar */}
         <div className="flex flex-col gap-4 border-b border-[rgba(0,0,0,0.06)] bg-[#F9FAFB] p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col sm:flex-row gap-4 w-full sm:max-w-3xl">
+          <div className="flex flex-col sm:flex-row gap-4 w-full flex-1 mr-4">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 text-gray-400" />
               <input
@@ -156,24 +172,135 @@ export default function ProductList() {
               )}
             </div>
 
-            <div className="sm:w-64 relative">
-              <select
-                value={projectFilter}
-                onChange={(e) => {
-                  setProjectFilter(e.target.value)
-                  setCurrentPage(1)
-                }}
-                className="input-minimal w-full rounded-2xl py-3 px-4 text-sm bg-white border border-[rgba(0,0,0,0.1)] shadow-sm outline-none appearance-none cursor-pointer"
-              >
-                <option value="">Semua Proyek</option>
-                <option value="none">Tidak Ada (Berdiri Sendiri)</option>
-                {dummyProjects.map(p => (
-                  <option key={p.id} value={p.id}>{p.name}</option>
-                ))}
-              </select>
-              {/* Custom arrow for select */}
-              <div className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-gray-400">
-                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+              {/* Location Filter */}
+              <div className="relative w-full sm:w-[240px]">
+                <button
+                  onClick={() => {
+                    setIsLocationDropdownOpen(!isLocationDropdownOpen)
+                    setIsProjectDropdownOpen(false)
+                  }}
+                  className="w-full flex items-center justify-between rounded-xl border border-[rgba(0,0,0,0.1)] bg-white py-3.5 pl-4 pr-4 text-sm font-semibold text-[#1F2937] shadow-sm transition hover:border-[#D4AF37] focus:border-[#D4AF37]"
+                >
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-gray-400" />
+                    <span>{locationFilter === '' ? 'Semua Lokasi' : locationFilter}</span>
+                  </div>
+                  {locationFilter !== 'Semua Lokasi' && locationFilter !== '' ? (
+                    <X
+                      className="h-4 w-4 text-gray-400 hover:text-red-500 transition-colors ml-auto mr-2"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setLocationFilter('Semua Lokasi')
+                        setProjectFilter('Semua Proyek')
+                        setCurrentPage(1)
+                      }}
+                    />
+                  ) : null}
+                  <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform ${isLocationDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isLocationDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute z-50 mt-2 w-full rounded-xl bg-white py-2 shadow-xl border border-[rgba(0,0,0,0.05)] max-h-60 overflow-y-auto"
+                    >
+                      {['Semua Lokasi', ...new Set(projects.map(p => p.location).filter(Boolean))].map((loc, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => {
+                            setLocationFilter(loc)
+                            setProjectFilter('Semua Proyek')
+                            setCurrentPage(1)
+                            setIsLocationDropdownOpen(false)
+                          }}
+                          className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${locationFilter === loc
+                            ? 'bg-[#D4AF37]/10 text-[#B8860B] font-bold'
+                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            }`}
+                        >
+                          {loc}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Project Filter */}
+              <div className="relative w-full sm:w-[280px]">
+                <button
+                  onClick={() => {
+                    setIsProjectDropdownOpen(!isProjectDropdownOpen)
+                    setIsLocationDropdownOpen(false)
+                  }}
+                  className="w-full flex items-center justify-between rounded-xl border border-[rgba(0,0,0,0.1)] bg-white py-3.5 pl-4 pr-4 text-sm font-semibold text-[#1F2937] shadow-sm transition hover:border-[#D4AF37] focus:border-[#D4AF37]"
+                >
+                  <div className="flex items-center gap-2 overflow-hidden">
+                    <Building2 className="h-4 w-4 text-gray-400 shrink-0" />
+                    <span className="truncate">
+                      {projectFilter === 'Semua Proyek' || projectFilter === '' ? 'Semua Proyek' :
+                       projects.find(p => String(p.id) === String(projectFilter))?.title || 'Semua Proyek'}
+                    </span>
+                  </div>
+                  {projectFilter !== 'Semua Proyek' && projectFilter !== '' ? (
+                    <X
+                      className="h-4 w-4 text-gray-400 hover:text-red-500 transition-colors shrink-0 ml-2 mr-2"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        setProjectFilter('Semua Proyek')
+                        setCurrentPage(1)
+                      }}
+                    />
+                  ) : null}
+                  <ChevronDown className={`h-4 w-4 text-gray-500 shrink-0 transition-transform ${isProjectDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isProjectDropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      className="absolute z-50 mt-2 w-full rounded-xl bg-white py-2 shadow-xl border border-[rgba(0,0,0,0.05)] max-h-60 overflow-y-auto"
+                    >
+                      <button
+                        onClick={() => {
+                          setProjectFilter('Semua Proyek')
+                          setCurrentPage(1)
+                          setIsProjectDropdownOpen(false)
+                        }}
+                        className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${projectFilter === 'Semua Proyek' || projectFilter === ''
+                          ? 'bg-[#D4AF37]/10 text-[#B8860B] font-bold'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                          }`}
+                      >
+                        Semua Proyek
+                      </button>
+                      {projects
+                        .filter(p => locationFilter === 'Semua Lokasi' || locationFilter === '' || p.location === locationFilter)
+                        .map(p => (
+                          <button
+                            key={p.id}
+                            onClick={() => {
+                              setProjectFilter(p.id)
+                              setCurrentPage(1)
+                              setIsProjectDropdownOpen(false)
+                            }}
+                            className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${String(projectFilter) === String(p.id)
+                              ? 'bg-[#D4AF37]/10 text-[#B8860B] font-bold'
+                              : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                              }`}
+                          >
+                            {p.title}
+                          </button>
+                        ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </div>
@@ -188,6 +315,7 @@ export default function ProductList() {
             <table className="w-full text-left text-sm text-[#1F2937]">
               <thead className="bg-[#F3F4F6] text-xs uppercase tracking-wider text-soft whitespace-nowrap">
                 <tr>
+                  <th className="px-6 py-4 font-semibold w-16 text-center">No</th>
                   <th className="px-6 py-4 font-semibold min-w-[320px]">Properti</th>
                   <th className="px-6 py-4 font-semibold min-w-[180px]">Harga & Tipe</th>
                   <th className="px-6 py-4 font-semibold min-w-[120px]">Status</th>
@@ -195,8 +323,11 @@ export default function ProductList() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[rgba(0,0,0,0.06)]">
-                {currentProducts.map((product) => (
+                {currentProducts.map((product, index) => (
                   <tr key={product.id} className="transition-colors hover:bg-[#F9FAFB]">
+                    <td className="px-6 py-6 text-center font-medium text-gray-500">
+                      {(currentPage - 1) * itemsPerPage + index + 1}
+                    </td>
                     <td className="px-6 py-6">
                       <div className="flex items-center gap-4">
                         {(() => {
@@ -204,10 +335,11 @@ export default function ProductList() {
                             <div className="h-20 w-32 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-[10px] text-gray-400">No Img</div>
                           )
                           const coverImg = [...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1))[0]
-                          if (coverImg.image_path.match(/\.(mp4|webm)$/)) {
+                          const imgUrl = coverImg.image_path.startsWith('http') ? coverImg.image_path : `http://127.0.0.1:8000/storage/${coverImg.image_path}`
+                          if (imgUrl.match(/\.(mp4|webm)$/)) {
                             return (
                               <video
-                                src={coverImg.image_path}
+                                src={imgUrl}
                                 className="h-20 w-32 rounded-xl object-cover border border-[rgba(0,0,0,0.1)] shadow-sm"
                                 muted loop playsInline autoPlay
                               />
@@ -215,7 +347,7 @@ export default function ProductList() {
                           }
                           return (
                             <img
-                              src={coverImg.image_path}
+                              src={imgUrl}
                               alt={product.title}
                               className="h-20 w-32 rounded-xl object-cover border border-[rgba(0,0,0,0.1)] shadow-sm bg-gray-100"
                               onError={(e) => {

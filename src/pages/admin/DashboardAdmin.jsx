@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../../utils/api'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
 import { Home, CheckCircle, Users } from 'lucide-react'
 
@@ -16,10 +16,8 @@ export default function DashboardAdmin() {
       try {
         const token = localStorage.getItem('token') || ''
         const [productsRes, accountsRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/api/products'),
-          axios.get('http://127.0.0.1:8000/api/accounts', {
-            headers: { Authorization: `Bearer ${token}` }
-          }).catch(() => ({ data: { success: false, data: [] } }))
+          api.get('/products'),
+          api.get('/accounts').catch(() => ({ data: { success: false, data: [] } }))
         ])
 
         if (productsRes.data && productsRes.data.success) {
@@ -75,7 +73,7 @@ export default function DashboardAdmin() {
     <div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[#1F2937]">Dashboard Overview</h1>
+          <h1 className="text-2xl font-semibold text-[#1F2937]">Dasbor Visualisasi</h1>
           <p className="mt-2 text-sm text-soft">Statistik ringkas dari katalog properti Anda saat ini.</p>
         </div>
 
