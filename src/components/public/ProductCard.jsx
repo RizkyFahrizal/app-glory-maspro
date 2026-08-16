@@ -42,7 +42,7 @@ export default function ProductCard({ product }) {
               style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
             >
               {[...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1)).map((img) => {
-                const imgUrl = img.image_path.startsWith('http') ? img.image_path : `http://127.0.0.1:8000/storage/${img.image_path}`;
+                const imgUrl = img.image_path.startsWith('http') ? img.image_path : `https://api.glorymaspro.com/storage/${img.image_path}`;
                 return (
                 <div key={img.id} className="h-full w-full flex-shrink-0 overflow-hidden bg-gray-100">
                   {imgUrl.match(/\.(mp4|webm)$/) ? (

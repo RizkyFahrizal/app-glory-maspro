@@ -64,7 +64,7 @@ export default function AccountForm() {
               setIsSuperAdmin(true)
             }
             if (data.photo) {
-              setPhotoPreview(`http://127.0.0.1:8000/storage/${data.photo}`)
+              setPhotoPreview(`https://api.glorymaspro.com/storage/${data.photo}`)
             }
           }
         } catch (error) {

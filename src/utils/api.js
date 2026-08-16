@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Konfigurasi baseURL mengarah ke server Laravel
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api',
+  baseURL: 'https://api.glorymaspro.com/api',
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'

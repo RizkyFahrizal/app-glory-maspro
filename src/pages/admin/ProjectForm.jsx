@@ -58,7 +58,7 @@ export default function ProjectForm() {
   const getFullUrl = (path) => {
     if (!path) return null
     if (path.startsWith('http')) return path
-    return `http://127.0.0.1:8000/storage/${path}`
+    return `https://api.glorymaspro.com/storage/${path}`
   }
 
   // Fetch for Edit or View

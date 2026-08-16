@@ -33,7 +33,7 @@ export default function AwardForm() {
               description: data.description || ''
             })
             if (data.image) {
-              setImagePreview(data.image.startsWith('http') ? data.image : `http://127.0.0.1:8000/storage/${data.image}`)
+              setImagePreview(data.image.startsWith('http') ? data.image : `https://api.glorymaspro.com/storage/${data.image}`)
             }
           }
         } catch (err) {

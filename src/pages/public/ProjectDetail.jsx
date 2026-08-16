@@ -108,7 +108,7 @@ export default function ProjectDetail() {
       {/* Header Banner */}
       <section className="relative h-[60vh] min-h-[500px] w-full bg-[#1F2937]">
         <img
-          src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `http://127.0.0.1:8000/storage/${project.image_header}`) : '/herobg.webp'}
+          src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `https://api.glorymaspro.com/storage/${project.image_header}`) : '/herobg.webp'}
           alt={project.title}
           className="w-full h-full object-cover opacity-60"
         />
@@ -158,7 +158,7 @@ export default function ProjectDetail() {
                 <div key={idx} className="bg-white rounded-[2rem] overflow-hidden shadow-sm border border-gray-200 group flex flex-col">
                   {promo.image && (
                     <div className="h-48 overflow-hidden shrink-0">
-                      <img src={promo.image.startsWith('http') ? promo.image : `http://127.0.0.1:8000/storage/${promo.image}`} alt={promo.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <img src={promo.image.startsWith('http') ? promo.image : `https://api.glorymaspro.com/storage/${promo.image}`} alt={promo.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                     </div>
                   )}
                   <div className="p-6 flex-1">
@@ -212,7 +212,7 @@ export default function ProjectDetail() {
                   <div key={idx} className="flex flex-col bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 group">
                     {cluster.image && (
                       <div className="h-56 overflow-hidden shrink-0">
-                        <img src={cluster.image.startsWith('http') ? cluster.image : `http://127.0.0.1:8000/storage/${cluster.image}`} alt={cluster.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <img src={cluster.image.startsWith('http') ? cluster.image : `https://api.glorymaspro.com/storage/${cluster.image}`} alt={cluster.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                       </div>
                     )}
                     <div className="p-8 flex flex-col justify-center flex-1">

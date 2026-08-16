@@ -90,7 +90,7 @@ export default function DashboardAdmin() {
 
         <div className="flex items-center gap-4 rounded-2xl bg-white p-3 pr-4 border border-[rgba(0,0,0,0.06)] shadow-sm">
           <img
-            src={userData.photo ? `http://127.0.0.1:8000/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
+            src={userData.photo ? `https://api.glorymaspro.com/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
             alt={userName}
             className="h-11 w-11 rounded-full border-2 border-[#D4AF37] object-cover"
           />

@@ -335,7 +335,7 @@ export default function ProductList() {
                             <div className="h-20 w-32 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-[10px] text-gray-400">No Img</div>
                           )
                           const coverImg = [...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1))[0]
-                          const imgUrl = coverImg.image_path.startsWith('http') ? coverImg.image_path : `http://127.0.0.1:8000/storage/${coverImg.image_path}`
+                          const imgUrl = coverImg.image_path.startsWith('http') ? coverImg.image_path : `https://api.glorymaspro.com/storage/${coverImg.image_path}`
                           if (imgUrl.match(/\.(mp4|webm)$/)) {
                             return (
                               <video

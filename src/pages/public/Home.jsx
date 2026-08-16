@@ -399,7 +399,7 @@ export default function Home() {
                 >
                   <div className="h-48 w-full overflow-hidden relative">
                     <img
-                      src={award.image ? (award.image.startsWith('http') ? award.image : `http://127.0.0.1:8000/storage/${award.image}`) : '/aboutbg.webp'}
+                      src={award.image ? (award.image.startsWith('http') ? award.image : `https://api.glorymaspro.com/storage/${award.image}`) : '/aboutbg.webp'}
                       alt={award.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
@@ -503,7 +503,7 @@ export default function Home() {
                 <Link to={`/project/${project.slug || project.id}`} className="flex-1 flex flex-col h-full w-full">
                   <div className="aspect-[16/9] overflow-hidden relative">
                     <img
-                      src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `http://127.0.0.1:8000/storage/${project.image_header}`) : '/herobg.webp'}
+                      src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `https://api.glorymaspro.com/storage/${project.image_header}`) : '/herobg.webp'}
                       alt={project.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />

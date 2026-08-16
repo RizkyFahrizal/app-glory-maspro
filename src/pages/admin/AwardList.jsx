@@ -129,7 +129,7 @@ export default function AwardList() {
                     <td className="px-6 py-4">
                       <div className="h-12 w-12 rounded-lg overflow-hidden border border-gray-100">
                         <img 
-                          src={award.image ? (award.image.startsWith('http') ? award.image : `http://127.0.0.1:8000/storage/${award.image}`) : 'https://via.placeholder.com/150'} 
+                          src={award.image ? (award.image.startsWith('http') ? award.image : `https://api.glorymaspro.com/storage/${award.image}`) : 'https://via.placeholder.com/150'} 
                           alt={award.title} 
                           className="h-full w-full object-cover" 
                         />

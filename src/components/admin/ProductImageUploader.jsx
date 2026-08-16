@@ -18,7 +18,7 @@ export default function ProductImageUploader({
           <p className="mb-3 text-sm font-semibold text-soft">Media Saat Ini:</p>
           <div className="flex flex-wrap gap-4">
             {existingImages.map(img => {
-              const imgUrl = img.image_path.startsWith('http') ? img.image_path : `http://127.0.0.1:8000/storage/${img.image_path}`
+              const imgUrl = img.image_path.startsWith('http') ? img.image_path : `https://api.glorymaspro.com/storage/${img.image_path}`
               return (
               <div key={img.id} className="relative h-32 w-32 rounded-xl border border-[rgba(0,0,0,0.1)] shadow-sm overflow-hidden group">
                 {img.image_path.endsWith('.webm') || img.image_path.endsWith('.mp4') ? (

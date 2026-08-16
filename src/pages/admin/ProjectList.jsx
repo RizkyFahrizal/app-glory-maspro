@@ -279,7 +279,7 @@ export default function ProjectList() {
                     <td className="px-4 py-4">
                       <div className="flex items-center gap-4">
                         <img
-                          src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `http://127.0.0.1:8000/storage/${project.image_header}`) : '/herobg.webp'}
+                          src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `https://api.glorymaspro.com/storage/${project.image_header}`) : '/herobg.webp'}
                           alt={project.title}
                           className="h-16 w-24 rounded-xl object-cover border border-[rgba(0,0,0,0.1)] shadow-sm bg-gray-100"
                         />
