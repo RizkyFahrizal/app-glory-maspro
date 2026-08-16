@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Lock, Eye, EyeOff, CheckCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import api from '../../utils/api'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -26,7 +26,7 @@ export default function Login() {
     setError('')
 
     try {
-      const res = await axios.post('https://api.glorymaspro.com/api/login', {
+      const res = await api.post('/login', {
         email,
         password
       })
@@ -51,79 +51,106 @@ export default function Login() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-[#e9d387] via-[#f9e7a9] to-[#e9d387] p-4 text-[#1F2937]">
-      <div className="absolute left-4 top-4 md:left-8 md:top-8">
-        <Link to="/" className="flex items-center gap-2 text-sm font-medium text-[#4A3000] transition hover:text-[#2C1A00]">
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Beranda
-        </Link>
+    <div className="flex min-h-screen bg-white">
+      {/* Left Side - Image/Brand */}
+      <div className="relative hidden w-1/2 flex-col justify-between overflow-hidden bg-[#101010] p-12 lg:flex">
+        <div className="absolute inset-0">
+          <img src="/herobg.webp" alt="Background" className="h-full w-full object-cover opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#101010] via-transparent to-transparent" />
+        </div>
+
+        <div className="relative z-10">
+          <Link to="/" className="flex items-center gap-2 text-white hover:text-[#D4AF37] transition font-medium">
+            <ArrowLeft className="h-5 w-5" /> Kembali ke Beranda
+          </Link>
+        </div>
+
+        <div className="relative z-10">
+          <h2 className="text-4xl font-bold text-white leading-tight mb-4">
+            Kelola Properti Anda<br />dengan <span className="text-[#D4AF37]">Lebih Mudah</span>
+          </h2>
+          <p className="text-gray-300 max-w-md leading-relaxed">
+            Satu tempat, banyak pilihan. Akses dashboard Anda sekarang untuk mengelola katalog perumahan Glory Maspro.
+          </p>
+        </div>
       </div>
 
-      <div className="w-full max-w-md">
-        <div className="mb-10 text-center">
-          <p className="section-label">Admin Portal</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-widest text-[#2C1A00]">GLORY MASPRO</h1>
-          <p className="mt-3 text-sm text-soft">Silakan login untuk mengelola katalog properti Anda.</p>
+      {/* Right Side - Form */}
+      <div className="flex w-full flex-col justify-center relative px-6 sm:px-12 lg:w-1/2 lg:px-20 xl:px-32 bg-[#FCFAF5]">
+        <div className="absolute left-6 top-8 lg:hidden">
+          <Link to="/" className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-[#D4AF37] transition">
+            <ArrowLeft className="h-4 w-4" /> Kembali
+          </Link>
         </div>
 
-        <div className="card-minimal animate-fade-in rounded-[2rem] p-8">
-          {error && (
-            <div className="mb-6 rounded-xl bg-red-50 p-4 text-sm text-red-600 border border-red-100">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="mb-6 flex items-center gap-2 rounded-xl bg-green-50 p-4 text-sm text-green-700 border border-green-100">
-              <CheckCircle className="h-5 w-5" />
-              {success}
-            </div>
-          )}
-          <form onSubmit={handleLogin} className="flex flex-col gap-6">
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Email Admin</label>
-              <input
-                required
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@glorymaspro.com"
-                className="input-minimal w-full rounded-2xl py-3 px-4"
-              />
-            </div>
+        <div className="w-full max-w-md mx-auto">
+          <div className="mb-10 text-center lg:text-left">
+            <p className="text-sm font-bold tracking-[0.2em] text-[#B8860B] uppercase mb-3">Portal Admin</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#1F2937] mb-3">Selamat Datang,<br />Sobat Glory! 👋</h1>
+            <p className="text-gray-500">Silakan login menggunakan email admin untuk melanjutkan.</p>
+          </div>
 
-            <div>
-              <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Password</label>
-              <div className="relative">
+          <div className="bg-white rounded-[2rem] p-8 shadow-xl shadow-black/[0.03] border border-[rgba(0,0,0,0.04)] animate-fade-in">
+            {error && (
+              <div className="mb-6 rounded-xl bg-red-50 p-4 text-sm text-red-600 border border-red-100 flex items-start gap-2">
+                <span className="shrink-0 mt-0.5">⚠️</span> {error}
+              </div>
+            )}
+            {success && (
+              <div className="mb-6 flex items-center gap-2 rounded-xl bg-green-50 p-4 text-sm text-green-700 border border-green-100">
+                <CheckCircle className="h-5 w-5" />
+                {success}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin} className="flex flex-col gap-6">
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-500">Email Admin</label>
                 <input
                   required
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="input-minimal w-full rounded-2xl py-3 pl-4 pr-12"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="glorymaspro@gmail.com"
+                  className="input-minimal w-full rounded-2xl py-3.5 px-4 bg-gray-50 focus:bg-white border-gray-200"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
               </div>
-            </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-gold mt-2 flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-semibold transition disabled:opacity-70"
-            >
-              <Lock className="h-4 w-4" /> {loading ? 'Memverifikasi...' : 'Masuk ke Dashboard'}
-            </button>
-          </form>
+              <div>
+                <label className="mb-2 block text-xs font-bold uppercase tracking-wider text-gray-500">Password</label>
+                <div className="relative">
+                  <input
+                    required
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="input-minimal w-full rounded-2xl py-3.5 pl-4 pr-12 bg-gray-50 focus:bg-white border-gray-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#D4AF37] transition"
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn-gold mt-4 flex w-full items-center justify-center gap-2 rounded-2xl py-4 font-bold text-white transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 disabled:hover:shadow-none"
+              >
+                <Lock className="h-4 w-4" /> {loading ? 'Memverifikasi...' : 'Masuk ke Dashboard'}
+              </button>
+            </form>
+          </div>
+
+          <p className="mt-8 text-center text-xs font-medium text-gray-400">
+            &copy; 2026 Glory Maspro. Hak Cipta Dilindungi.
+          </p>
         </div>
-
-        <p className="mt-8 text-center text-xs text-soft">
-          &copy; 2026 Glory Maspro. Restricted Access.
-        </p>
       </div>
     </div>
   )

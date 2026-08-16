@@ -41,17 +41,19 @@ export default function ProductCard({ product }) {
               className="flex h-full w-full transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentImageIndex * 100}%)` }}
             >
-              {[...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1)).map((img) => (
+              {[...product.images].sort((a, b) => (b.is_primary ? 1 : 0) - (a.is_primary ? 1 : 0) || (a.image_path.match(/\.(mp4|webm)$/) ? 1 : -1)).map((img) => {
+                const imgUrl = img.image_path.startsWith('http') ? img.image_path : `http://127.0.0.1:8000/storage/${img.image_path}`;
+                return (
                 <div key={img.id} className="h-full w-full flex-shrink-0 overflow-hidden bg-gray-100">
-                  {img.image_path.match(/\.(mp4|webm)$/) ? (
+                  {imgUrl.match(/\.(mp4|webm)$/) ? (
                     <video
-                      src={img.image_path}
+                      src={imgUrl}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       muted loop playsInline autoPlay
                     />
                   ) : (
                     <img
-                      src={img.image_path}
+                      src={imgUrl}
                       alt={product.title}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       onError={(e) => {
@@ -61,7 +63,8 @@ export default function ProductCard({ product }) {
                     />
                   )}
                 </div>
-              ))}
+                )
+              })}
             </div>
             {product.images.length > 1 && (
               <>
@@ -91,7 +94,7 @@ export default function ProductCard({ product }) {
             )}
           </>
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm text-soft">No Image</div>
+          <div className="flex h-full w-full items-center justify-center text-sm text-soft">Tidak ada gambar</div>
         )}
         <span className="absolute right-3 top-3 z-10 rounded-full bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-bold tracking-widest text-[#B8860B] uppercase shadow-sm">
           {product.status?.toLowerCase() === 'available' ? 'TERSEDIA' : 'TERJUAL'}
@@ -106,7 +109,9 @@ export default function ProductCard({ product }) {
           <div className="flex flex-col items-end text-right">
             <div className="flex items-center gap-1 text-[#1F2937]">
               <MapPin className="h-3 w-3 text-[#D4AF37]" />
-              <span className="text-xs font-semibold">{product.location}</span>
+              <span className="text-xs font-semibold">
+                {product.project ? `${product.project.location || ''} - ${product.project.region || ''}` : '-'}
+              </span>
             </div>
             {product.address && (
               <span className="mt-0.5 max-w-[160px] line-clamp-1 text-[10px] text-soft">{product.address}</span>

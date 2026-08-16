@@ -75,7 +75,7 @@ export default function SplashScreen() {
           </h1>
           <div className="mt-3 h-[1px] w-16 bg-gradient-to-r from-transparent via-[#4A3000] to-transparent opacity-40" />
           <p className="mt-3 text-xs font-bold tracking-[0.4em] text-[#4A3000]/80 uppercase">
-            Property Collection
+            Koleksi Properti
           </p>
         </div>
       </div>

@@ -45,7 +45,7 @@ export default function About() {
               Glory Maspro
             </h1>
             <p className="text-xl md:text-2xl font-bold opacity-90 mb-2">
-              Property Collection
+              Koleksi Properti
             </p>
             <p className="text-sm md:text-base font-medium opacity-80 uppercase tracking-widest">
               Sidoarjo - Surabaya, Jawa Timur
@@ -154,7 +154,7 @@ export default function About() {
                 <p className="text-sm text-[#5C4000] leading-relaxed">
                   Kantor Glory Maspro<br />
                   Sidoarjo - Surabaya<br />
-                  Jawa Timur 61254
+                  Jawa Timur
                 </p>
                 <div className="mt-2 text-xs font-semibold text-red-600 flex items-center gap-1">
                   <MapIcon className="w-3 h-3" /> MAPS
@@ -169,9 +169,7 @@ export default function About() {
               <div>
                 <h4 className="font-bold text-[#2C1A00] mb-1">Jam Operasional</h4>
                 <p className="text-sm text-[#5C4000] leading-relaxed">
-                  Senin - Jumat: 09.00 - 17.00 WIB<br />
-                  Sabtu: 09.00 - 14.00 WIB<br />
-                  Minggu: Libur
+                  Setiap Hari: 24 Jam<br />
                 </p>
               </div>
             </div>
@@ -183,9 +181,13 @@ export default function About() {
               <div className="flex-1">
                 <h4 className="font-bold text-[#2C1A00] mb-3">Kontak & Sosial Media</h4>
                 <div className="flex flex-col gap-3 text-sm font-medium text-[#5C4000]">
-                  <a href="mailto:info@glorymaspro.com" className="flex items-center gap-2 hover:text-red-600 transition-colors">
+                  <a href="https://wa.me/6281235897277" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-red-600 transition-colors">
+                    <Phone className="w-4 h-4 text-red-500 shrink-0" />
+                    <span className="truncate">081235897277 (Vevey)</span>
+                  </a>
+                  <a href="mailto:glorymaspro@gmail.com" className="flex items-center gap-2 hover:text-red-600 transition-colors">
                     <Mail className="w-4 h-4 text-red-500 shrink-0" />
-                    <span className="truncate">info@glorymaspro.com</span>
+                    <span className="truncate">glorymaspro@gmail.com</span>
                   </a>
                   <a href="https://instagram.com/glorymaspro" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-red-600 transition-colors">
                     <img src="/ig-icon.svg" alt="Instagram" className="w-5 h-5 object-contain shrink-0" />
@@ -205,12 +207,26 @@ export default function About() {
                     </div>
                     <span>@glory.maspro2</span>
                   </a>
+                  <a href="https://tiktok.com/@glory.maspro" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-red-600 transition-colors group">
+                    <div className="relative w-5 h-5 shrink-0">
+                      <svg viewBox="0 0 24 24" fill="#25F4EE" className="w-5 h-5 absolute -top-[1.2px] -left-[1.2px] transition-all group-hover:-top-[1.5px] group-hover:-left-[1.5px]">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
+                      </svg>
+                      <svg viewBox="0 0 24 24" fill="#FE2C55" className="w-5 h-5 absolute top-[1.2px] left-[1.2px] transition-all group-hover:top-[1.5px] group-hover:left-[1.5px]">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
+                      </svg>
+                      <svg viewBox="0 0 24 24" fill="#000000" className="w-5 h-5 absolute top-0 left-0 relative z-10">
+                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
+                      </svg>
+                    </div>
+                    <span>@glory.maspro</span>
+                  </a>
                 </div>
               </div>
             </div>
 
             <a
-              href="https://maps.app.goo.gl/ypjmHXKv6gwiDkm47"
+              href="https://maps.app.goo.gl/5ojExJFS4zTxUbWX6"
               target="_blank"
               rel="noreferrer"
               className="mt-4 flex items-center justify-center gap-2 w-full bg-[#F5B041] hover:bg-[#E67E22] text-white font-bold py-4 rounded-2xl transition-colors shadow-md"
@@ -223,7 +239,7 @@ export default function About() {
           <div className="lg:col-span-8 h-[400px] lg:h-full min-h-[400px] w-full rounded-[2rem] overflow-hidden shadow-lg border-4 border-white bg-gray-200 relative">
             <iframe
               title="Google Maps Lokasi Perusahaan"
-              src="https://maps.google.com/maps?q=-7.455827,112.6873922&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=-7.4572183,112.687377&t=&z=16&ie=UTF8&iwloc=&output=embed"
               className="absolute inset-0 w-full h-full border-0"
               allowFullScreen=""
               loading="lazy"

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Plus, Search, X, SearchX, RefreshCcw } from 'lucide-react'
-import axios from 'axios'
+import api from '../../utils/api'
 import AccountCard from '../../components/admin/AccountCard'
 import SuccessModal from '../../components/admin/SuccessModal'
 import DeleteModal from '../../components/admin/DeleteModal'
@@ -73,10 +73,7 @@ export default function AccountList() {
   const fetchAccounts = async (showLoading = true) => {
     try {
       if (showLoading) setLoading(true)
-      const token = localStorage.getItem('token') || ''
-      const res = await axios.get('https://api.glorymaspro.com/api/accounts', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      const res = await api.get('/accounts')
       if (res.data && res.data.success) {
         const users = res.data.data
         setAdminAccounts(users.filter(u => u.role?.toLowerCase() === 'admin' || u.name === 'Super Admin'))
@@ -108,10 +105,7 @@ export default function AccountList() {
     if (!accountToDelete) return
 
     try {
-      const token = localStorage.getItem('token') || ''
-      await axios.delete(`https://api.glorymaspro.com/api/accounts/${accountToDelete.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await api.delete(`/accounts/${accountToDelete.id}`)
       setShowSuccessDelete(true)
       setTimeout(() => setShowSuccessDelete(false), 2000)
       fetchAccounts() // Refresh list after delete
@@ -125,12 +119,9 @@ export default function AccountList() {
 
   const saveReorder = async (queue) => {
     try {
-      const token = localStorage.getItem('token') || ''
       const orderedIds = queue.map(acc => acc.wa_marketing?.id).filter(Boolean)
       if (orderedIds.length > 0) {
-        await axios.post('https://api.glorymaspro.com/api/wa-marketing/reorder', { ordered_ids: orderedIds }, {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        await api.post('/wa-marketing/reorder', { ordered_ids: orderedIds })
       }
     } catch (error) {
       console.error('Failed to reorder:', error)
@@ -256,14 +247,14 @@ export default function AccountList() {
                 <EmptyState onReset={() => setAdminSearch('')} />
               )}
             </div>
-            
+
             {filteredAdmin.length > 0 && adminTotalPages > 1 && (
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[rgba(0,0,0,0.06)] pt-6 text-sm text-soft">
                 <div>
                   Menampilkan {((adminCurrentPage - 1) * itemsPerPage) + 1} - {Math.min(adminCurrentPage * itemsPerPage, filteredAdmin.length)} dari {filteredAdmin.length} data
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-2">
-                  <button 
+                  <button
                     onClick={() => setAdminCurrentPage(p => Math.max(1, p - 1))}
                     disabled={adminCurrentPage === 1}
                     className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -277,12 +268,12 @@ export default function AccountList() {
                       className={`rounded-lg px-3 py-1 transition ${adminCurrentPage === page
                         ? 'bg-[#D4AF37]/10 text-[#B8860B] font-medium'
                         : 'border border-[rgba(0,0,0,0.1)] hover:bg-gray-50 hover:text-[#1F2937]'
-                      }`}
+                        }`}
                     >
                       {page}
                     </button>
                   ))}
-                  <button 
+                  <button
                     onClick={() => setAdminCurrentPage(p => Math.min(adminTotalPages, p + 1))}
                     disabled={adminCurrentPage === adminTotalPages}
                     className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -372,14 +363,14 @@ export default function AccountList() {
                 <EmptyState onReset={() => setMarketingSearch('')} />
               )}
             </div>
-            
+
             {filteredMarketing.length > 0 && marketingTotalPages > 1 && (
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[rgba(0,0,0,0.06)] pt-6 text-sm text-soft">
                 <div>
                   Menampilkan {((marketingCurrentPage - 1) * itemsPerPage) + 1} - {Math.min(marketingCurrentPage * itemsPerPage, filteredMarketing.length)} dari {filteredMarketing.length} data
                 </div>
                 <div className="flex flex-wrap items-center justify-center gap-2">
-                  <button 
+                  <button
                     onClick={() => setMarketingCurrentPage(p => Math.max(1, p - 1))}
                     disabled={marketingCurrentPage === 1}
                     className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
@@ -393,12 +384,12 @@ export default function AccountList() {
                       className={`rounded-lg px-3 py-1 transition ${marketingCurrentPage === page
                         ? 'bg-[#D4AF37]/10 text-[#B8860B] font-medium'
                         : 'border border-[rgba(0,0,0,0.1)] hover:bg-gray-50 hover:text-[#1F2937]'
-                      }`}
+                        }`}
                     >
                       {page}
                     </button>
                   ))}
-                  <button 
+                  <button
                     onClick={() => setMarketingCurrentPage(p => Math.min(marketingTotalPages, p + 1))}
                     disabled={marketingCurrentPage === marketingTotalPages}
                     className="rounded-lg border border-[rgba(0,0,0,0.1)] px-3 py-1 transition hover:bg-white hover:text-[#1F2937] disabled:opacity-50 disabled:cursor-not-allowed"
