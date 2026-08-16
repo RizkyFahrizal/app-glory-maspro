@@ -109,12 +109,13 @@ export default function AwardForm() {
       ) : (
         <>
           <div className="mb-8">
-            <Link
-              to="/admin/awards"
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
               className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali ke Daftar Penghargaan
-            </Link>
+              <ArrowLeft className="h-4 w-4" /> Kembali ke Halaman Sebelumnya
+            </button>
             <h1 className="text-2xl font-semibold text-[#1F2937]">
               {isEdit ? 'Edit Penghargaan' : 'Tambah Penghargaan Baru'}
             </h1>
@@ -161,7 +162,7 @@ export default function AwardForm() {
               <button type="submit" disabled={loading} className="btn-gold flex-1 rounded-2xl py-4 font-bold text-sm transition disabled:opacity-50">
                 {loading ? 'Menyimpan...' : 'Simpan Data'}
               </button>
-              <button type="button" onClick={() => navigate('/admin/awards')} className="flex-1 rounded-2xl bg-gray-100 py-4 font-bold text-sm text-[#1F2937] transition hover:bg-gray-200">
+              <button type="button" onClick={() => navigate(-1)} className="flex-1 rounded-2xl bg-gray-100 py-4 font-bold text-sm text-[#1F2937] transition hover:bg-gray-200">
                 Batal
               </button>
             </div>

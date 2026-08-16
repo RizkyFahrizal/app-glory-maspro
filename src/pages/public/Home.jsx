@@ -503,7 +503,7 @@ export default function Home() {
                 <Link to={`/project/${project.slug || project.id}`} className="flex-1 flex flex-col h-full w-full">
                   <div className="aspect-[16/9] overflow-hidden relative">
                     <img
-                      src={project.header_image ? (project.header_image.startsWith('http') ? project.header_image : `http://127.0.0.1:8000/storage/${project.header_image}`) : '/herobg.webp'}
+                      src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `http://127.0.0.1:8000/storage/${project.image_header}`) : '/herobg.webp'}
                       alt={project.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />

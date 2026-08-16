@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, MapPin, CheckCircle2, Home as HomeIcon, Building2, Tag, Layers } from 'lucide-react'
 import ProductCard from '../../components/public/ProductCard'
@@ -8,10 +8,14 @@ import api from '../../utils/api'
 
 export default function ProjectDetail() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [project, setProject] = useState(null)
   const [loading, setLoading] = useState(true)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 6
+
+  const [clusterPage, setClusterPage] = useState(1)
+  const clustersPerPage = 2
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -89,6 +93,10 @@ export default function ProjectDetail() {
     return pages;
   };
 
+  const clusters = project?.sub_projects || [];
+  const totalClusterPages = Math.ceil(clusters.length / clustersPerPage);
+  const paginatedClusters = clusters.slice((clusterPage - 1) * clustersPerPage, clusterPage * clustersPerPage);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -100,7 +108,7 @@ export default function ProjectDetail() {
       {/* Header Banner */}
       <section className="relative h-[60vh] min-h-[500px] w-full bg-[#1F2937]">
         <img
-          src={project.header_image ? (project.header_image.startsWith('http') ? project.header_image : `http://127.0.0.1:8000/storage/${project.header_image}`) : '/herobg.webp'}
+          src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `http://127.0.0.1:8000/storage/${project.image_header}`) : '/herobg.webp'}
           alt={project.title}
           className="w-full h-full object-cover opacity-60"
         />
@@ -108,9 +116,9 @@ export default function ProjectDetail() {
 
         {/* Tombol Kembali (Absolute di Kiri Atas) */}
         <div className="absolute top-6 left-6 md:top-8 md:left-12 z-20">
-          <Link to="/" className="inline-flex items-center gap-2 bg-white px-5 py-2.5 rounded-full text-[#1F2937] hover:bg-gray-100 transition-all duration-300 font-bold text-sm shadow-xl hover:-translate-y-0.5">
+          <button onClick={() => navigate(-1)} className="inline-flex items-center gap-2 bg-white px-5 py-2.5 rounded-full text-[#1F2937] hover:bg-gray-100 transition-all duration-300 font-bold text-sm shadow-xl hover:-translate-y-0.5">
             <ArrowLeft className="w-4 h-4" /> Kembali
-          </Link>
+          </button>
         </div>
 
         <div className="absolute inset-0 flex flex-col justify-end px-6 py-12 md:px-16 md:py-16">
@@ -194,26 +202,53 @@ export default function ProjectDetail() {
           </div>
 
           {/* List Cluster */}
-          {project.sub_projects && project.sub_projects.length > 0 && (
+          {clusters && clusters.length > 0 && (
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-[#1F2937] mb-8 flex items-center gap-3">
                 <Layers className="w-8 h-8 text-[#D4AF37]" /> Daftar Cluster
               </h2>
-              <div className="flex flex-col gap-8">
-                {project.sub_projects.map((cluster, idx) => (
-                  <div key={idx} className="flex flex-col md:flex-row bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 group">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {paginatedClusters.map((cluster, idx) => (
+                  <div key={idx} className="flex flex-col bg-white rounded-[2.5rem] overflow-hidden shadow-sm border border-gray-100 group">
                     {cluster.image && (
-                      <div className="md:w-2/5 h-56 md:h-auto overflow-hidden shrink-0">
-                        <img src={cluster.image.startsWith('http') ? cluster.image : `http://127.0.0.1:8000/storage/${cluster.image}`} alt={cluster.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <div className="h-56 overflow-hidden shrink-0">
+                        <img src={cluster.image.startsWith('http') ? cluster.image : `http://127.0.0.1:8000/storage/${cluster.image}`} alt={cluster.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                       </div>
                     )}
-                    <div className="p-8 flex flex-col justify-center md:w-3/5">
-                      <h3 className="text-2xl md:text-3xl font-bold text-[#1F2937] mb-4">{cluster.title}</h3>
-                      <p className="text-gray-600 leading-relaxed text-lg">{cluster.description}</p>
+                    <div className="p-8 flex flex-col justify-center flex-1">
+                      <h3 className="text-xl md:text-2xl font-bold text-[#1F2937] mb-4">{cluster.name}</h3>
+                      <p className="text-gray-600 leading-relaxed">{cluster.description}</p>
                     </div>
                   </div>
                 ))}
               </div>
+
+              {/* Pagination Cluster */}
+              {totalClusterPages > 1 && (
+                <div className="mt-8 flex justify-center gap-4">
+                  <button
+                    onClick={() => setClusterPage(p => Math.max(1, p - 1))}
+                    disabled={clusterPage === 1}
+                    className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white shadow-sm"
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                    Sebelumnya
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium text-gray-700">
+                      Hal {clusterPage} dari {totalClusterPages}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => setClusterPage(p => Math.min(totalClusterPages, p + 1))}
+                    disabled={clusterPage === totalClusterPages}
+                    className="flex items-center gap-2 rounded-full border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white shadow-sm"
+                  >
+                    Selanjutnya
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

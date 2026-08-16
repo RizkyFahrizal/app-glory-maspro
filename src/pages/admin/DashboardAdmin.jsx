@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
 import api from '../../utils/api'
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
-import { Home, CheckCircle, Users } from 'lucide-react'
+import { Home, Building2, Users } from 'lucide-react'
 
 export default function DashboardAdmin() {
   const [products, setProducts] = useState([])
+  const [projects, setProjects] = useState([])
   const [marketingCount, setMarketingCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const userData = JSON.parse(localStorage.getItem('user') || '{}')
@@ -15,13 +16,22 @@ export default function DashboardAdmin() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token') || ''
-        const [productsRes, accountsRes] = await Promise.all([
+        const [productsRes, accountsRes, projectsRes] = await Promise.all([
           api.get('/products'),
-          api.get('/accounts').catch(() => ({ data: { success: false, data: [] } }))
+          api.get('/accounts').catch(() => ({ data: { success: false, data: [] } })),
+          api.get('/projects').catch(() => ({ data: [] }))
         ])
 
         if (productsRes.data && productsRes.data.success) {
           setProducts(productsRes.data.data)
+        } else if (Array.isArray(productsRes.data)) {
+          setProducts(productsRes.data)
+        }
+
+        if (projectsRes.data && projectsRes.data.data) {
+          setProjects(projectsRes.data.data)
+        } else if (Array.isArray(projectsRes.data)) {
+          setProjects(projectsRes.data)
         }
 
         if (accountsRes.data && accountsRes.data.success) {
@@ -38,13 +48,14 @@ export default function DashboardAdmin() {
   }, [])
 
   const totalProducts = products.length
-  const availableProducts = products.filter(p => p.status?.toLowerCase() === 'available')
-  const totalAvailable = availableProducts.length
+  const totalProjects = projects.length
 
   const locationCount = {}
-  products.forEach(p => {
+  projects.forEach(p => {
+    const region = p.region || 'Lainnya'
     const loc = p.location || 'Lainnya'
-    locationCount[loc] = (locationCount[loc] || 0) + 1
+    const label = `${region} - ${loc}`
+    locationCount[label] = (locationCount[label] || 0) + 1
   })
   const locationColors = ['#D4AF37', '#2C3E50', '#8B6508', '#F39C12', '#7F8C8D', '#16A085', '#E67E22', '#9B59B6', '#34495E']
   const locationChartData = Object.entries(locationCount).map(([name, value], idx) => ({
@@ -95,11 +106,11 @@ export default function DashboardAdmin() {
         <div className="glass-panel rounded-3xl p-6 border border-[rgba(0,0,0,0.06)] bg-white">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D4AF37]/10 text-[#B8860B]">
-              <Home className="h-6 w-6" />
+              <Building2 className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Total Properti</p>
-              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalProducts} Unit</h3>
+              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Total Proyek</p>
+              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalProjects}</h3>
             </div>
           </div>
         </div>
@@ -107,11 +118,11 @@ export default function DashboardAdmin() {
         <div className="glass-panel rounded-3xl p-6 border border-[rgba(0,0,0,0.06)] bg-white">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D4AF37]/10 text-[#B8860B]">
-              <CheckCircle className="h-6 w-6" />
+              <Home className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Properti Tersedia</p>
-              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalAvailable} Unit</h3>
+              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Total Properti</p>
+              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalProducts} Unit</h3>
             </div>
           </div>
         </div>

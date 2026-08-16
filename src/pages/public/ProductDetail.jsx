@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import api from '../../utils/api'
 import { ArrowLeft, MapPin, Play } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -7,6 +7,7 @@ import ProductLightbox from '../../components/public/ProductLightbox'
 
 export default function ProductDetail() {
   const { slug } = useParams()
+  const navigate = useNavigate()
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)
   const [isContacting, setIsContacting] = useState(false)
@@ -153,9 +154,9 @@ export default function ProductDetail() {
         transition={{ duration: 0.4 }}
       >
         <div className="bg-white rounded-[2rem] shadow-sm border border-[rgba(0,0,0,0.06)] p-5 md:p-8">
-          <Link to="/" className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#6B7280] hover:text-[#B8860B] transition">
-            <ArrowLeft className="h-4 w-4" /> Kembali ke Katalog
-          </Link>
+          <button onClick={() => navigate(-1)} className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#6B7280] hover:text-[#B8860B] transition">
+            <ArrowLeft className="h-4 w-4" /> Kembali ke Halaman Sebelumnya
+          </button>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
             {/* LEFT COLUMN: Images, Description, Note */}
@@ -218,7 +219,9 @@ export default function ProductDetail() {
               <div className="mt-3 flex items-start gap-2 text-sm text-soft">
                 <MapPin className="mt-1 h-4 w-4 shrink-0 text-[#D4AF37]" />
                 <div className="flex flex-col">
-                  <span className="font-medium text-[#1F2937]">{product.location}</span>
+                  <span className="font-medium text-[#1F2937]">
+                    {product.project ? `${product.project.location || ''} - ${product.project.region || ''}` : '-'}
+                  </span>
                   {product.address && <span className="text-xs">{product.address}</span>}
                 </div>
               </div>

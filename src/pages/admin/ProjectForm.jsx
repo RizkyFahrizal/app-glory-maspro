@@ -12,11 +12,10 @@ export default function ProjectForm() {
   const navigate = useNavigate()
 
   const [loading, setLoading] = useState(false)
+  const [initLoading, setInitLoading] = useState(isEdit || isView)
   const [showSuccess, setShowSuccess] = useState(false)
   
   const headerInputRef = useRef(null)
-  const proyekInputRef = useRef(null)
-  const promoInputRef = useRef(null)
 
   // Role guard: marketing cannot create/edit projects
   useEffect(() => {
@@ -42,17 +41,19 @@ export default function ProjectForm() {
 
   // Images state (Files)
   const [images, setImages] = useState({
-    image_header: null,
-    image_proyek: null,
-    image_promo: null
+    image_header: null
   })
 
   // Previews
   const [previews, setPreviews] = useState({
-    image_header: null,
-    image_proyek: null,
-    image_promo: null
+    image_header: null
   })
+
+  const [promoImages, setPromoImages] = useState({})
+  const [clusterImages, setClusterImages] = useState({})
+  
+  const [promoPreviews, setPromoPreviews] = useState({})
+  const [clusterPreviews, setClusterPreviews] = useState({})
 
   const getFullUrl = (path) => {
     if (!path) return null
@@ -79,14 +80,30 @@ export default function ProjectForm() {
             sub_projects: Array.isArray(data.sub_projects) ? data.sub_projects : []
           })
           setPreviews({
-            image_header: getFullUrl(data.image_header),
-            image_proyek: getFullUrl(data.image_proyek),
-            image_promo: getFullUrl(data.image_promo)
+            image_header: getFullUrl(data.image_header)
           })
+
+          const initialPromoPreviews = {}
+          if (Array.isArray(data.promos)) {
+            data.promos.forEach(p => {
+              if (p.image) initialPromoPreviews[p.id] = getFullUrl(p.image)
+            })
+          }
+          setPromoPreviews(initialPromoPreviews)
+
+          const initialClusterPreviews = {}
+          if (Array.isArray(data.sub_projects)) {
+            data.sub_projects.forEach(c => {
+              if (c.image) initialClusterPreviews[c.id] = getFullUrl(c.image)
+            })
+          }
+          setClusterPreviews(initialClusterPreviews)
         } catch (err) {
           console.error(err)
           alert('Gagal mengambil data proyek')
           navigate('/admin/projects')
+        } finally {
+          setInitLoading(false)
         }
       }
       fetchData()
@@ -124,23 +141,45 @@ export default function ProjectForm() {
   }
 
   // Promos Array
-  const addPromo = () => setFormData(prev => ({ ...prev, promos: [...prev.promos, { id: Date.now(), title: '', description: '' }] }))
-  const removePromo = (idToRemove) => setFormData(prev => ({ ...prev, promos: prev.promos.filter(p => p.id !== idToRemove) }))
+  const addPromo = () => setFormData(prev => ({ ...prev, promos: [...prev.promos, { id: Date.now(), title: '', description: '', image: null }] }))
+  const removePromo = (idToRemove) => {
+    setFormData(prev => ({ ...prev, promos: prev.promos.filter(p => p.id !== idToRemove) }))
+    setPromoImages(prev => { const newObj = { ...prev }; delete newObj[idToRemove]; return newObj; })
+    setPromoPreviews(prev => { const newObj = { ...prev }; delete newObj[idToRemove]; return newObj; })
+  }
   const updatePromo = (idToUpdate, field, val) => {
     setFormData(prev => ({
       ...prev,
       promos: prev.promos.map(p => p.id === idToUpdate ? { ...p, [field]: val } : p)
     }))
   }
+  const handlePromoImage = (e, id) => {
+    const file = e.target.files[0]
+    if (file) {
+      setPromoImages(prev => ({ ...prev, [id]: file }))
+      setPromoPreviews(prev => ({ ...prev, [id]: URL.createObjectURL(file) }))
+    }
+  }
 
   // Clusters (sub_projects) Array
-  const addCluster = () => setFormData(prev => ({ ...prev, sub_projects: [...prev.sub_projects, { id: Date.now(), name: '', description: '' }] }))
-  const removeCluster = (idToRemove) => setFormData(prev => ({ ...prev, sub_projects: prev.sub_projects.filter(c => c.id !== idToRemove) }))
+  const addCluster = () => setFormData(prev => ({ ...prev, sub_projects: [...prev.sub_projects, { id: Date.now(), name: '', description: '', image: null }] }))
+  const removeCluster = (idToRemove) => {
+    setFormData(prev => ({ ...prev, sub_projects: prev.sub_projects.filter(c => c.id !== idToRemove) }))
+    setClusterImages(prev => { const newObj = { ...prev }; delete newObj[idToRemove]; return newObj; })
+    setClusterPreviews(prev => { const newObj = { ...prev }; delete newObj[idToRemove]; return newObj; })
+  }
   const updateCluster = (idToUpdate, field, val) => {
     setFormData(prev => ({
       ...prev,
       sub_projects: prev.sub_projects.map(c => c.id === idToUpdate ? { ...c, [field]: val } : c)
     }))
+  }
+  const handleClusterImage = (e, id) => {
+    const file = e.target.files[0]
+    if (file) {
+      setClusterImages(prev => ({ ...prev, [id]: file }))
+      setClusterPreviews(prev => ({ ...prev, [id]: URL.createObjectURL(file) }))
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -150,6 +189,7 @@ export default function ProjectForm() {
     const payload = new FormData()
     payload.append('title', formData.title)
     payload.append('location', formData.location)
+    payload.append('region', formData.region)
     payload.append('description', formData.description)
     payload.append('long_description', formData.long_description)
     payload.append('drive_link', formData.drive_link)
@@ -160,14 +200,20 @@ export default function ProjectForm() {
     payload.append('promos', JSON.stringify(formData.promos))
     payload.append('sub_projects', JSON.stringify(formData.sub_projects))
 
-    // Append files if exist
+    // Append global files
     if (images.image_header) payload.append('image_header', images.image_header)
-    if (images.image_proyek) payload.append('image_proyek', images.image_proyek)
-    if (images.image_promo) payload.append('image_promo', images.image_promo)
 
-    if (isEdit) {
-      payload.append('_method', 'PUT')
-    }
+    // Append individual promo images
+    Object.keys(promoImages).forEach(id => {
+      if (promoImages[id]) payload.append(`promo_image_${id}`, promoImages[id])
+    })
+
+    // Append individual cluster images
+    Object.keys(clusterImages).forEach(id => {
+      if (clusterImages[id]) payload.append(`cluster_image_${id}`, clusterImages[id])
+    })
+
+    // Note: The route in api.php is Route::post('/projects/{id}') so we don't need _method=PUT
 
     try {
       if (isEdit) {
@@ -188,12 +234,23 @@ export default function ProjectForm() {
     }
   }
 
+  if (initLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-[#D4AF37] border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-500 font-medium animate-pulse">Memuat data proyek...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="mx-auto max-w-5xl pb-20">
       <div className="mb-8">
-        <Link to="/admin/projects" className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]">
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Daftar Proyek
-        </Link>
+        <button type="button" onClick={() => navigate(-1)} className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]">
+          <ArrowLeft className="h-4 w-4" /> Kembali ke Halaman Sebelumnya
+        </button>
         <h1 className="text-2xl font-semibold text-[#1F2937]">
           {isView ? 'Detail Proyek' : isEdit ? 'Edit Proyek' : 'Tambah Proyek Baru'}
         </h1>
@@ -207,15 +264,15 @@ export default function ProjectForm() {
             <div className="space-y-6">
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Proyek</label>
-                <input required type="text" name="title" value={formData.title} onChange={handleChange} disabled={isView} className="input-minimal w-full rounded-2xl py-3 px-4 disabled:bg-gray-100 disabled:text-gray-500" />
+                <input required type="text" name="title" value={formData.title} onChange={handleChange} disabled={isView} placeholder="Contoh: Proyek Taman Anggun Sejahtera" className="input-minimal w-full rounded-2xl py-3 px-4 disabled:bg-gray-100 disabled:text-gray-500" />
               </div>
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi</label>
-                <input required type="text" name="location" value={formData.location} onChange={handleChange} disabled={isView} className="input-minimal w-full rounded-2xl py-3 px-4 disabled:bg-gray-100 disabled:text-gray-500" />
+                <input required type="text" name="location" value={formData.location} onChange={handleChange} disabled={isView} placeholder="Contoh: Sidoarjo, Surabaya" className="input-minimal w-full rounded-2xl py-3 px-4 disabled:bg-gray-100 disabled:text-gray-500" />
               </div>
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Daerah (Filter Utama)</label>
-                <input required type="text" name="region" value={formData.region} onChange={handleChange} disabled={isView} placeholder="Contoh: Sidoarjo, Barat Surabaya, dll" className="input-minimal w-full rounded-2xl py-3 px-4 disabled:bg-gray-100 disabled:text-gray-500" />
+                <input required type="text" name="region" value={formData.region} onChange={handleChange} disabled={isView} placeholder="Contoh: Balungbendo, Tanggulangin, Wiyung" className="input-minimal w-full rounded-2xl py-3 px-4 disabled:bg-gray-100 disabled:text-gray-500" />
               </div>
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Link Google Drive (Media Promosi)</label>
@@ -291,37 +348,28 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="mb-6">
-             <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Gambar Banner Promo Utama (Global)</label>
-             <input type="file" ref={promoInputRef} onChange={(e) => handleImageChange(e, 'image_promo')} accept="image/*" className="hidden" disabled={isView} />
-             <div onClick={() => !isView && promoInputRef.current?.click()} className={`group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] h-40 transition ${!isView ? 'hover:bg-[#F3F4F6] cursor-pointer' : ''}`}>
-               {previews.image_promo ? (
-                 <>
-                   <img src={previews.image_promo} alt="Preview" className="h-full w-full object-cover" />
-                   {!isView && (
-                     <button type="button" onClick={(e) => handleRemoveImage(e, 'image_promo', promoInputRef)} className="absolute right-4 top-4 rounded-full bg-red-500 p-2 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                       <X className="h-4 w-4" />
-                     </button>
-                   )}
-                 </>
-               ) : (
-                 <>
-                   <ImagePlus className="mb-3 h-8 w-8 text-[#D4AF37]" />
-                   <p className="text-sm font-medium text-[#1F2937]">Unggah Gambar Banner Promo</p>
-                 </>
-               )}
-             </div>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {formData.promos.map((promo) => (
-              <div key={promo.id} className="p-6 border border-gray-100 rounded-2xl bg-gray-50 relative group">
+              <div key={promo.id} className="p-6 border border-gray-100 rounded-2xl bg-gray-50 relative group flex gap-6">
                 {!isView && (
-                  <button type="button" onClick={() => removePromo(promo.id)} className="absolute top-4 right-4 p-2 text-red-400 hover:bg-red-100 rounded-xl bg-white opacity-0 group-hover:opacity-100 transition shadow-sm">
+                  <button type="button" onClick={() => removePromo(promo.id)} className="absolute top-4 right-4 p-2 text-red-400 hover:bg-red-100 rounded-xl bg-white opacity-0 group-hover:opacity-100 transition shadow-sm z-10">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 )}
-                <div className="space-y-4 pr-10">
+                <div className="w-1/3 shrink-0">
+                  <input type="file" id={`promo-img-${promo.id}`} onChange={(e) => handlePromoImage(e, promo.id)} accept="image/*" className="hidden" disabled={isView} />
+                  <div onClick={() => !isView && document.getElementById(`promo-img-${promo.id}`)?.click()} className={`group/img relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] h-32 transition ${!isView ? 'hover:bg-[#F3F4F6] cursor-pointer' : ''}`}>
+                    {promoPreviews[promo.id] ? (
+                      <img src={promoPreviews[promo.id]} alt="Preview" className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="text-center p-2">
+                        <ImagePlus className="mx-auto mb-2 h-6 w-6 text-[#D4AF37]" />
+                        <p className="text-[10px] font-medium text-[#1F2937]">Gambar Promo</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-4 flex-1 pr-8">
                   <input type="text" placeholder="Judul Promo" value={promo.title} disabled={isView} onChange={(e) => updatePromo(promo.id, 'title', e.target.value)} className="input-minimal w-full rounded-xl py-2 px-4 font-semibold disabled:bg-gray-100 disabled:text-gray-500" />
                   <textarea placeholder="Deskripsi Promo" value={promo.description} disabled={isView} onChange={(e) => updatePromo(promo.id, 'description', e.target.value)} rows="2" className="input-minimal w-full rounded-xl py-2 px-4 resize-none text-sm disabled:bg-gray-100 disabled:text-gray-500"></textarea>
                 </div>
@@ -342,37 +390,28 @@ export default function ProjectForm() {
             )}
           </div>
 
-          <div className="mb-6">
-             <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Gambar Banner Proyek (Global)</label>
-             <input type="file" ref={proyekInputRef} onChange={(e) => handleImageChange(e, 'image_proyek')} accept="image/*" className="hidden" disabled={isView} />
-             <div onClick={() => !isView && proyekInputRef.current?.click()} className={`group relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] h-40 transition ${!isView ? 'hover:bg-[#F3F4F6] cursor-pointer' : ''}`}>
-               {previews.image_proyek ? (
-                 <>
-                   <img src={previews.image_proyek} alt="Preview" className="h-full w-full object-cover" />
-                   {!isView && (
-                     <button type="button" onClick={(e) => handleRemoveImage(e, 'image_proyek', proyekInputRef)} className="absolute right-4 top-4 rounded-full bg-red-500 p-2 text-white opacity-0 group-hover:opacity-100 transition-opacity">
-                       <X className="h-4 w-4" />
-                     </button>
-                   )}
-                 </>
-               ) : (
-                 <>
-                   <ImagePlus className="mb-3 h-8 w-8 text-[#D4AF37]" />
-                   <p className="text-sm font-medium text-[#1F2937]">Unggah Gambar Banner Section Proyek</p>
-                 </>
-               )}
-             </div>
-          </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {formData.sub_projects.map((cluster) => (
-              <div key={cluster.id} className="p-6 border border-gray-100 rounded-2xl bg-gray-50 relative group">
+              <div key={cluster.id} className="p-6 border border-gray-100 rounded-2xl bg-gray-50 relative group flex gap-6">
                 {!isView && (
-                  <button type="button" onClick={() => removeCluster(cluster.id)} className="absolute top-4 right-4 p-2 text-red-400 hover:bg-red-100 rounded-xl bg-white opacity-0 group-hover:opacity-100 transition shadow-sm">
+                  <button type="button" onClick={() => removeCluster(cluster.id)} className="absolute top-4 right-4 p-2 text-red-400 hover:bg-red-100 rounded-xl bg-white opacity-0 group-hover:opacity-100 transition shadow-sm z-10">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 )}
-                <div className="space-y-4 pr-10">
+                <div className="w-1/3 shrink-0">
+                  <input type="file" id={`cluster-img-${cluster.id}`} onChange={(e) => handleClusterImage(e, cluster.id)} accept="image/*" className="hidden" disabled={isView} />
+                  <div onClick={() => !isView && document.getElementById(`cluster-img-${cluster.id}`)?.click()} className={`group/img relative flex flex-col items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[rgba(0,0,0,0.1)] bg-[#F9FAFB] h-32 transition ${!isView ? 'hover:bg-[#F3F4F6] cursor-pointer' : ''}`}>
+                    {clusterPreviews[cluster.id] ? (
+                      <img src={clusterPreviews[cluster.id]} alt="Preview" className="h-full w-full object-cover" />
+                    ) : (
+                      <div className="text-center p-2">
+                        <ImagePlus className="mx-auto mb-2 h-6 w-6 text-[#D4AF37]" />
+                        <p className="text-[10px] font-medium text-[#1F2937]">Gambar Cluster</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-4 flex-1 pr-8">
                   <input type="text" placeholder="Nama Cluster" value={cluster.name} disabled={isView} onChange={(e) => updateCluster(cluster.id, 'name', e.target.value)} className="input-minimal w-full rounded-xl py-2 px-4 font-semibold disabled:bg-gray-100 disabled:text-gray-500" />
                   <textarea placeholder="Deskripsi Singkat" value={cluster.description} disabled={isView} onChange={(e) => updateCluster(cluster.id, 'description', e.target.value)} rows="2" className="input-minimal w-full rounded-xl py-2 px-4 resize-none text-sm disabled:bg-gray-100 disabled:text-gray-500"></textarea>
                 </div>
@@ -389,7 +428,7 @@ export default function ProjectForm() {
               {loading ? 'Menyimpan...' : 'Simpan Proyek'}
             </button>
           )}
-          <button type="button" onClick={() => navigate('/admin/projects')} className="flex-1 rounded-2xl bg-gray-100 py-4 font-bold text-sm text-[#1F2937] transition hover:bg-gray-200">
+          <button type="button" onClick={() => navigate(-1)} className="flex-1 rounded-2xl bg-gray-100 py-4 font-bold text-sm text-[#1F2937] transition hover:bg-gray-200">
             {isView ? 'Kembali' : 'Batal'}
           </button>
         </div>

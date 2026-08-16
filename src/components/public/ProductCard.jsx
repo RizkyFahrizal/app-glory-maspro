@@ -109,7 +109,9 @@ export default function ProductCard({ product }) {
           <div className="flex flex-col items-end text-right">
             <div className="flex items-center gap-1 text-[#1F2937]">
               <MapPin className="h-3 w-3 text-[#D4AF37]" />
-              <span className="text-xs font-semibold">{product.location}</span>
+              <span className="text-xs font-semibold">
+                {product.project ? `${product.project.location || ''} - ${product.project.region || ''}` : '-'}
+              </span>
             </div>
             {product.address && (
               <span className="mt-0.5 max-w-[160px] line-clamp-1 text-[10px] text-soft">{product.address}</span>

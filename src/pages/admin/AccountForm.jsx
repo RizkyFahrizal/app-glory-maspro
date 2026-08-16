@@ -173,12 +173,13 @@ export default function AccountForm() {
   return (
     <div className="mx-auto max-w-4xl">
       <div className="mb-8">
-        <Link
-          to={isMarketing ? "/admin/dashboard" : "/admin/accounts"}
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
           className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]"
         >
-          <ArrowLeft className="h-4 w-4" /> {isMarketing ? 'Kembali ke Dashboard' : 'Kembali ke Kelola Akun'}
-        </Link>
+          <ArrowLeft className="h-4 w-4" /> Kembali ke Halaman Sebelumnya
+        </button>
         <h1 className="text-2xl font-semibold text-[#1F2937]">
           {isEdit ? 'Edit Data Akun' : 'Tambah Akun Baru'}
         </h1>
@@ -358,7 +359,7 @@ export default function AccountForm() {
               </button>
               <button
                 type="button"
-                onClick={() => isMarketing ? navigate('/admin/dashboard') : navigate('/admin/accounts')}
+                onClick={() => navigate(-1)}
                 className="flex-1 rounded-2xl bg-gray-100 py-4 font-bold text-sm text-[#1F2937] transition hover:bg-gray-200"
               >
                 Kembali

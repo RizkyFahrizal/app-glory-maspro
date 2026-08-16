@@ -1,12 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronDown, X } from 'lucide-react';
+import { Search } from 'lucide-react';
 
-export default function CustomSelect({ options, value, name, onChange, placeholder, icon: Icon, className, disabled }) {
+export default function CustomSelect({ options, value, name, onChange, placeholder, icon: Icon, className, disabled, searchable = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
   const [dropdownStyle, setDropdownStyle] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -15,13 +18,14 @@ export default function CustomSelect({ options, value, name, onChange, placehold
         dropdownRef.current && !dropdownRef.current.contains(event.target)
       ) {
         setIsOpen(false);
+        setSearchQuery('');
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isOpen && buttonRef.current) {
       const updatePosition = () => {
         const rect = buttonRef.current.getBoundingClientRect();
@@ -44,7 +48,18 @@ export default function CustomSelect({ options, value, name, onChange, placehold
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (isOpen && searchable && searchInputRef.current) {
+      // Focus the input without scrolling the page to the bottom
+      searchInputRef.current.focus({ preventScroll: true });
+    }
+  }, [isOpen, searchable]);
+
   const selectedOption = options.find(opt => opt.value === value);
+
+  const filteredOptions = searchable 
+    ? options.filter(opt => opt.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    : options;
 
   return (
     <>
@@ -90,8 +105,24 @@ export default function CustomSelect({ options, value, name, onChange, placehold
           }}
           className="overflow-hidden rounded-2xl border border-[rgba(212,175,55,0.2)] bg-[#FCFAF5]/95 backdrop-blur-xl shadow-xl animate-fade-in"
         >
+          {searchable && (
+            <div className="p-2 border-b border-[rgba(0,0,0,0.06)] bg-[#FCFAF5]">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Cari..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 rounded-xl bg-white border border-gray-200 text-sm focus:outline-none focus:border-[#D4AF37] focus:ring-1 focus:ring-[#D4AF37]"
+                />
+              </div>
+            </div>
+          )}
           <ul className="max-h-60 overflow-auto py-2">
-            {options.map((opt) => (
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((opt) => (
               <li
                 key={opt.value}
                 onClick={() => {
@@ -104,7 +135,12 @@ export default function CustomSelect({ options, value, name, onChange, placehold
               >
                 {opt.label}
               </li>
-            ))}
+            ))
+            ) : (
+              <li className="px-4 py-3 text-sm text-gray-500 text-center">
+                Pencarian tidak ditemukan
+              </li>
+            )}
           </ul>
         </div>,
         document.body
