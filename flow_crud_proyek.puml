@@ -1,0 +1,34 @@
+@startuml
+title Flowchart CRUD Proyek & Produk Properti
+
+|User Admin|
+start
+:Login ke Dashboard Admin;
+:Pilih Menu Kelola Proyek / Produk;
+fork
+  :Tambah Proyek Baru (Create);
+fork again
+  :Edit Data Proyek (Update);
+fork again
+  :Hapus Proyek (Delete);
+end fork
+
+|Sistem / Database|
+:Validasi Data Input (Nama, Harga, Lokasi, dll);
+:Simpan Perubahan ke Database;
+
+|Sistem / Database|
+:Data Proyek Tersimpan & Diperbarui;
+
+|Guest (Calon Pembeli)|
+:Buka Halaman Utama / Katalog Proyek;
+
+|Sistem / Database|
+:Ambil Data Proyek Terbaru dari Database;
+:Tampilkan ke Antarmuka Publik;
+
+|Guest (Calon Pembeli)|
+:Melihat Data Proyek & Produk yang Terbaru;
+stop
+
+@enduml

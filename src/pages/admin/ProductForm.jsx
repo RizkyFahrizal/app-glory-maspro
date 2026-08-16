@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom'
 import { ArrowLeft, Save, ImagePlus, X } from 'lucide-react'
-import axios from 'axios'
+import api from '../../utils/api'
 import SuccessModal from '../../components/admin/SuccessModal'
 import AlertModal from '../../components/admin/AlertModal'
 import DeleteModal from '../../components/admin/DeleteModal'
@@ -9,6 +9,24 @@ import CustomSelect from '../../components/public/CustomSelect'
 import ProductImageUploader from '../../components/admin/ProductImageUploader'
 
 export default function ProductForm() {
+  const [projects, setProjects] = useState([])
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const res = await api.get('/projects')
+        if (res.data && res.data.data) {
+          setProjects(res.data.data)
+        } else {
+          setProjects(Array.isArray(res.data) ? res.data : [])
+        }
+      } catch (err) {
+        console.error('Failed to fetch projects', err)
+      }
+    }
+    fetchProjects()
+  }, [])
+
   const { id } = useParams()
   const location = useLocation()
   const isView = location.pathname.includes('/view/')
@@ -34,7 +52,6 @@ export default function ProductForm() {
     price_start_multiplier: 'Jt',
     price_end: '',
     price_end_multiplier: 'Jt',
-    location: '',
     address: '',
     bedrooms: '',
     bathrooms: '',
@@ -47,7 +64,8 @@ export default function ProductForm() {
     furnish: 'Non-Furnished',
     note: '',
     description: '',
-    status: 'available'
+    status: 'available',
+    project_id: ''
   })
 
   const [images, setImages] = useState([])
@@ -59,7 +77,7 @@ export default function ProductForm() {
     if (isEdit || isView) {
       const fetchProduct = async () => {
         try {
-          const res = await axios.get(`https://api.glorymaspro.com/api/products/${id}`)
+          const res = await api.get(`/products/${id}`)
           if (res.data && res.data.success) {
             const data = res.data.data
 
@@ -79,7 +97,6 @@ export default function ProductForm() {
               price_start_multiplier: pStart.m,
               price_end: pEnd.v,
               price_end_multiplier: pEnd.m,
-              location: data.location || '',
               address: data.address || '',
               bedrooms: data.bedrooms || '',
               bathrooms: data.bathrooms || '',
@@ -92,7 +109,8 @@ export default function ProductForm() {
               furnish: data.furnish || 'Non-Furnished',
               note: data.note || '',
               description: data.description || '',
-              status: data.status || 'available'
+              status: data.status || 'available',
+              project_id: data.project_id || ''
             })
             if (data.images) {
               setExistingImages(data.images)
@@ -177,10 +195,7 @@ export default function ProductForm() {
   const handleConfirmDeleteImage = async () => {
     if (!imageToDelete) return
     try {
-      const token = localStorage.getItem('token') || ''
-      await axios.delete(`https://api.glorymaspro.com/api/products/images/${imageToDelete}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
+      await api.delete(`/products/images/${imageToDelete}`)
       setExistingImages(prev => prev.filter(img => img.id !== imageToDelete))
     } catch (error) {
       console.error('Failed to delete image:', error)
@@ -229,16 +244,14 @@ export default function ProductForm() {
 
       if (isEdit) {
         payload.append('_method', 'PUT')
-        await axios.post(`https://api.glorymaspro.com/api/products/${id}`, payload, {
+        await api.post(`/products/${id}`, payload, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         })
       } else {
-        await axios.post('https://api.glorymaspro.com/api/products', payload, {
+        await api.post('/products', payload, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data'
           }
         })
@@ -260,12 +273,13 @@ export default function ProductForm() {
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-8">
-        <Link
-          to="/admin/products"
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
           className="mb-4 inline-flex items-center gap-2 text-sm font-medium text-[#B8860B] transition hover:text-[#D4AF37]"
         >
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Katalog
-        </Link>
+          <ArrowLeft className="h-4 w-4" /> Kembali ke Halaman Sebelumnya
+        </button>
         <h1 className="text-2xl font-semibold text-[#1F2937]">
           {isView ? 'Detail Properti' : isEdit ? 'Edit Data Properti' : 'Tambah Properti Baru'}
         </h1>
@@ -297,6 +311,25 @@ export default function ProductForm() {
 
             {/* Kiri: Info Utama */}
             <div className="space-y-6">
+              <div>
+                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Proyek Terkait</label>
+                {isView ? (
+                  <input type="text" value={projects.find(p => p.id == formData.project_id)?.title || 'Tidak Ada (Berdiri Sendiri)'} disabled className="input-minimal w-full rounded-2xl py-3 px-4 bg-gray-50 text-gray-500 cursor-not-allowed" />
+                ) : (
+                  <CustomSelect
+                    name="project_id"
+                    value={formData.project_id}
+                    onChange={handleInputChange}
+                    disabled={isView}
+                    searchable={true}
+                    placeholder="Pilih Proyek Terkait"
+                    options={[
+                      ...projects.map(p => ({ label: p.title, value: String(p.id) }))
+                    ]}
+                  />
+                )}
+              </div>
+
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Nama Properti</label>
                 <input
@@ -402,20 +435,6 @@ export default function ProductForm() {
                     />
                   )}
                 </div>
-              </div>
-
-              <div>
-                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Lokasi</label>
-                <input
-                  required
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  placeholder="Contoh: Jakarta Selatan"
-                  disabled={isView}
-                  className={`input-minimal w-full rounded-2xl py-3 px-4 ${isView ? 'bg-gray-50 text-gray-500 cursor-not-allowed' : ''}`}
-                />
               </div>
 
               <div>
@@ -615,12 +634,13 @@ export default function ProductForm() {
           />
 
           <div className="mt-10 flex items-center justify-end gap-4 border-t border-[rgba(0,0,0,0.06)] pt-6">
-            <Link
-              to="/admin/products"
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
               className="rounded-2xl px-6 py-3 text-sm font-medium text-soft transition hover:text-[#1F2937]"
             >
               Kembali
-            </Link>
+            </button>
             {!isView && (
               <button
                 type="submit"

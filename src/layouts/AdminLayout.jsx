@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-import axios from 'axios'
+import api from '../utils/api'
 import AdminTopbar from '../components/admin/AdminTopbar'
 import AdminSidebar from '../components/admin/AdminSidebar'
 
@@ -19,9 +19,7 @@ export default function AdminLayout() {
 
     const verifyToken = async () => {
       try {
-        await axios.get('https://api.glorymaspro.com/api/user', {
-          headers: { Authorization: `Bearer ${token}` }
-        })
+        await api.get('/user')
         setIsChecking(false)
       } catch (error) {
         if (error.response && (error.response.status === 401 || error.response.status === 403)) {

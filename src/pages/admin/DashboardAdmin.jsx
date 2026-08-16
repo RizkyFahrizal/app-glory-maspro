@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend } from 'recharts'
-import { Home, CheckCircle, Users } from 'lucide-react'
+import api from '../../utils/api'
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts'
+import { Home, Building2, Users } from 'lucide-react'
 
 export default function DashboardAdmin() {
   const [products, setProducts] = useState([])
+  const [projects, setProjects] = useState([])
   const [marketingCount, setMarketingCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const userData = JSON.parse(localStorage.getItem('user') || '{}')
@@ -15,15 +16,22 @@ export default function DashboardAdmin() {
     const fetchData = async () => {
       try {
         const token = localStorage.getItem('token') || ''
-        const [productsRes, accountsRes] = await Promise.all([
-          axios.get('https://api.glorymaspro.com/api/products'),
-          axios.get('https://api.glorymaspro.com/api/accounts', {
-            headers: { Authorization: `Bearer ${token}` }
-          }).catch(() => ({ data: { success: false, data: [] } }))
+        const [productsRes, accountsRes, projectsRes] = await Promise.all([
+          api.get('/products'),
+          api.get('/accounts').catch(() => ({ data: { success: false, data: [] } })),
+          api.get('/projects').catch(() => ({ data: [] }))
         ])
 
         if (productsRes.data && productsRes.data.success) {
           setProducts(productsRes.data.data)
+        } else if (Array.isArray(productsRes.data)) {
+          setProducts(productsRes.data)
+        }
+
+        if (projectsRes.data && projectsRes.data.data) {
+          setProjects(projectsRes.data.data)
+        } else if (Array.isArray(projectsRes.data)) {
+          setProjects(projectsRes.data)
         }
 
         if (accountsRes.data && accountsRes.data.success) {
@@ -40,13 +48,14 @@ export default function DashboardAdmin() {
   }, [])
 
   const totalProducts = products.length
-  const availableProducts = products.filter(p => p.status?.toLowerCase() === 'available')
-  const totalAvailable = availableProducts.length
+  const totalProjects = projects.length
 
   const locationCount = {}
-  products.forEach(p => {
+  projects.forEach(p => {
+    const region = p.region || 'Lainnya'
     const loc = p.location || 'Lainnya'
-    locationCount[loc] = (locationCount[loc] || 0) + 1
+    const label = `${region} - ${loc}`
+    locationCount[label] = (locationCount[label] || 0) + 1
   })
   const locationColors = ['#D4AF37', '#2C3E50', '#8B6508', '#F39C12', '#7F8C8D', '#16A085', '#E67E22', '#9B59B6', '#34495E']
   const locationChartData = Object.entries(locationCount).map(([name, value], idx) => ({
@@ -75,13 +84,13 @@ export default function DashboardAdmin() {
     <div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-[#1F2937]">Dashboard Overview</h1>
+          <h1 className="text-2xl font-semibold text-[#1F2937]">Dasbor Visualisasi</h1>
           <p className="mt-2 text-sm text-soft">Statistik ringkas dari katalog properti Anda saat ini.</p>
         </div>
 
         <div className="flex items-center gap-4 rounded-2xl bg-white p-3 pr-4 border border-[rgba(0,0,0,0.06)] shadow-sm">
           <img
-            src={userData.photo ? `https://api.glorymaspro.com/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
+            src={userData.photo ? `http://127.0.0.1:8000/storage/${userData.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=D4AF37&color=fff&bold=true`}
             alt={userName}
             className="h-11 w-11 rounded-full border-2 border-[#D4AF37] object-cover"
           />
@@ -97,11 +106,11 @@ export default function DashboardAdmin() {
         <div className="glass-panel rounded-3xl p-6 border border-[rgba(0,0,0,0.06)] bg-white">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D4AF37]/10 text-[#B8860B]">
-              <Home className="h-6 w-6" />
+              <Building2 className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Total Properti</p>
-              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalProducts} Unit</h3>
+              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Total Proyek</p>
+              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalProjects}</h3>
             </div>
           </div>
         </div>
@@ -109,11 +118,11 @@ export default function DashboardAdmin() {
         <div className="glass-panel rounded-3xl p-6 border border-[rgba(0,0,0,0.06)] bg-white">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#D4AF37]/10 text-[#B8860B]">
-              <CheckCircle className="h-6 w-6" />
+              <Home className="h-6 w-6" />
             </div>
             <div>
-              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Properti Tersedia</p>
-              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalAvailable} Unit</h3>
+              <p className="text-xs font-semibold tracking-wider text-soft uppercase">Total Properti</p>
+              <h3 className="mt-1 text-2xl font-bold text-[#1F2937]">{totalProducts} Unit</h3>
             </div>
           </div>
         </div>
@@ -132,71 +141,47 @@ export default function DashboardAdmin() {
       </div>
 
       {/* Chart Section */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-8">
         <div className="glass-panel rounded-3xl p-8 border border-[rgba(0,0,0,0.06)] bg-white flex flex-col">
           <h3 className="mb-6 text-lg font-semibold tracking-wide text-[#1F2937]">Distribusi Berdasarkan Lokasi</h3>
           <div className="h-80 w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={locationChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={4}
+              <BarChart
+                data={locationChartData}
+                margin={{ top: 10, right: 10, left: -20, bottom: 40 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E7EB" />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 11, fill: '#6B7280' }}
+                  axisLine={false}
+                  tickLine={false}
+                  angle={-45}
+                  textAnchor="end"
+                  height={60}
+                />
+                <YAxis
+                  tick={{ fontSize: 12, fill: '#6B7280' }}
+                  axisLine={false}
+                  tickLine={false}
+                  allowDecimals={false}
+                />
+                <Tooltip
+                  contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
+                  itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
+                  cursor={{ fill: 'rgba(0,0,0,0.02)' }}
+                />
+                <Bar
                   dataKey="value"
-                  stroke="none"
+                  fill="#D4AF37"
+                  radius={[4, 4, 0, 0]}
+                  barSize={40}
                 >
                   {locationChartData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.color} />
                   ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
-                  itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  iconType="circle"
-                  wrapperStyle={{ color: '#4B5563', fontSize: '12px' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="glass-panel rounded-3xl p-8 border border-[rgba(0,0,0,0.06)] bg-white flex flex-col">
-          <h3 className="mb-6 text-lg font-semibold tracking-wide text-[#1F2937]">Distribusi Berdasarkan Tipe</h3>
-          <div className="h-80 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={typeChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={100}
-                  paddingAngle={4}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {typeChartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#ffffff', borderColor: 'rgba(0,0,0,0.1)', borderRadius: '12px', color: '#1F2937' }}
-                  itemStyle={{ color: '#1F2937', fontSize: '14px', fontWeight: '500' }}
-                />
-                <Legend
-                  verticalAlign="bottom"
-                  height={36}
-                  iconType="circle"
-                  wrapperStyle={{ color: '#4B5563', fontSize: '12px' }}
-                />
-              </PieChart>
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </div>

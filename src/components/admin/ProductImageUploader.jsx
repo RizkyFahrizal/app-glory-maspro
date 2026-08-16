@@ -17,12 +17,14 @@ export default function ProductImageUploader({
         <div className="mb-6">
           <p className="mb-3 text-sm font-semibold text-soft">Media Saat Ini:</p>
           <div className="flex flex-wrap gap-4">
-            {existingImages.map(img => (
+            {existingImages.map(img => {
+              const imgUrl = img.image_path.startsWith('http') ? img.image_path : `http://127.0.0.1:8000/storage/${img.image_path}`
+              return (
               <div key={img.id} className="relative h-32 w-32 rounded-xl border border-[rgba(0,0,0,0.1)] shadow-sm overflow-hidden group">
                 {img.image_path.endsWith('.webm') || img.image_path.endsWith('.mp4') ? (
-                  <video src={`${img.image_path}#t=0.001`} preload="metadata" className="h-full w-full object-cover bg-black" muted loop playsInline autoPlay />
+                  <video src={`${imgUrl}#t=0.001`} preload="metadata" className="h-full w-full object-cover bg-black" muted loop playsInline autoPlay />
                 ) : (
-                  <img src={img.image_path} alt="Existing" className="h-full w-full object-cover" />
+                  <img src={imgUrl} alt="Existing" className="h-full w-full object-cover" />
                 )}
                 {!isView && (
                   <button
@@ -35,7 +37,8 @@ export default function ProductImageUploader({
                   </button>
                 )}
               </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}

@@ -16,6 +16,11 @@ export default function PublicFooter() {
           <h4 className="text-sm font-semibold tracking-[0.22em] text-[#F5F2EA] uppercase">Tautan</h4>
           <ul className="mt-4 space-y-3 text-sm text-soft">
             <li>
+              <Link to="/about" className="text-[#6b7280] transition-colors duration-300 hover:text-[#e9d387] hover:drop-shadow-[0_0_8px_rgba(233,211,135,0.4)]">
+                Tentang Kami
+              </Link>
+            </li>
+            <li>
               <Link to="/" className="text-[#6b7280] transition-colors duration-300 hover:text-[#e9d387] hover:drop-shadow-[0_0_8px_rgba(233,211,135,0.4)]">
                 Katalog Properti
               </Link>
@@ -26,9 +31,9 @@ export default function PublicFooter() {
         <div>
           <h4 className="text-sm font-semibold tracking-[0.22em] text-[#F5F2EA] uppercase">Kontak</h4>
           <div className="mt-4 space-y-2 text-sm text-soft">
-            <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[#D4AF37]" />Jeonju City, Candi, Sidoarjo, East Java</p>
-            {/* <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-[#D4AF37]" /> +62 812-3456-7890</p> */}
-            {/* <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-[#D4AF37]" /> hello@glorymaspro.com</p> */}
+            <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[#D4AF37] shrink-0" />Kantor Glory Maspro, Jenjou City</p>
+            <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-[#D4AF37] shrink-0" />081235897277 (Vevey)</p>
+            <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-[#D4AF37] shrink-0" />glorymaspro@gmail.com</p>
           </div>
         </div>
       </div>

@@ -81,7 +81,7 @@ export default function AccountCard({
       {/* Profile Header */}
       <div className={`flex items-center gap-4 ${isMarketing ? 'ml-12' : ''}`}>
         <img
-          src={account.photo ? `https://api.glorymaspro.com/storage/${account.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(account.name)}&background=D4AF37&color=fff`}
+          src={account.photo ? `http://127.0.0.1:8000/storage/${account.photo}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(account.name)}&background=D4AF37&color=fff`}
           alt={account.name}
           className="h-16 w-16 rounded-full border-2 border-[rgba(0,0,0,0.06)] object-cover shadow-sm"
         />

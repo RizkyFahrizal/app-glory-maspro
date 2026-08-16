@@ -1,10 +1,11 @@
-import { Search, SlidersHorizontal, MapPin, X } from 'lucide-react'
+import { Search, SlidersHorizontal, MapPin, X, Building2 } from 'lucide-react'
 import CustomSelect from './CustomSelect'
 
 export default function FilterBar({
   filters,
   locations,
   propertyTypes,
+  allProjects = [],
   isFilterOpen,
   onFilterChange,
   onSearch,
@@ -12,6 +13,15 @@ export default function FilterBar({
   onClearFilter,
   setFilters
 }) {
+  const availableProjects = filters.location 
+    ? allProjects.filter(p => p.location === filters.location)
+    : allProjects;
+
+  const projectOptions = [
+    { label: "Semua Proyek", value: "" },
+    ...availableProjects.map(p => ({ label: p.title, value: p.id }))
+  ];
+
   return (
     <div className="glass-panel mb-9 flex flex-col rounded-[1.75rem] p-4 md:p-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center">
@@ -44,14 +54,21 @@ export default function FilterBar({
           icon={MapPin}
           options={[
             { label: "Semua Lokasi", value: "" },
-            ...locations.map(loc => ({ label: loc, value: loc }))
+            ...[...new Set(allProjects.map(p => p.location).filter(Boolean))].map(loc => ({ label: loc, value: loc }))
           ]}
-          className="md:w-64"
+          className="md:w-64 lg:w-72 flex-shrink-0"
         />
 
-        <button onClick={onSearch} className="btn-gold rounded-2xl px-8 py-3 transition">
-          Cari
-        </button>
+        <CustomSelect
+          name="project_id"
+          value={filters.project_id}
+          onChange={onFilterChange}
+          placeholder="Semua Proyek"
+          icon={Building2}
+          options={projectOptions}
+          className="md:w-64 lg:w-72 flex-shrink-0"
+        />
+
         <button
           onClick={onToggleFilter}
           className={`flex items-center justify-center gap-2 rounded-2xl px-6 py-3 font-semibold transition ${isFilterOpen ? 'bg-[#D4AF37] text-white shadow-md' : 'btn-ghost'}`}
@@ -65,8 +82,8 @@ export default function FilterBar({
           }`}
       >
         <div className="overflow-hidden">
-          <div className="grid grid-cols-1 gap-6 border-t border-[rgba(0,0,0,0.06)] pt-6 md:grid-cols-2 lg:grid-cols-4">
-            <div>
+          <div className="grid grid-cols-1 gap-6 border-t border-[rgba(0,0,0,0.06)] pt-6 md:grid-cols-2 lg:grid-cols-12">
+            <div className="lg:col-span-3">
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Tipe Properti</label>
               <CustomSelect
                 name="property_type"
@@ -79,7 +96,7 @@ export default function FilterBar({
                 ]}
               />
             </div>
-            <div>
+            <div className="lg:col-span-2">
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Tidur</label>
               <div className="relative">
                 <input
@@ -98,7 +115,7 @@ export default function FilterBar({
                 )}
               </div>
             </div>
-            <div>
+            <div className="lg:col-span-2">
               <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Kamar Mandi</label>
               <div className="relative">
                 <input
@@ -117,7 +134,7 @@ export default function FilterBar({
                 )}
               </div>
             </div>
-            <div>
+            <div className="lg:col-span-3">
               <div className="mb-2 flex items-end justify-between">
                 <label className="block text-xs font-semibold uppercase tracking-wider text-soft">Range Harga</label>
                 <span className="text-[10px] font-medium text-[#B8860B] opacity-80">*Klik JT/M u/ ubah satuan</span>
@@ -140,7 +157,7 @@ export default function FilterBar({
                 </div>
                 <span className="text-soft">-</span>
                 <div className="relative flex flex-1">
-                  <input type="number" min="0" name="max_price" value={filters.max_price} onChange={onFilterChange} placeholder="Max" className="input-minimal w-full rounded-xl py-2.5 pl-3 pr-16" />
+                  <input type="number" min="0" name="max_price" value={filters.max_price} onChange={onFilterChange} placeholder="Maks" className="input-minimal w-full rounded-xl py-2.5 pl-3 pr-16" />
                   {filters.max_price && (
                     <button type="button" onClick={() => setFilters(prev => ({ ...prev, max_price: '' }))} className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#B8860B] z-10">
                       <X className="h-4 w-4" />
@@ -155,6 +172,11 @@ export default function FilterBar({
                   </button>
                 </div>
               </div>
+            </div>
+            <div className="lg:col-span-2 flex items-end">
+              <button onClick={onSearch} className="btn-gold w-full rounded-2xl px-6 py-2.5 transition">
+                Cari Sekarang
+              </button>
             </div>
           </div>
         </div>
