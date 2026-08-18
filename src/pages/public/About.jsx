@@ -92,7 +92,7 @@ export default function About() {
                 <h3 className="font-bold text-lg text-orange-900">Perkembangan</h3>
               </div>
               <p className="text-orange-800/80 text-sm leading-relaxed">
-                Seiring berjalannya waktu, Glory Maspro terus berkembang dan berkolaborasi dengan berbagai developer terkemuka. Kami aktif menghadirkan berbagai pilihan perumahan mulai dari klaster eksklusif hingga apartemen berkonsep TOD.
+                Seiring berjalannya waktu, Glory Maspro terus berkembang dan berkolaborasi dengan berbagai developer terkemuka. Kami aktif menghadirkan berbagai pilihan perumahan mulai dari klaster eksklusif.
               </p>
             </motion.div>
 
@@ -192,20 +192,6 @@ export default function About() {
                   <a href="https://instagram.com/glorymaspro" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-red-600 transition-colors">
                     <img src="/ig-icon.svg" alt="Instagram" className="w-5 h-5 object-contain shrink-0" />
                     <span>@glorymaspro</span>
-                  </a>
-                  <a href="https://tiktok.com/@glory.maspro2" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-red-600 transition-colors group">
-                    <div className="relative w-5 h-5 shrink-0">
-                      <svg viewBox="0 0 24 24" fill="#25F4EE" className="w-5 h-5 absolute -top-[1.2px] -left-[1.2px] transition-all group-hover:-top-[1.5px] group-hover:-left-[1.5px]">
-                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
-                      </svg>
-                      <svg viewBox="0 0 24 24" fill="#FE2C55" className="w-5 h-5 absolute top-[1.2px] left-[1.2px] transition-all group-hover:top-[1.5px] group-hover:left-[1.5px]">
-                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
-                      </svg>
-                      <svg viewBox="0 0 24 24" fill="#000000" className="w-5 h-5 absolute top-0 left-0 relative z-10">
-                        <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
-                      </svg>
-                    </div>
-                    <span>@glory.maspro2</span>
                   </a>
                   <a href="https://tiktok.com/@glory.maspro" target="_blank" rel="noreferrer" className="flex items-center gap-2 hover:text-red-600 transition-colors group">
                     <div className="relative w-5 h-5 shrink-0">

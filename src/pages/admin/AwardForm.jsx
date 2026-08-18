@@ -16,6 +16,7 @@ export default function AwardForm() {
 
   const [formData, setFormData] = useState({
     title: '',
+    date: '',
     description: ''
   })
   const [imageFile, setImageFile] = useState(null)
@@ -30,6 +31,7 @@ export default function AwardForm() {
             const data = res.data.data || res.data
             setFormData({
               title: data.title || '',
+              date: data.date || '',
               description: data.description || ''
             })
             if (data.image) {
@@ -75,6 +77,7 @@ export default function AwardForm() {
 
     const payload = new FormData()
     payload.append('title', formData.title)
+    if(formData.date) payload.append('date', formData.date)
     payload.append('description', formData.description)
     if (imageFile) {
       payload.append('image', imageFile)
@@ -148,6 +151,11 @@ export default function AwardForm() {
                 <div>
                   <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Judul Penghargaan</label>
                   <input required type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Contoh: Top Agent 2025" className="input-minimal w-full rounded-2xl py-3 px-4" />
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Tahun Penghargaan</label>
+                  <input required type="number" name="date" value={formData.date} onChange={handleChange} placeholder="Contoh: 2025" className="input-minimal w-full rounded-2xl py-3 px-4" />
                 </div>
 
                 <div>

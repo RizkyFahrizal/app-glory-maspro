@@ -187,7 +187,7 @@ export default function ProjectDetail() {
 
             {/* Fasilitas Kawasan (Digabung ke kotak ini) */}
             <div className="pt-10 border-t border-gray-100">
-              <h3 className="text-xl md:text-2xl font-bold text-[#1F2937] mb-8">Fasilitas Kawasan</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-[#1F2937] mb-8">Fasilitas Umum</h3>
               <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {project.facilities && Array.isArray(project.facilities) && project.facilities.map((fac, idx) => (
                   <li key={idx} className="flex items-center gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100">
@@ -271,8 +271,12 @@ export default function ProjectDetail() {
                 <ProductCard key={product.id} product={product} />
               ))
             ) : (
-              <div className="col-span-full text-center text-gray-400">
-                Belum ada produk untuk proyek ini.
+              <div className="col-span-full flex flex-col items-center justify-center py-16 px-4 bg-white/5 border border-white/10 rounded-[2rem] backdrop-blur-sm">
+                <HomeIcon className="w-16 h-16 text-gray-500 mb-4 opacity-50" />
+                <h4 className="text-xl font-bold text-gray-300 mb-2">Belum Ada Unit</h4>
+                <p className="text-gray-400 max-w-md text-center">
+                  Saat ini belum ada daftar rumah atau unit yang ditawarkan pada proyek ini. Silakan periksa kembali nanti.
+                </p>
               </div>
             )}
           </div>

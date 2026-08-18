@@ -316,7 +316,7 @@ export default function ProjectForm() {
         {/* === SECTION 2: FASILITAS === */}
         <div className="rounded-3xl bg-white p-8 border border-[rgba(0,0,0,0.06)] shadow-sm">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-[#1F2937]">Fasilitas Kawasan</h2>
+            <h2 className="text-xl font-bold text-[#1F2937]">Fasilitas Umum</h2>
             {!isView && (
               <button type="button" onClick={addFacility} className="text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-xl flex items-center gap-2">
                 <Plus className="w-4 h-4" /> Tambah Fasilitas

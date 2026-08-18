@@ -610,7 +610,6 @@ export default function ProductForm() {
               <div>
                 <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-soft">Deskripsi Lengkap</label>
                 <textarea
-                  required
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}

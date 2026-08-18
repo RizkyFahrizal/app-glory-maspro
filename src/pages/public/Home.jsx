@@ -260,24 +260,6 @@ export default function Home() {
                 <img src="/ig-icon.svg" alt="Instagram" className="w-full h-full object-contain" />
               </a>
               <a
-                href="https://tiktok.com/@glory.maspro2"
-                target="_blank"
-                rel="noreferrer"
-                className="w-12 h-12 rounded-full bg-white flex items-center justify-center hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.5)] transition-all duration-300 text-black shadow-lg shadow-black/20 relative group"
-              >
-                <div className="relative w-6 h-6">
-                  <svg viewBox="0 0 24 24" fill="#25F4EE" className="w-6 h-6 absolute -top-[1.5px] -left-[1.5px] transition-all group-hover:-top-[2px] group-hover:-left-[2px]">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
-                  </svg>
-                  <svg viewBox="0 0 24 24" fill="#FE2C55" className="w-6 h-6 absolute top-[1.5px] left-[1.5px] transition-all group-hover:top-[2px] group-hover:left-[2px]">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
-                  </svg>
-                  <svg viewBox="0 0 24 24" fill="#000000ff" className="w-6 h-6 absolute top-0 left-0 relative z-10">
-                    <path d="M12.525.02c1.31-.02 2.61-.01 3.91.04.15 1.53.85 3.01 2.11 3.82 1.34.86 3.03 1.01 4.54.91v4.06c-1.39-.12-2.76-.58-3.92-1.36-.2-.13-.39-.27-.58-.42v6.62c0 2.27-.67 4.58-2.12 6.32-1.6 1.95-3.99 3.09-6.49 3.16-2.52.07-5.06-.94-6.83-2.71-1.66-1.66-2.52-4.04-2.27-6.39.26-2.45 1.63-4.66 3.69-5.91 2.05-1.24 4.58-1.55 6.84-.87.49.15.96.34 1.4.58V12.6c-.46-.35-.98-.63-1.54-.8-.96-.31-2.02-.27-2.95.1-1.12.44-2.06 1.35-2.46 2.47-.44 1.25-.33 2.7.29 3.85.64 1.18 1.83 2.07 3.15 2.37 1.29.3 2.7.08 3.83-.57 1.07-.63 1.82-1.72 2.06-2.94.1-.5.13-1.02.13-1.53V0h-2.6z" />
-                  </svg>
-                </div>
-              </a>
-              <a
                 href="https://tiktok.com/@glory.maspro"
                 target="_blank"
                 rel="noreferrer"
@@ -387,32 +369,52 @@ export default function Home() {
               className="flex gap-6 md:gap-8 overflow-x-auto pb-8 [&::-webkit-scrollbar]:hidden scroll-smooth"
               style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}
             >
-              {awards.map((award, index) => (
-                <motion.div
-                  key={award.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                  whileHover={{ y: -10 }}
-                  className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm group min-w-[280px] w-[280px] md:min-w-[380px] md:w-[380px] shrink-0 flex flex-col"
-                >
-                  <div className="h-48 w-full overflow-hidden relative">
-                    <img
-                      src={award.image ? (award.image.startsWith('http') ? award.image : `https://api.glorymaspro.com/storage/${award.image}`) : '/aboutbg.webp'}
-                      alt={award.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#1F2937] via-transparent to-transparent opacity-80" />
+              {loading ? (
+                [1, 2, 3, 4].map((i) => (
+                  <div
+                    key={`skeleton-${i}`}
+                    className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm min-w-[280px] w-[280px] md:min-w-[380px] md:w-[380px] shrink-0 flex flex-col animate-pulse"
+                  >
+                    <div className="h-56 w-full bg-white/10" />
+                    <div className="p-8 text-center flex-1 flex flex-col items-center justify-center space-y-4">
+                      <div className="h-4 w-16 bg-white/20 rounded-full" />
+                      <div className="h-6 w-3/4 bg-white/20 rounded-full" />
+                      <div className="space-y-2 w-full mt-2">
+                        <div className="h-3 w-full bg-white/10 rounded-full" />
+                        <div className="h-3 w-5/6 bg-white/10 rounded-full mx-auto" />
+                      </div>
+                    </div>
                   </div>
-                  <div className="p-8 text-center flex-1">
-                    <h4 className="text-xl font-bold mb-3 text-white">{award.title}</h4>
-                    <p className="text-gray-400 text-sm leading-relaxed">
-                      {award.description}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+                ))
+              ) : (
+                awards.map((award, index) => (
+                  <motion.div
+                    key={award.id}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                    whileHover={{ y: -10 }}
+                    className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden backdrop-blur-sm group min-w-[280px] w-[280px] md:min-w-[380px] md:w-[380px] shrink-0 flex flex-col"
+                  >
+                    <div className="h-56 w-full relative flex items-center justify-center bg-black/20 p-4">
+                      <img
+                        src={award.image ? (award.image.startsWith('http') ? award.image : `https://api.glorymaspro.com/storage/${award.image}`) : '/aboutbg.webp'}
+                        alt={award.title}
+                        className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110 drop-shadow-2xl"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#1F2937] via-transparent to-transparent opacity-60 pointer-events-none" />
+                    </div>
+                    <div className="p-8 text-center flex-1">
+                      {award.date && <p className="text-[#D4AF37] font-bold text-sm tracking-wider mb-2">{award.date}</p>}
+                      <h4 className="text-xl font-bold mb-3 text-white">{award.title}</h4>
+                      <p className="text-gray-400 text-sm leading-relaxed">
+                        {award.description}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))
+              )}
             </div>
 
             {/* Right Button */}
@@ -491,55 +493,84 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {paginatedProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-50 border border-[rgba(0,0,0,0.04)] flex flex-col"
-              >
-                <Link to={`/project/${project.slug || project.id}`} className="flex-1 flex flex-col h-full w-full">
-                  <div className="aspect-[16/9] overflow-hidden relative">
-                    <img
-                      src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `https://api.glorymaspro.com/storage/${project.image_header}`) : '/herobg.webp'}
-                      alt={project.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
+            {loading ? (
+              [1, 2, 3].map((i) => (
+                <div
+                  key={`proj-skel-${i}`}
+                  className="rounded-[2rem] overflow-hidden shadow-sm bg-gray-50 border border-[rgba(0,0,0,0.04)] flex flex-col animate-pulse"
+                >
+                  <div className="aspect-[16/9] w-full bg-gray-200" />
                   <div className="p-8 flex-1 flex flex-col">
-                    <h4 className="text-2xl font-bold text-[#1F2937] mb-3">{project.title}</h4>
-                    <p className="text-gray-600 mb-6 line-clamp-2 leading-relaxed">
-                      {project.description}
-                    </p>
+                    <div className="h-7 w-3/4 bg-gray-200 rounded-lg mb-4" />
+                    <div className="h-4 w-full bg-gray-200 rounded mb-2" />
+                    <div className="h-4 w-5/6 bg-gray-200 rounded mb-8" />
 
-                    {project.facilities && Array.isArray(project.facilities) && project.facilities.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-8">
-                        {project.facilities.slice(0, 3).map((facility, i) => (
-                          <span key={i} className="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg">
-                            {facility.value || facility}
-                          </span>
-                        ))}
-                        {project.facilities.length > 3 && (
-                          <span className="px-3 py-1.5 bg-[#D4AF37]/10 text-[#B8860B] text-xs font-semibold rounded-lg">
-                            +{project.facilities.length - 3} lagi
-                          </span>
-                        )}
-                      </div>
-                    )}
+                    <div className="flex flex-wrap gap-2 mb-8">
+                      <div className="h-7 w-20 bg-gray-200 rounded-lg" />
+                      <div className="h-7 w-24 bg-gray-200 rounded-lg" />
+                    </div>
 
                     <div className="mt-auto pt-4">
-                      <span
-                        className="inline-flex items-center justify-center w-full btn-gold rounded-xl px-6 py-3.5 font-semibold transition-all duration-300 gap-2 hover:-translate-y-1 hover:shadow-lg text-white"
-                      >
-                        Lihat Detail Proyek <ArrowRight className="w-4 h-4" />
-                      </span>
+                      <div className="h-14 w-full bg-gray-200 rounded-xl" />
                     </div>
                   </div>
-                </Link>
-              </motion.div>
-            ))}
+                </div>
+              ))
+            ) : paginatedProjects.length === 0 ? (
+              <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-20">
+                <p className="text-gray-500 font-medium">Belum ada proyek yang tersedia.</p>
+              </div>
+            ) : (
+              paginatedProjects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  className="group relative rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 bg-gray-50 border border-[rgba(0,0,0,0.04)] flex flex-col"
+                >
+                  <Link to={`/project/${project.slug || project.id}`} className="flex-1 flex flex-col h-full w-full">
+                    <div className="aspect-[16/9] overflow-hidden relative">
+                      <img
+                        src={project.image_header ? (project.image_header.startsWith('http') ? project.image_header : `https://api.glorymaspro.com/storage/${project.image_header}`) : '/herobg.webp'}
+                        alt={project.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </div>
+                    <div className="p-8 flex-1 flex flex-col">
+                      <h4 className="text-2xl font-bold text-[#1F2937] mb-3">{project.title}</h4>
+                      <p className="text-gray-600 mb-6 line-clamp-2 leading-relaxed">
+                        {project.description}
+                      </p>
+
+                      {project.facilities && Array.isArray(project.facilities) && project.facilities.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-8">
+                          {project.facilities.slice(0, 3).map((facility, i) => (
+                            <span key={i} className="px-3 py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-lg">
+                              {facility.value || facility}
+                            </span>
+                          ))}
+                          {project.facilities.length > 3 && (
+                            <span className="px-3 py-1.5 bg-[#D4AF37]/10 text-[#B8860B] text-xs font-semibold rounded-lg">
+                              +{project.facilities.length - 3} lagi
+                            </span>
+                          )}
+                        </div>
+                      )}
+
+                      <div className="mt-auto pt-4">
+                        <span
+                          className="inline-flex items-center justify-center w-full btn-gold rounded-xl px-6 py-3.5 font-semibold transition-all duration-300 gap-2 hover:-translate-y-1 hover:shadow-lg text-white"
+                        >
+                          Lihat Detail Proyek <ArrowRight className="w-4 h-4" />
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.div>
+              ))
+            )}
           </div>
 
           {totalPages > 1 && (
