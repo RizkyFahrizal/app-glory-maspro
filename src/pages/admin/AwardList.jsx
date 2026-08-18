@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus, Search, Edit, Trash2, Award, X } from 'lucide-react'
+import DeleteModal from '../../components/admin/DeleteModal'
+import SuccessModal from '../../components/admin/SuccessModal'
+import AlertModal from '../../components/admin/AlertModal'
 import api from '../../utils/api'
 
 
@@ -10,6 +13,10 @@ export default function AwardList() {
   const [search, setSearch] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+
+  const [awardToDelete, setAwardToDelete] = useState(null)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
 
   const fetchAwards = async () => {
     try {
@@ -32,15 +39,23 @@ export default function AwardList() {
     fetchAwards()
   }, [])
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Yakin ingin menghapus penghargaan ini?')) {
-      try {
-        await api.delete(`/achievements/${id}`)
-        fetchAwards()
-      } catch (err) {
-        console.error('Failed to delete achievement', err)
-        alert('Gagal menghapus penghargaan.')
-      }
+  const handleDeleteClick = (award) => {
+    setAwardToDelete(award)
+  }
+
+  const confirmDelete = async () => {
+    if (!awardToDelete) return
+
+    try {
+      await api.delete(`/achievements/${awardToDelete.id}`)
+      fetchAwards()
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 2500)
+    } catch (err) {
+      console.error('Failed to delete achievement', err)
+      setAlertInfo({ isOpen: true, title: 'Gagal', message: 'Terjadi kesalahan saat menghapus penghargaan.' })
+    } finally {
+      setAwardToDelete(null)
     }
   }
 
@@ -151,7 +166,7 @@ export default function AwardList() {
                           <Edit className="h-4 w-4" />
                         </Link>
                         <button
-                          onClick={() => handleDelete(award.id)}
+                          onClick={() => handleDeleteClick(award)}
                           className="rounded-xl bg-red-50 p-2 text-red-400 transition hover:bg-red-100 hover:text-red-600"
                           title="Hapus Penghargaan"
                         >
@@ -208,6 +223,26 @@ export default function AwardList() {
         )}
 
       </div>
+
+      <DeleteModal
+        isOpen={!!awardToDelete}
+        itemName={awardToDelete?.title}
+        onCancel={() => setAwardToDelete(null)}
+        onConfirm={confirmDelete}
+      />
+
+      <SuccessModal
+        isOpen={showSuccess}
+        title="Berhasil Dihapus"
+        message="Data penghargaan telah dihapus."
+      />
+
+      <AlertModal
+        isOpen={alertInfo.isOpen}
+        title={alertInfo.title}
+        message={alertInfo.message}
+        onOk={() => setAlertInfo({ ...alertInfo, isOpen: false })}
+      />
     </div>
   )
 }

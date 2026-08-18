@@ -138,7 +138,7 @@ export default function ProjectDetail() {
               <div className="flex items-center gap-2 text-gray-200">
                 <MapPin className="w-6 h-6 text-[#D4AF37]" />
                 <span className="text-lg md:text-xl">
-                  {[project.region, project.location].filter(Boolean).join(' - ')}
+                  {[project.location, project.region].filter(Boolean).join(' - ')}
                 </span>
               </div>
             </motion.div>
@@ -268,7 +268,7 @@ export default function ProjectDetail() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {paginatedProducts.length > 0 ? (
               paginatedProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={{...product, project: project}} />
               ))
             ) : (
               <div className="col-span-full flex flex-col items-center justify-center py-16 px-4 bg-white/5 border border-white/10 rounded-[2rem] backdrop-blur-sm">

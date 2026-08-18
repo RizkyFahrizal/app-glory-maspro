@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import { Plus, Search, Edit, Trash2, Building2, MapPin, Eye, ChevronDown, X, Map } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
 import RoleNotice from '../../components/admin/RoleNotice'
+import DeleteModal from '../../components/admin/DeleteModal'
+import SuccessModal from '../../components/admin/SuccessModal'
+import AlertModal from '../../components/admin/AlertModal'
 import api from '../../utils/api'
 
 
@@ -15,6 +18,10 @@ export default function ProjectList() {
   const [regionFilter, setRegionFilter] = useState('Semua Daerah')
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
+
+  const [projectToDelete, setProjectToDelete] = useState(null)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [alertInfo, setAlertInfo] = useState({ isOpen: false, title: '', message: '' })
 
   const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false)
   const [isRegionDropdownOpen, setIsRegionDropdownOpen] = useState(false)
@@ -43,15 +50,23 @@ export default function ProjectList() {
     fetchProjects()
   }, [])
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Yakin ingin menghapus proyek ini? Semua data terkait (termasuk produk) akan ikut terhapus atau kehilangan relasi.')) {
-      try {
-        await api.delete(`/projects/${id}`)
-        fetchProjects() // Refresh data
-      } catch (err) {
-        console.error('Failed to delete project', err)
-        alert('Gagal menghapus proyek.')
-      }
+  const handleDeleteClick = (project) => {
+    setProjectToDelete(project)
+  }
+
+  const confirmDelete = async () => {
+    if (!projectToDelete) return
+
+    try {
+      await api.delete(`/projects/${projectToDelete.id}`)
+      fetchProjects() // Refresh data
+      setShowSuccess(true)
+      setTimeout(() => setShowSuccess(false), 2500)
+    } catch (err) {
+      console.error('Failed to delete project', err)
+      setAlertInfo({ isOpen: true, title: 'Gagal', message: 'Terjadi kesalahan saat menghapus proyek.' })
+    } finally {
+      setProjectToDelete(null)
     }
   }
 
@@ -320,7 +335,7 @@ export default function ProjectList() {
                               <Edit className="h-4 w-4" />
                             </Link>
                             <button
-                              onClick={() => handleDelete(project.id)}
+                              onClick={() => handleDeleteClick(project)}
                               className="rounded-xl bg-red-50 p-2 text-red-400 transition hover:bg-red-100 hover:text-red-600"
                               title="Hapus Proyek"
                             >
@@ -379,6 +394,26 @@ export default function ProjectList() {
         )}
 
       </div>
+
+      <DeleteModal
+        isOpen={!!projectToDelete}
+        itemName={projectToDelete?.title}
+        onCancel={() => setProjectToDelete(null)}
+        onConfirm={confirmDelete}
+      />
+
+      <SuccessModal
+        isOpen={showSuccess}
+        title="Berhasil Dihapus"
+        message="Data proyek beserta relasinya telah dihapus."
+      />
+
+      <AlertModal
+        isOpen={alertInfo.isOpen}
+        title={alertInfo.title}
+        message={alertInfo.message}
+        onOk={() => setAlertInfo({ ...alertInfo, isOpen: false })}
+      />
     </div>
   )
 }
