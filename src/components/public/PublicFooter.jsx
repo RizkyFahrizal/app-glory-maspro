@@ -31,7 +31,7 @@ export default function PublicFooter() {
         <div>
           <h4 className="text-sm font-semibold tracking-[0.22em] text-[#F5F2EA] uppercase">Kontak</h4>
           <div className="mt-4 space-y-2 text-sm text-soft">
-            <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[#D4AF37] shrink-0" />Kantor Glory Maspro, Jenjou City</p>
+            {/* <p className="flex items-center gap-2"><MapPin className="h-4 w-4 text-[#D4AF37] shrink-0" />Kantor Glory Maspro, Jenjou City</p> */}
             <p className="flex items-center gap-2"><Phone className="h-4 w-4 text-[#D4AF37] shrink-0" />081235897277 (Vevey)</p>
             <p className="flex items-center gap-2"><Mail className="h-4 w-4 text-[#D4AF37] shrink-0" />glorymaspro@gmail.com</p>
           </div>

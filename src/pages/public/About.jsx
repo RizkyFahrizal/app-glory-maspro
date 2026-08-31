@@ -211,18 +211,18 @@ export default function About() {
               </div>
             </div>
 
-            <a
+            {/* <a
               href="https://maps.app.goo.gl/5ojExJFS4zTxUbWX6"
               target="_blank"
               rel="noreferrer"
               className="mt-4 flex items-center justify-center gap-2 w-full bg-[#F5B041] hover:bg-[#E67E22] text-white font-bold py-4 rounded-2xl transition-colors shadow-md"
             >
               <MapIcon className="w-5 h-5" /> Buka di Google Maps
-            </a>
+            </a> */}
           </div>
 
           {/* Right: Google Maps Iframe */}
-          <div className="lg:col-span-8 h-[400px] lg:h-full min-h-[400px] w-full rounded-[2rem] overflow-hidden shadow-lg border-4 border-white bg-gray-200 relative">
+          {/* <div className="lg:col-span-8 h-[400px] lg:h-full min-h-[400px] w-full rounded-[2rem] overflow-hidden shadow-lg border-4 border-white bg-gray-200 relative">
             <iframe
               title="Google Maps Lokasi Perusahaan"
               src="https://maps.google.com/maps?q=-7.4572183,112.687377&t=&z=16&ie=UTF8&iwloc=&output=embed"
@@ -231,7 +231,7 @@ export default function About() {
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
-          </div>
+          </div> */}
         </div>
       </section>
     </div>
